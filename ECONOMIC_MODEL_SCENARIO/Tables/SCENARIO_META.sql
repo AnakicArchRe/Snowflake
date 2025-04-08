@@ -1,0 +1,4 @@
+create or replace TABLE SCENARIO_META (
+	SCENARIOID NUMBER(38,0),
+	DEPTH NUMBER(38,0)
+);
