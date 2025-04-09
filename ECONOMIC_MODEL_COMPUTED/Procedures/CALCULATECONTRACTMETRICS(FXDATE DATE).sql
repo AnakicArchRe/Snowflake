@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATECONTRACTMETRICS(FXD
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     // 1. prepare blocks in exposure period, with amounts in USD
@@ -280,4 +279,4 @@ begin
                 calculationcontractid, lossviewgroup;
 
 end
-$$;
+;

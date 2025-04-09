@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.INSERT_NETPOSITION_CATCHALL()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
     
     -- Insert the catch-all retrocontract
@@ -39,4 +38,4 @@ begin
         ;
 
 END
-$$;
+;

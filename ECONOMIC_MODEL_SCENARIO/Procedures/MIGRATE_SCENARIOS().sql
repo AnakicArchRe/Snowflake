@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_SCENARIO.MIGRATE_SCENARIOS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- 1. scenario table
@@ -229,4 +228,4 @@ begin
     create or replace table economic_model_revoext.referenceportfolio as 
     select * from economic_model.referenceportfolio;
 end
-$$;
+;

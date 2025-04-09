@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_INVESTOR_RESULTS(S
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- TODO: extract this into a table-valued-function, we're using this same query in three queries (calculate blocks, blocksylt, investor/contract results)
@@ -447,4 +446,4 @@ begin
             order by 
                 retrocontractid, lossviewgroup;
 end
-$$;
+;

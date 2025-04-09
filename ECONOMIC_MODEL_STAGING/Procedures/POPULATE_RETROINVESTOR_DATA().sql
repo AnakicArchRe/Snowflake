@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_RETROINVESTOR_DATA()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
 
     create or replace temp table retroinvestormappingdata as
@@ -179,4 +178,4 @@ BEGIN
             rc.retroconfigurationid;
 
 End
-$$;
+;

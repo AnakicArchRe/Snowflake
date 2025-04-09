@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_RETROCONTRACTS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- 1. housekeeping (clean up old/orphaned entries) - delete contracts with no retroprograms (except catchall placeholder contracts i.e. net position)
@@ -97,4 +96,4 @@ begin
 
     commit;
 end
-$$;
+;

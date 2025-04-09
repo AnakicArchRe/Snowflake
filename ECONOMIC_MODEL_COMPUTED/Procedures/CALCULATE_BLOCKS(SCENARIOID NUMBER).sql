@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_BLOCKS(SCENARIOID 
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- Find scenarios to recalculate. Since we're computing diff blokcs, we have to include selected and derived scenarios.
@@ -323,4 +322,4 @@ begin
         ;
     
 end
-$$;
+;

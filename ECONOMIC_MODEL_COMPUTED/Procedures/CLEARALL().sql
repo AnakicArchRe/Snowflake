@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CLEARALL()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 DECLARE
     tbl varchar;
     tblsCurr CURSOR FOR 
@@ -27,4 +26,4 @@ begin
         delete from identifier(:tbl);
     END FOR;
 end
-$$;
+;

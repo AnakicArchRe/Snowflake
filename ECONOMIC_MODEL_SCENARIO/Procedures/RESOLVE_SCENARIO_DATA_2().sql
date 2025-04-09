@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_SCENARIO.RESOLVE_SCENARIO_DATA_2()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- scenario parts
@@ -413,4 +412,4 @@ begin
     drop table economic_model_scenario.retroinvestmentleg_scenario_tmp;
 
 end
-$$;
+;

@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_GROSSBLOCKSYLT()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
 
     -- create or replace table economic_model_computed.grossblockylt 
@@ -54,4 +53,4 @@ BEGIN
     ;
        
 end
-$$;
+;

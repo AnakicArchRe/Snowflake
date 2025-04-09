@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_CAPITAL(SCENARIOID
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- TODO: we're doing the same joins (starting with RetroTag) over and over in this stored procedure... 
@@ -342,4 +341,4 @@ begin
     call economic_model_scenario.resolve_scenario_data();
     
 end
-$$;
+;

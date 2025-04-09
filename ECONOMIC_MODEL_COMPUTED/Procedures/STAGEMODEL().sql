@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.STAGEMODEL()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- clear old data just in case (we don't want to have any artifacts that belong to a previous run)
@@ -15,4 +14,4 @@ begin
     call economic_model_staging.calculate_model();
 
 end
-$$;
+;

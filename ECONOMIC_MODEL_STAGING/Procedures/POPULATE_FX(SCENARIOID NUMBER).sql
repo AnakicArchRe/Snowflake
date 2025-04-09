@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_FX(SCENARIOID NUMBER
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     create or replace table economic_model_staging.fxrate as
@@ -42,4 +41,4 @@ begin
                 basecurrency asc, 
                 currency asc;
 end
-$$;
+;

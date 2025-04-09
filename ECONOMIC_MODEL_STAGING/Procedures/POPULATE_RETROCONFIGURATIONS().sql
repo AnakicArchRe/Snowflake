@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_RETROCONFIGURATIONS(
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
 
     create or replace table economic_model_staging.retroconfiguration as
@@ -59,4 +58,4 @@ BEGIN
             ORDER BY 
                 RETROCONTRACTID, StartDate;    
 End
-$$;
+;

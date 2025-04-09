@@ -2,9 +2,8 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CLEARSCENARIODATAFROMTABLE(T
 RETURNS VARCHAR(16777216)
 LANGUAGE SQL
 AS
-$$
 begin
 
     return concat('economic_model_computed.', :tablename);
 end
-$$;
+;

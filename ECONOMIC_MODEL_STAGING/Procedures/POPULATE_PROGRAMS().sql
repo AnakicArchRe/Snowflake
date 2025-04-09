@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_PROGRAMS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
     
     -- program
@@ -19,4 +18,4 @@ begin
             inner join economic_model_raw.cedentgroup cg on c.cedentgroupid = cg.cedentgroupid and c.source_db = cg.source_db
             inner join economic_model_raw.company cp on p.companyid = cp.companyid and p.source_db = cp.source_db;
 end
-$$;
+;

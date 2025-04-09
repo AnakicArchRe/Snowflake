@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_PORTLAYERPERIODS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
 
     create or replace table economic_model_staging.PortLayerPeriod as
@@ -64,4 +63,4 @@ BEGIN
             inner join economic_model_staging.portlayer pl on p.portlayerid = pl.portlayerid;
     
 END
-$$;
+;

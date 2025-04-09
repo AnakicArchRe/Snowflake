@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.BLOCKOPERATIONS_EXPANDFROMDI
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
     
     truncate table economic_model_computed.blockoperations_out;
@@ -26,4 +25,4 @@ begin
 
     truncate table economic_model_computed.blockoperations_in;
 end
-$$;
+;

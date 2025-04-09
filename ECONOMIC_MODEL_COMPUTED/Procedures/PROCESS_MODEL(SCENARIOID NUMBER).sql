@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.PROCESS_MODEL(SCENARIOID NUM
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 declare
     currLevel int;
     lvlCurr cursor for select $1 level from values (1), (2), (3), (4), (5), (10) order by level asc;
@@ -542,4 +541,4 @@ begin
             inner join economic_model_scenario.portlayer_scenario pl on pl.scenarioid = sf.scenarioid
             inner join economic_model_staging.submission s on pl.submissionid = s.submissionid;
 end
-$$;
+;

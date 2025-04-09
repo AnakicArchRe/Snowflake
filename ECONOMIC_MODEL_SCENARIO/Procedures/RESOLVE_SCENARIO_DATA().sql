@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_SCENARIO.RESOLVE_SCENARIO_DATA()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- scenario parts
@@ -234,4 +233,4 @@ begin
             ;
 
 end
-$$;
+;

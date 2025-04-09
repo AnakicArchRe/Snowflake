@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_PORTFOLIOS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
 
     -- portfolio
@@ -18,4 +17,4 @@ BEGIN
             isactive = 1 and isdeleted = 0;
 
 end
-$$;
+;

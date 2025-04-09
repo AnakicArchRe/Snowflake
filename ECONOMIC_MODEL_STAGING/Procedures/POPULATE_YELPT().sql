@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_YELPT()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
 
     -- Yelpt is yelt at period-level (instead of day-level)
@@ -75,4 +74,4 @@ BEGIN
     from 
         withYearlyLoss y;
 end
-$$;
+;

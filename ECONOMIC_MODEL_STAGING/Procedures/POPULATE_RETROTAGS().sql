@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_RETROTAGS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
     
     -- Tag each period with a list of retroconfigurations it cedes to.
@@ -70,4 +69,4 @@ BEGIN
             order by 
                 periodid;
 end
-$$;
+;

@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_RAW.LOAD_RAW_DATA()
 RETURNS VARCHAR(16777216)
 LANGUAGE SQL
 AS
-$$
 DECLARE
     tbl varchar;
     destTblWithSchema varchar;
@@ -99,4 +98,4 @@ BEGIN
     return concat('Loaded ', (select count(*) from economic_model_raw.tablenames), ' tables from ', (select count(*) from economic_model_raw.sources), ' databases.');
     
 END
-$$;
+;

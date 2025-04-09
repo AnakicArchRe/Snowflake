@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_SUBJECTBLOCKSYLT()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
 
     truncate economic_model_computed.blockoperations_in;
@@ -58,4 +57,4 @@ BEGIN
         ;
     
 end
-$$;
+;

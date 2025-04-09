@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_PORTLAYERS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
     
     -- portlayers
@@ -176,4 +175,4 @@ BEGIN
         where 
             LayerView <> 'NOTINCLUDED';
 End
-$$;
+;

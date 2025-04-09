@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.CALCULATE_MODEL()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 BEGIN
 
     call economic_model_staging.populate_Submissions();
@@ -51,4 +50,4 @@ BEGIN
     call economic_model_staging.Insert_NetPosition_CatchAll();
     
 END
-$$;
+;

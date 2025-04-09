@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_SUBMISSIONS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- submission
@@ -23,4 +22,4 @@ begin
             isactive = 1 and isdeleted = 0;
 
 end
-$$;
+;

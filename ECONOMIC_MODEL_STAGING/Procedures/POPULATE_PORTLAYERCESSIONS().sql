@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_PORTLAYERCESSIONS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- work out whether a layer cedes to a retroprogram (not contract)...
@@ -85,4 +84,4 @@ begin
     return sqlrowcount;
     
 end
-$$;
+;

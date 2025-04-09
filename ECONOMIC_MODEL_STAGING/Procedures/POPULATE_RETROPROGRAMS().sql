@@ -2,7 +2,6 @@ CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_STAGING.POPULATE_RETROPROGRAMS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
-$$
 begin
 
     -- work out whether a layer cedes to a retroprogram (not contract)...
@@ -31,4 +30,4 @@ begin
             and status in (22, 10, 25, 1);
 
 end
-$$;
+;
