@@ -481,9 +481,42 @@ begin
     // 4. load ceded blocks and investor contract data and calculate investor metrics
 
      // 2.2.3. calculate metrics using the subject blocks
-
+    
     truncate economic_model_computed.calculationcontract;
-    // todo: fill with investor-level contract data
+
+    insert into economic_model_computed.calculationcontract
+        with investmentAmtByInvestor as (
+            select distinct rl.scenarioid, rl.retrocontractinvestorid, max_by(investmentsignedamt, startdate) investmentsignedamt from economic_model_scenario.retroinvestmentleg_scenario rl
+            inner join economic_model_staging.retroconfiguration rc on rl.retroconfigurationid = rc.retroconfigurationid
+            inner join economic_model_staging.retrocontractinvestor rci on rl.retrocontractinvestorid = rci.retrocontractinvestorid
+            group by rl.scenarioid, rl.retrocontractinvestorid
+        )
+        select 
+            amt.scenarioid, 
+            ri.retrocontractinvestorid, 
+            1 /*1=retrocontract*/, 
+            r.climateload, 
+            r.nonmodeledload, 
+            ri.brokerage, 
+            ri.commission, 
+            ri.profitcommission, 
+            ri.reinsuranceexpensesoncededcapital, 
+            ri.reinsuranceexpensesoncededpremium, 
+            r.capitalcalculationlossview, 
+            r.capitalcalculationtargetreturnperiod,
+            1 /*capital calculation method, currently only tvar supported so this is a placeholder parameter*/,
+            amt.investmentsignedamt,
+            exposurestart,
+            exposureend,
+            case when retroprogramtype = 2 then 'RAD' else 'LOD' end
+        from 
+            economic_model_staging.retrocontractinvestor ri
+            cross join economic_model_computed.ScenarioFiltered sf
+            inner join economic_model_scenario.retrocontract_scenario r on ri.retrocontractid = r.retrocontractid and r.scenarioid = sf.scenarioid
+            inner join investmentAmtByInvestor amt on amt.retrocontractinvestorid = ri.retrocontractinvestorid and amt.scenarioid = sf.scenarioid
+        where 
+            r.scenarioid is not null
+         ;
      
     truncate economic_model_computed.calculationblock;
 
@@ -539,6 +572,7 @@ begin
         from 
             economic_model_computed.scenariofiltered sf
             inner join economic_model_scenario.portlayer_scenario pl on pl.scenarioid = sf.scenarioid
-            inner join economic_model_staging.submission s on pl.submissionid = s.submissionid;
+            inner join economic_model_staging.submission s on pl.submissionid = s.submissionid
+    ;
 end
 ;
