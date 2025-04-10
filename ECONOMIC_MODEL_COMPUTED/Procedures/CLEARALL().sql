@@ -23,7 +23,7 @@ begin
 
     FOR tblrecord IN tblsCurr DO
         set tbl := tblrecord.tablefullname;
-        delete from identifier(:tbl);
+        truncate identifier(:tbl);
     END FOR;
 end
 ;

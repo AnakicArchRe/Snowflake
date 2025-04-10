@@ -77,7 +77,7 @@ begin
             
     -- 3. 
     
-    delete from economic_model_scenario.retrocontract_override;
+    truncate economic_model_scenario.retrocontract_override;
     insert into economic_model_scenario.retrocontract_override(scenarioid, retrocontractid, level, isactive)
         with retroProgramToContractMap as (
             select 
@@ -97,7 +97,7 @@ begin
             inner join economic_model.retroprogram_scenario ov on m.retroprogramid = ov.retroprogramid;
     
     -- 4. retroprogramconfiguration_scenario
-    delete from  economic_model_scenario.retroconfiguration_override;
+    truncate economic_model_scenario.retroconfiguration_override;
     insert into  economic_model_scenario.retroconfiguration_override(retroconfigurationid, scenarioid, targetcollateraloverride)
         with 
             cte as (
@@ -150,7 +150,7 @@ begin
     
     
     -- 5. retroinvestmentleg override
-    delete from economic_model_scenario.retroinvestmentleg_override;
+    truncate economic_model_scenario.retroinvestmentleg_override;
     insert into economic_model_scenario.retroinvestmentleg_override(retroinvestmentlegid, scenarioid, investmentsignedpctentry, investmentsignedpct, investmentsignedamt)
         with 
             sourcePriority as (

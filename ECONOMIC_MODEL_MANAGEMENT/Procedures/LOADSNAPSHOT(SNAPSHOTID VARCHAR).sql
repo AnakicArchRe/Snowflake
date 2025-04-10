@@ -23,7 +23,7 @@ BEGIN
        
         -- remove current data
         execute immediate
-            'delete from ' || :table_schema || '.' || :table_name;
+            'truncate ' || :table_schema || '.' || :table_name;
 
         -- restore saved data
         execute immediate
