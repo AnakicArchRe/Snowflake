@@ -4,6 +4,10 @@ LANGUAGE SQL
 AS
 BEGIN
 
+    -- todo: some layers are >12month. These are not correctly handled at the moment.
+    -- It's possible that for such layers, we get blocks that are also >12 months long
+    -- and these blocks will not 
+
     create or replace table economic_model_staging.PortLayerPeriod as
         -- 1. break up portleayers into stable periods 
         -- (portlayer start/end, cession start/end, retro reset)
