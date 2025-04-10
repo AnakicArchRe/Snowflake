@@ -29,7 +29,7 @@ BEGIN
 
     truncate economic_model_computed.grossblockylt;
 
-    insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, loss, rp, rb, seasonalPremium, seasonalExpenses)
+    insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, loss, rp, rb)
         select 
             b.scenarioid,
             y.lossviewgroup,
@@ -40,9 +40,7 @@ BEGIN
             -- cast(per.periodend as date) periodend,
             round(sum(exposedlimit * totalloss))  Loss,
             round(sum(exposedrp * totalrp))  RP,
-            round(sum(exposedrp * totalrb))  RB,
-            round(sum(exposedpremium * periodlossshare)) as seasonalPremium,
-            round(sum(exposedexpenses * periodlossshare)) as seasonalExpenses
+            round(sum(exposedrp * totalrb))  RB
         from 
             economic_model_computed.blockoperations_out b
             inner join economic_model_staging.portlayer pl on b.blockid = pl.portlayerid

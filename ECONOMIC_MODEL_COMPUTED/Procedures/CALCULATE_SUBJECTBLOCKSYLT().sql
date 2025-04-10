@@ -16,7 +16,7 @@ BEGIN
 
     truncate economic_model_computed.subjectblockylt;
     
-    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, periodStart, periodEnd, subjectLoss, subjectRP, subjectRB, seasonalPremium, seasonalExpenses, maxlossscalefactor)
+    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, periodStart, periodEnd, subjectLoss, subjectRP, subjectRB, maxlossscalefactor)
         with cte as (
             select 
                 y.year, 
@@ -31,8 +31,6 @@ BEGIN
                 round(scaleFactor * exposedlimit * totalloss)  subjectLoss,
                 round(scaleFactor * exposedrp * totalrp)  subjectRP,
                 round(scaleFactor * exposedrp * totalrb)  subjectRB,
-                round(exposedpremium * periodlossshare) as seasonalPremium,
-                round(exposedexpenses * periodlossshare) as seasonalExpenses,
                 y.maxlossscalefactor / scalefactor as maxlossscalefactor
             from 
                 economic_model_computed.blockoperations_out rb
@@ -53,8 +51,19 @@ BEGIN
         select 
             * exclude scalefactor 
         from 
-            cte  
+            cte
         ;
     
-end
-;
+    create or replace table economic_model_computed.subjectblock_seasonal_premium as
+        select 
+            t.retroblockid, s.scenarioid, se.lossviewgroup, rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
+        from
+            economic_model_computed.blockoperations_out rb
+            // filter for active scenarios
+            inner join economic_model_scenario.scenario s on rb.scenarioid = s.scenarioid and s.isactive = 1
+            inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
+            inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
+            inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid
+    ;
+
+end;
