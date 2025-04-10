@@ -27,7 +27,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_GROSSBLOCKSYLT()",
-    "ObjectDDLHash": "442ad672845a94cc2b3da1daca6e79ff7b3db900d92a076cb245d1a9174cb7b4"
+    "ObjectDDLHash": "9a8e194820d8978ae0d08289dd55066adba9e37eddf903e9c90f07bf7f0b91f1"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -39,13 +39,13 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_NETBLOCKSYLT()",
-    "ObjectDDLHash": "5784fdf6b9082199a1e7d2ee1dfceaaf8e44ea2069b275ef7cb2652e32ecc002"
+    "ObjectDDLHash": "7aa77c0126956cffb8cdb01745c0a0081493fa336a9f3880751e3862cdcfde94"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_SUBJECTBLOCKSYLT()",
-    "ObjectDDLHash": "8b485227982685f51b81cb51394f91a7689c40705eec9192a792108423e72e0b"
+    "ObjectDDLHash": "e5060ccc8165f0f1ecde4f61357e642699f83f3c2086c96ad13a5bbd7e2933df"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -63,7 +63,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CLEARALL()",
-    "ObjectDDLHash": "c48949c3b84525977739da798230694a0f83955d8795bd9678d67da0b0523543"
+    "ObjectDDLHash": "24f22b9aee7fe39b629377431592049df6f8281f8fe9be545c170d6b719f23c5"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -81,7 +81,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "LOADALL()",
-    "ObjectDDLHash": "2f7af5c4c52dff5e90972a1a8e880751e3ee603ca48e96c7bcaec22d85fbce2c"
+    "ObjectDDLHash": "519daf59b3860c1367605a37c0422f720a20137b6e09118b3177356cd3f79792"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -93,7 +93,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "9f3f27c1cc91400745c447201f2610a9887dbc488b5d7b5a8812ad259710c086"
+    "ObjectDDLHash": "ca5b0260ca02367d231ee433772142ee1ed3cafe8c55d3ec18577fb3d702ed44"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -147,7 +147,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CEDEDBLOCK",
-    "ObjectDDLHash": "c25d4710a2fcbe7f67908307bc1806523e71cc9b9eaced410da4c66c596cbd2d"
+    "ObjectDDLHash": "b1de2addfb1f938c0a804372c2573bf2eda37e6989551abacbde24b93d5dcd66"
   },
   {
     "ObjectType": "TABLE",
@@ -164,8 +164,14 @@
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "GROSSBLOCK_SEASONAL_PREMIUM",
+    "ObjectDDLHash": "44cdd3a6ff414a983c2bd556d3d8ad025cdb42df7acebae54e4d63dd2c353e36"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "GROSSBLOCKYLT",
-    "ObjectDDLHash": "07105d5ab3a2773f609b6d986d91d1cc46d39f48f88a7df586c453247b27f8b4"
+    "ObjectDDLHash": "9857c404e5d18a09d7a6bd3e92c9bc913f2c73ccfb192758b635c2ab54af3efe"
   },
   {
     "ObjectType": "TABLE",
@@ -176,20 +182,32 @@
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "NETBLOCK_SEASONAL_PREMIUM",
+    "ObjectDDLHash": "37cac5719aabb275a20d0613afa0bc796f25b0ee6f40622e22aeb53a73b2360a"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "NETBLOCKYLT",
-    "ObjectDDLHash": "7967ab70fea01d0f0d3904f514f9e6de4b6fb1e77c95b54cf7cb5ced2b234037"
+    "ObjectDDLHash": "c822d51ceaaf25eb4bc6d0dfec325ce33dc78e0c39aae292066d991635f791af"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "SUBJECTBLOCK",
-    "ObjectDDLHash": "b31b73766fae0e02151b5b4e93345c2143333a66dc74698dc90518cf3a4e7321"
+    "ObjectDDLHash": "0b94330456f9b87ef9d22187f6ecb5148e9106bbda5ea07d73fcf95ee808a110"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "SUBJECTBLOCK_SEASONAL_PREMIUM",
+    "ObjectDDLHash": "59f9981bba18fe00bc9d04a9c5095d7b97d16b3427f554506a66cdd4d1a58189"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "SUBJECTBLOCKYLT",
-    "ObjectDDLHash": "567f0fd05a74db05bbc7aca814cc69e51475d49843d2fdce7ed81272d323fcf5"
+    "ObjectDDLHash": "82b15d66a8a0bdeced0710f2b510a794b7024a1bec921c38a45b57465c95ea07"
   },
   {
     "ObjectType": "VIEW",
@@ -213,7 +231,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
     "ObjectName": "LOADSNAPSHOT(SNAPSHOTID VARCHAR)",
-    "ObjectDDLHash": "f9e360fcc102f57693bc3619e9725d9a0774149f97df644d39ac94d1a7b60bcd"
+    "ObjectDDLHash": "2b3f468e38f1ac906962dc8e8fcde074fd68d1e8b3424043978542ea564ab335"
   },
   {
     "ObjectType": "TABLE",
@@ -291,7 +309,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_RAW",
     "ObjectName": "PORTFOLIO",
-    "ObjectDDLHash": "20fe9e6068cb530ab7b9694cd65dbb987bce3284e32617d37ac886eca70ef7a2"
+    "ObjectDDLHash": "037aa05d1182df4dce0d6f3103ac4d80b30d05fa17f4d5eab4e3dc3a35517d82"
   },
   {
     "ObjectType": "TABLE",
@@ -345,7 +363,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_RAW",
     "ObjectName": "RETROPROGRAM",
-    "ObjectDDLHash": "4295d924e2caada081353972faca9ed91686334192b3a88ce829ae7d8b5547c7"
+    "ObjectDDLHash": "28b5a11de28f2ff85b6a8918dc11aa0d302351e7ff5e735133ceb717ae06faf6"
   },
   {
     "ObjectType": "TABLE",
@@ -369,7 +387,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_RAW",
     "ObjectName": "SUBMISSION",
-    "ObjectDDLHash": "adc7ef42ce2c79bff23c3cd0be4644a31b392d2c283167f3ffdbccbcbaab805d"
+    "ObjectDDLHash": "e2d6348d0d2024beb7d35171ddec2c40b21cc24ac5f40df81d060199fa611d1f"
   },
   {
     "ObjectType": "TABLE",
@@ -387,7 +405,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "MIGRATE_SCENARIOS()",
-    "ObjectDDLHash": "9bbeec3ea926edf9727b37c9f90b3defcfbdebd95f4917a88c90b78caddbd4c9"
+    "ObjectDDLHash": "11dcfde7a998f0778ee66970f157a12f4756f8d6cbbe74f75be5fd80ca3e4ee2"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -519,7 +537,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_PORTLAYERPERIODS()",
-    "ObjectDDLHash": "08a3c09d074f3c6faec806d05ccbb4572eab13c805a08119845feac8e5cd0948"
+    "ObjectDDLHash": "6afcfc0cefd5e39108791858bc4c7d65d73db6a263b17fd009f87b7682415640"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -573,7 +591,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_YELPT()",
-    "ObjectDDLHash": "3d7ed746454e0ddbb7dfc36d4341000f3c811ba66dbbfdf5579bce1acb630584"
+    "ObjectDDLHash": "9e22569c37e4634a8314936ce16f25ba6a19a7dbf50f1241cf10fd4b70117560"
   },
   {
     "ObjectType": "TABLE",
@@ -651,7 +669,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "SEASONALITY",
-    "ObjectDDLHash": "f1bf9773787e10fa1ca81ce8fa1798fa0c12b06461b688166e220dca6a19ab1b"
+    "ObjectDDLHash": "95e6c1655daabb5374e43d9d5c3c4950ac6d8af8bde3dd97565676955016bca7"
   },
   {
     "ObjectType": "TABLE",
@@ -663,6 +681,6 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "YELPT",
-    "ObjectDDLHash": "b9dd51325b77e3d5848cb92f76ef5e5bfa79bf3cb44c6d106248b4bc1f0d274b"
+    "ObjectDDLHash": "9a072c5d6dcc58ed6becad585c23fd5222af54f98855bdc5f9c4b2af0a7b7a7c"
   }
 ]

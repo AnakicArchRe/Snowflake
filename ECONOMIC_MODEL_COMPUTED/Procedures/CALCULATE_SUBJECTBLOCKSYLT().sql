@@ -64,4 +64,5 @@ BEGIN
             inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid
     ;
 
-end;
+end
+;
