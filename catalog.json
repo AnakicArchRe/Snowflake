@@ -14,12 +14,6 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CALCULATE_BLOCKS(NUMBER)",
-    "ObjectDDLHash": "7b97ea95478159a144681157d30844f06c376710d3907c887c657aa672f45ad6"
-  },
-  {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_GROSSBLOCKSYLT()",
     "ObjectDDLHash": "9a8e194820d8978ae0d08289dd55066adba9e37eddf903e9c90f07bf7f0b91f1"
   },
@@ -69,7 +63,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(NUMBER)",
-    "ObjectDDLHash": "ca5b0260ca02367d231ee433772142ee1ed3cafe8c55d3ec18577fb3d702ed44"
+    "ObjectDDLHash": "92b1884ad551475231050228b1df21ba278c5da2feb3a9a8c02ab6c1196aa8eb"
   },
   {
     "ObjectType": "PROCEDURE",
