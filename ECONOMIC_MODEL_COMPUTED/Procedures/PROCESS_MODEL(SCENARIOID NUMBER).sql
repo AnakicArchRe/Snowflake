@@ -86,25 +86,27 @@ begin
             pls.sharefactor,
             b.placement,
             pls.premiumfactor,
-            // todo: add seasonal premium factor
             per.shareoflayerduration,
             pls.expenses,
+
+            // todo: add side sign
+            s.sidesign,
 
             pls.reinstcount,
 
             // calculated values
-            pls.limit100pct * pls.share * pls.sharefactor * b.placement as exposedLimit,
-            pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement as exposedPremium,
-            pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement as exposedExpenses,
-            pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement * per.shareoflayerduration as proRataPremium,
-            pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement * per.shareoflayerduration * pls.expenses as proRataPremiumExpenses,
+            s.sidesign * pls.limit100pct * pls.share * pls.sharefactor * b.placement as exposedLimit,
+            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement as exposedPremium,
+            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement as exposedExpenses,
+            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement * per.shareoflayerduration as proRataPremium,
+            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement * per.shareoflayerduration * pls.expenses as proRataPremiumExpenses,
 
             // we'll need non placed blocks for calculating cession (cession gross % includes placement)
-            pls.limit100pct * pls.share * pls.sharefactor as nonplaced_exposedLimit,
-            pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor as nonplaced_exposedPremium,
-            pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor as nonplaced_exposedExpenses,
-            pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * per.shareoflayerduration as nonplaced_proRataPremium,
-            pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * per.shareoflayerduration * pls.expenses as nonplaced_proRataPremiumExpenses
+            s.sidesign * pls.limit100pct * pls.share * pls.sharefactor as nonplaced_exposedLimit,
+            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor as nonplaced_exposedPremium,
+            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor as nonplaced_exposedExpenses,
+            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * per.shareoflayerduration as nonplaced_proRataPremium,
+            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * per.shareoflayerduration * pls.expenses as nonplaced_proRataPremiumExpenses
 
             // calculation (might need 4 more columns here: premium+expenses/placed+nonplaced for seasonal calc)
         from 
@@ -142,7 +144,6 @@ begin
     -- 2. let's start generating and saving blocks
 
 -- todo: we need a unique id for ceded blocks composed of retroblock and investorid (check if this ever leads to duplicates... it should not)
-
    
     -- 2.1. Retros with isspecific flag are not scenario-dependent and they don't interact with other retros, so we can calculate their ceded blocks right away.
     -- the cessiongross comes from the retroallocation table, and avilable is always 1 (todo: confirm with PC). 
@@ -151,7 +152,7 @@ begin
     -- Todo: It looks like some retros with IsSpecific=1 have multiple investors for a given layer. Is this expected? Investigate.
      insert into economic_model_computed.cededblock(
             scenarioid, retroblockid, retrocontractinvestorid, cessiongross, exposedlimit, exposedrp, exposedexpenses, premiumprorata, expensesprorata, reinstcount,
-            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation)
+            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign)
         select
             b.scenarioid, 
             b.retroblockid,
@@ -164,7 +165,8 @@ begin
             b.nonplaced_proratapremium * cessiongross as premiumprorata,
             b.nonplaced_proratapremiumexpenses * cessiongross as expensesprorata,
             reinstcount,
-            limit100pct, premium100pct, share, sharefactor, placement, premiumfactor, shareoflayerduration, expenses, 1, 'Specific retros always have Available = 1'
+            limit100pct, premium100pct, share, sharefactor, placement, premiumfactor, shareoflayerduration, expenses, 1, 'Specific retros always have Available = 1',
+            b.sidesign
         from 
             economic_model_computed.baseblockinfo b
             inner join economic_model_scenario.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
@@ -256,6 +258,7 @@ begin
                     b.shareoflayerduration,
                     b.expenses,
                     b.reinstcount,
+                    b.sidesign,
 
                     coalesce(la.available, 1) as availableAtLevel,
                     
@@ -291,7 +294,7 @@ begin
         // todo: expand subjectblock with columns for all factors we used (for auditing results)
         insert into economic_model_computed.subjectblock(
             scenarioid, retroblockid, exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
-            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation)
+            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign)
             select 
                 scenarioid,
                 retroblockid,
@@ -311,7 +314,8 @@ begin
                 shareoflayerduration,
                 expenses,
                 availableatlevel,
-                availableExplanation
+                availableExplanation,
+                sidesign
             from 
                 economic_model_computed.subjectBlockInfo;
 
@@ -414,7 +418,7 @@ begin
             -- Since I'm also using it for available I didn't add the diag_ prefix this is an internal detail so I'm on the fence about it.
             cessiongross, 
             exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
-            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation)
+            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign)
              select
                 b.scenarioid, 
                 retroblockid,
@@ -437,7 +441,8 @@ begin
                 shareoflayerduration,
                 expenses,
                 availableatlevel,
-                availableExplanation
+                availableExplanation,
+                sidesign
             from 
                 economic_model_computed.subjectBlockInfo b
                 inner join economic_model_scenario.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
