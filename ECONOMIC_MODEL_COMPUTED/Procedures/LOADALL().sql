@@ -8,7 +8,7 @@ begin
     call economic_model_computed.stagemodel();
 
     -- resolve scenario data, calculate blocks and contract/investor results
-    call economic_model_computed.process_model();
+    call economic_model_computed.process_model(null);
 
     -- precalculate ylt for blocks, for better powerbi performance
     call economic_model_computed.PreparePowerBIData();
