@@ -21,9 +21,11 @@ BEGIN
     // todo: rename columns to be agnostic about the kind of blocks, e.g. premiumprorata to premium
     insert into economic_model_computed.blockoperations_in(scenarioid, blockid, exposedlimit, exposedrp, premiumprorata, expensesprorata, exposedpremium, exposedexpenses)
         select 
-            scenarioid, portlayerid, exposedlimit, exposedrp, premium, expenses, exposedrp, exposedexpenses
+            b.scenarioid, portlayerid, exposedlimit, exposedrp, premium, expenses, exposedrp, exposedexpenses
         from 
-            economic_model_computed.grossblock;
+            economic_model_computed.grossblock b
+            // filter for active scenarios
+            inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1;
 
     call economic_model_computed.blockoperations_reducetodiff();
 
@@ -48,6 +50,17 @@ BEGIN
             inner join economic_model_staging.yelpt y on per.yeltperiodid = y.yeltperiodid
         group by
             year, peril, lossviewgroup, b.scenarioid, pl.portlayerid
+    ;
+
+    -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.
+    create or replace table economic_model_computed.grossblock_seasonal_premium as
+        select 
+            t.retroblockid, rb.scenarioid, se.lossviewgroup, rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
+        from
+            economic_model_computed.blockoperations_out rb
+            inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
+            inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
+            inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid
     ;
        
 end

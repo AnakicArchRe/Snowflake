@@ -8,9 +8,11 @@ BEGIN
     
     insert into economic_model_computed.blockoperations_in(scenarioid, blockid, exposedlimit, exposedrp, premiumprorata, expensesprorata, exposedpremium, exposedexpenses)
         select 
-            scenarioid, retroblockid, exposedlimit, exposedrp, premiumprorata, expensesprorata, exposedrp, exposedexpenses
+            b.scenarioid, retroblockid, exposedlimit, exposedrp, premiumprorata, expensesprorata, exposedrp, exposedexpenses
         from 
-            economic_model_computed.subjectblock;
+            economic_model_computed.subjectblock b
+            // filter for active scenarios
+            inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1;
 
     call economic_model_computed.blockoperations_reducetodiff();
 
@@ -34,8 +36,6 @@ BEGIN
                 y.maxlossscalefactor / scalefactor as maxlossscalefactor
             from 
                 economic_model_computed.blockoperations_out rb
-                // filter for active scenarios
-                inner join economic_model_scenario.scenario s on rb.scenarioid = s.scenarioid and s.isactive = 1
                 inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
                 inner join economic_model_staging.retroconfiguration rcf on t.retroconfigurationid = rcf.retroconfigurationid
                 inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
@@ -56,11 +56,9 @@ BEGIN
     
     create or replace table economic_model_computed.subjectblock_seasonal_premium as
         select 
-            t.retroblockid, s.scenarioid, se.lossviewgroup, rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
+            t.retroblockid, rb.scenarioid, se.lossviewgroup, rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
         from
             economic_model_computed.blockoperations_out rb
-            // filter for active scenarios
-            inner join economic_model_scenario.scenario s on rb.scenarioid = s.scenarioid and s.isactive = 1
             inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
             inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
             inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid

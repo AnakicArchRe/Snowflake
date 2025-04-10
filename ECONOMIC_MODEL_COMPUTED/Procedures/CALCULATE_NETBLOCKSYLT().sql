@@ -11,9 +11,11 @@ BEGIN
     insert into economic_model_computed.blockoperations_in(scenarioid, blockid, exposedlimit, exposedrp, premiumprorata, expensesprorata)
         select 
             // todo: should this be using cedeblockid (composed of retroblock+investorid) instead of retroblockid?
-            scenarioid, retroblockid, exposedlimit, exposedrp, premiumprorata, expensesprorata
+            b.scenarioid, retroblockid, exposedlimit, exposedrp, premiumprorata, expensesprorata
         from 
-            economic_model_computed.cededblock
+            economic_model_computed.cededblock b
+            // filter for active scenarios
+            inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1
         where 
             retrocontractinvestorid = 'NET_POSITION_INVESTOR'
     ;
@@ -51,6 +53,17 @@ BEGIN
         --     rcs.includeinanalysis = true and
         group by
             year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, per.periodstart, per.periodend
+    ;
+
+    -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.
+    create or replace table economic_model_computed.netblock_seasonal_premium as
+        select 
+            t.retroblockid, rb.scenarioid, se.lossviewgroup, rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
+        from
+            economic_model_computed.blockoperations_out rb
+            inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
+            inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
+            inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid
     ;
 
 end
