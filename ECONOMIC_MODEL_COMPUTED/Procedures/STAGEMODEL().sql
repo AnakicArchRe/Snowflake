@@ -11,7 +11,7 @@ begin
     call economic_model_raw.load_raw_data();
 
     -- prepare scenario-independent data (portlayercessions, portlayerperiods, yelpt, etc.)
-    call economic_model_staging.calculate_model();
+    call economic_model_staging.populate_staging_data();
 
 end
 ;

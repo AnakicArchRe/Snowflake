@@ -75,7 +75,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "STAGEMODEL()",
-    "ObjectDDLHash": "5b24ab53388fb4d9acc27ccc2a54ce2e1a34e00e5bea9a82f3745e82b3f55139"
+    "ObjectDDLHash": "36211076ad02ba772522899ac775638b3750eb72833dbb47a191f4ab236d3d9b"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -476,12 +476,6 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
-    "ObjectName": "CALCULATE_MODEL()",
-    "ObjectDDLHash": "c8af67b7cae8ae3e9f49d8b47c0817d150abbc3e3e0933898e4185f527963b83"
-  },
-  {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "INSERT_NETPOSITION_CATCHALL()",
     "ObjectDDLHash": "2e7ee20ec34b4798b43cf7a83be9ef13b69793d941e8ed8e884f04066421a62b"
   },
@@ -550,6 +544,12 @@
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_RETROTAGS()",
     "ObjectDDLHash": "f98b819c691b6548fb736c8feb15ee99f5fe872b419fbcd4c9671524cbb66f95"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_STAGING",
+    "ObjectName": "populate_staging_data()",
+    "ObjectDDLHash": "fe53623497183508fd293e9ba8fffdf65e3e84722705b490a1fc187ff21d4413"
   },
   {
     "ObjectType": "PROCEDURE",
