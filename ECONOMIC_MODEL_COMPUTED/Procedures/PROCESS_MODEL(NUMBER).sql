@@ -88,8 +88,6 @@ begin
             pls.premiumfactor,
             per.shareoflayerduration,
             pls.expenses,
-
-            // todo: add side sign
             s.sidesign,
 
             pls.reinstcount,
