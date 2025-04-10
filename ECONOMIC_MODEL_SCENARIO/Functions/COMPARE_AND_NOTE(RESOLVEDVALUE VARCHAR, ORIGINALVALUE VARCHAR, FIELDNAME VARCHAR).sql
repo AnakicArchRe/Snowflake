@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION ECONOMIC_MODEL_SCENARIO.COMPARE_AND_NOTE(RESOLVEDVALUE VARCHAR, ORIGINALVALUE VARCHAR, FIELDNAME VARCHAR)
+RETURNS VARCHAR(16777216)
+AS
+$$
+
+    CASE 
+        WHEN resolvedValue is distinct from originalValue THEN concat(fieldName, ' (was ', originalValue, ')')
+        ELSE NULL
+    END
+
+$$;

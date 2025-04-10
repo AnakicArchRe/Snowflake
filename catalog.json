@@ -366,6 +366,12 @@
     "ObjectDDLHash": "2b52d1a4a8b368acfacbed1e9d4b2ebb28b7db32f9919c437fc5c25337afd85b"
   },
   {
+    "ObjectType": "FUNCTION",
+    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
+    "ObjectName": "COMPARE_AND_NOTE(RESOLVEDVALUE VARCHAR, ORIGINALVALUE VARCHAR, FIELDNAME VARCHAR)",
+    "ObjectDDLHash": "b3e75df97bc74da944c0f32910baef654b10d4b56e4a66cfc91bf730ac83a771"
+  },
+  {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "MIGRATE_SCENARIOS()",
