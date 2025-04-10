@@ -1,0 +1,5 @@
+create or replace TABLE SEASONALITY (
+	YELTPERIODID VARCHAR(16777216),
+	LOSSVIEWGROUP VARCHAR(16777216),
+	ShareOfYearlyLayerLosses float
+);
