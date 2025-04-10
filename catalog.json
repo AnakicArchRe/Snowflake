@@ -14,26 +14,14 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CALCULATE_BLOCKS(SCENARIOID NUMBER)",
+    "ObjectName": "CALCULATE_BLOCKS(NUMBER)",
     "ObjectDDLHash": "7b97ea95478159a144681157d30844f06c376710d3907c887c657aa672f45ad6"
-  },
-  {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CALCULATE_CAPITAL(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "84d2b4d7d8b93fb4ca536c8900553eaeb43d339df9950af36e8a62e5798a9b39"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_GROSSBLOCKSYLT()",
     "ObjectDDLHash": "9a8e194820d8978ae0d08289dd55066adba9e37eddf903e9c90f07bf7f0b91f1"
-  },
-  {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CALCULATE_INVESTOR_RESULTS(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "7c25b1348b8cb65882a3d013cd86822bc1f5f61a0a445671ba6f214040345ca4"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -50,13 +38,7 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CALCULATECONTRACTMETRICS()",
-    "ObjectDDLHash": "34190eb62b9b4e803f812f10b0331566163c85da63d07d416d12603b4e85b651"
-  },
-  {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CALCULATECONTRACTMETRICS(FXDATE DATE)",
+    "ObjectName": "CALCULATECONTRACTMETRICS(DATE)",
     "ObjectDDLHash": "7d233dc27aecacb00bdbc112b8887c50918b27615940bcf8cccb0a38a11267ad"
   },
   {
@@ -68,14 +50,8 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CLEARSCENARIODATAFROMTABLE(TABLENAME VARCHAR, SCENARIOID NUMBER)",
+    "ObjectName": "CLEARSCENARIODATAFROMTABLE(VARCHAR, NUMBER)",
     "ObjectDDLHash": "9fb2a335ea777c0a0b8fa37624a3f7e54416a39d9d371450cf6c8819608cba31"
-  },
-  {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CLEARSCENARIODATAFROMTABLE(TABLENAME VARCHAR)",
-    "ObjectDDLHash": "261257aff069a5b299cadf8e6b3df2a32823ad6822750165e241ef7245ea88d0"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -92,14 +68,8 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "PROCESS_MODEL(SCENARIOID NUMBER)",
+    "ObjectName": "PROCESS_MODEL(NUMBER)",
     "ObjectDDLHash": "ca5b0260ca02367d231ee433772142ee1ed3cafe8c55d3ec18577fb3d702ed44"
-  },
-  {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "PROCESS_SCENARIO(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "9dcbf1313957940496e95d5fc3b2e7b7e92c7914a67f6651f8fc38f86c34ab57"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -218,19 +188,19 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
-    "ObjectName": "CREATESNAPSHOT(SNAPSHOTID VARCHAR, DESCRIPTION VARCHAR, CREATEDBY VARCHAR, OVERWRITE BOOLEAN)",
+    "ObjectName": "CREATESNAPSHOT(VARCHAR, VARCHAR, VARCHAR, BOOLEAN)",
     "ObjectDDLHash": "ac7eb4b63785a467dafe716f0cecc6c5fd0f2908f45ffc99a2d72c97abdfcf63"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
-    "ObjectName": "DELETESNAPSHOT(SNAPSHOTID VARCHAR)",
+    "ObjectName": "DELETESNAPSHOT(VARCHAR)",
     "ObjectDDLHash": "35d55c7d9b5b3ee0f9e1486115ca07174cc2b943b660bbf0bd60de0469f7b3f3"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
-    "ObjectName": "LOADSNAPSHOT(SNAPSHOTID VARCHAR)",
+    "ObjectName": "LOADSNAPSHOT(VARCHAR)",
     "ObjectDDLHash": "2b3f468e38f1ac906962dc8e8fcde074fd68d1e8b3424043978542ea564ab335"
   },
   {
@@ -518,7 +488,7 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
-    "ObjectName": "POPULATE_FX(SCENARIOID NUMBER)",
+    "ObjectName": "POPULATE_FX(NUMBER)",
     "ObjectDDLHash": "72a8df61565e421690debd133a80767ccfe6d14c110fd17a91564e64c998f2c3"
   },
   {
