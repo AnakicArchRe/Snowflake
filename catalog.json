@@ -3,115 +3,115 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "BLOCKOPERATIONS_EXPANDFROMDIFF()",
-    "ObjectDDLHash": "65602cd202ffa0e4c1252b864cfb16c817ca2b702b25d80f36d621bf9cf66d93"
+    "ObjectDDLHash": "a5f3fc94ae9c4dc99f36d636cb9e9d98fa7382faea2e1b313b9c4006bfe0dba0"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "BLOCKOPERATIONS_REDUCETODIFF()",
-    "ObjectDDLHash": "c2b0028d7a57f95534d268515c0f46f3ab29d62e5ff30af5c3d61475f691e1c9"
+    "ObjectDDLHash": "a0c25c0aea4bf1ded081eeefd4c059b0a608dc875ab9d0d90c6043628e7416db"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_BLOCKS(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "5f486cb8a61bb6f2bbeef65829ea7a219497be913ea57852217605258bb6213a"
+    "ObjectDDLHash": "7b97ea95478159a144681157d30844f06c376710d3907c887c657aa672f45ad6"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_CAPITAL(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "78f82dd89f1f215227f573732d9ca1ff4ac7a4c49b2404a31858e2d86ffdc1b5"
+    "ObjectDDLHash": "84d2b4d7d8b93fb4ca536c8900553eaeb43d339df9950af36e8a62e5798a9b39"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_GROSSBLOCKSYLT()",
-    "ObjectDDLHash": "c852a6b9d829f49f4b2489452affb08d5b6102fedfc704f9a807ad43eed6e0d1"
+    "ObjectDDLHash": "442ad672845a94cc2b3da1daca6e79ff7b3db900d92a076cb245d1a9174cb7b4"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_INVESTOR_RESULTS(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "444e6e924dca82fdfca746133609549c8ac96602eba6fcd0711155372bea593f"
+    "ObjectDDLHash": "7c25b1348b8cb65882a3d013cd86822bc1f5f61a0a445671ba6f214040345ca4"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_NETBLOCKSYLT()",
-    "ObjectDDLHash": "2660a053f95ab319b7c93d1fa409b2fde7122553052f22ef009ddf3c96590d17"
+    "ObjectDDLHash": "5784fdf6b9082199a1e7d2ee1dfceaaf8e44ea2069b275ef7cb2652e32ecc002"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_SUBJECTBLOCKSYLT()",
-    "ObjectDDLHash": "27fa577382498e0a2301168c8ec640acb0932ec48ea7fe7e90357318583d9c89"
+    "ObjectDDLHash": "8b485227982685f51b81cb51394f91a7689c40705eec9192a792108423e72e0b"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATECONTRACTMETRICS()",
-    "ObjectDDLHash": "61f20e7ef3a8425b1f2122717955f4ef9f993cffb8fd9af54a4604aeb1152eed"
+    "ObjectDDLHash": "34190eb62b9b4e803f812f10b0331566163c85da63d07d416d12603b4e85b651"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATECONTRACTMETRICS(FXDATE DATE)",
-    "ObjectDDLHash": "6489cd1fd0985de38b22c84f546f24100d36507c4c57982431cbd767c4b6c296"
+    "ObjectDDLHash": "7d233dc27aecacb00bdbc112b8887c50918b27615940bcf8cccb0a38a11267ad"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CLEARALL()",
-    "ObjectDDLHash": "7e7538b47342e49142422fd4d5cf5762710555cdcfdbbd42ca5bc859aaf4d28d"
+    "ObjectDDLHash": "c48949c3b84525977739da798230694a0f83955d8795bd9678d67da0b0523543"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CLEARSCENARIODATAFROMTABLE(TABLENAME VARCHAR, SCENARIOID NUMBER)",
-    "ObjectDDLHash": "7de49be52e289563fb774a0422d887a4032e8dfec8a2fffb43401289aff1c071"
+    "ObjectDDLHash": "9fb2a335ea777c0a0b8fa37624a3f7e54416a39d9d371450cf6c8819608cba31"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CLEARSCENARIODATAFROMTABLE(TABLENAME VARCHAR)",
-    "ObjectDDLHash": "f6e1138dcbe5a68a0fc409b24f86e32d5fcf1b40048dcc270b45ac313d68d609"
+    "ObjectDDLHash": "261257aff069a5b299cadf8e6b3df2a32823ad6822750165e241ef7245ea88d0"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "LOADALL()",
-    "ObjectDDLHash": "d8096d71fa92fd8249800b2d9d9673b107af224f0d849a91db08c32376e4cfd1"
+    "ObjectDDLHash": "2f7af5c4c52dff5e90972a1a8e880751e3ee603ca48e96c7bcaec22d85fbce2c"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PREPAREPOWERBIDATA()",
-    "ObjectDDLHash": "9e37bffb2bc3dc22f964c6281b24db24955683e4ca385017e2fd8b48532bec21"
+    "ObjectDDLHash": "2f9422cbcde79648b389f41e7f57366e5b06764b86376f403dc4fd997c92f447"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "8e76845b4402362f66bc11b33e64fb6dc568716bb660707f61aa99c15147b570"
+    "ObjectDDLHash": "9f3f27c1cc91400745c447201f2610a9887dbc488b5d7b5a8812ad259710c086"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_SCENARIO(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "81545f57806887a9555edb6eddff5b2fc9f18441899f9d97f4b1b09ae83bf95f"
+    "ObjectDDLHash": "9dcbf1313957940496e95d5fc3b2e7b7e92c7914a67f6651f8fc38f86c34ab57"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "STAGEMODEL()",
-    "ObjectDDLHash": "f300f29691cc5b46d82d01218025580840742c2399aaf5e716c2b08e3102b633"
+    "ObjectDDLHash": "5b24ab53388fb4d9acc27ccc2a54ce2e1a34e00e5bea9a82f3745e82b3f55139"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "VALIDATE_SCENARIOS()",
-    "ObjectDDLHash": "462875db0a17cee1e58db5a3d3a6494d385030aed94645129ee1bc2b2d989420"
+    "ObjectDDLHash": "6f46b08dab653f491fa0b11a55c9b83d9394af1d16f0cb4fa4a94d78f4fcc413"
   },
   {
     "ObjectType": "TABLE",
@@ -199,9 +199,39 @@
   },
   {
     "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
+    "ObjectName": "CREATESNAPSHOT(SNAPSHOTID VARCHAR, DESCRIPTION VARCHAR, CREATEDBY VARCHAR, OVERWRITE BOOLEAN)",
+    "ObjectDDLHash": "ac7eb4b63785a467dafe716f0cecc6c5fd0f2908f45ffc99a2d72c97abdfcf63"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
+    "ObjectName": "DELETESNAPSHOT(SNAPSHOTID VARCHAR)",
+    "ObjectDDLHash": "35d55c7d9b5b3ee0f9e1486115ca07174cc2b943b660bbf0bd60de0469f7b3f3"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
+    "ObjectName": "LOADSNAPSHOT(SNAPSHOTID VARCHAR)",
+    "ObjectDDLHash": "f9e360fcc102f57693bc3619e9725d9a0774149f97df644d39ac94d1a7b60bcd"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
+    "ObjectName": "SNAPSHOTINFO",
+    "ObjectDDLHash": "f5c35539e18c810b49e55958e4783808df72085057a619b98756a1f1b1b66ec1"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
+    "ObjectName": "TABLESNAPSHOTINFO",
+    "ObjectDDLHash": "6473ad6b6d21c5852f84627bf076547791fb3ef14d9a219853bfc7169a7625a0"
+  },
+  {
+    "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_RAW",
     "ObjectName": "LOAD_RAW_DATA()",
-    "ObjectDDLHash": "256c40d0147b908378e918c2742bba8ea26b0d03c5d57c82fb6bacd606d7e9b4"
+    "ObjectDDLHash": "0a7880bec9ab83f6e2913c610ee924d2c8f0597c75447d905da10345e35f6549"
   },
   {
     "ObjectType": "TABLE",
@@ -357,19 +387,19 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "MIGRATE_SCENARIOS()",
-    "ObjectDDLHash": "075d9b80eb1af7c52266963d82914cf7c8d005ca4d410feb47fe6a62d6414679"
+    "ObjectDDLHash": "9bbeec3ea926edf9727b37c9f90b3defcfbdebd95f4917a88c90b78caddbd4c9"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "RESOLVE_SCENARIO_DATA_2()",
-    "ObjectDDLHash": "d2db4bba0f23cd4dda7309db07dc5a8ad6d37006de9990d93dfad33e256aa118"
+    "ObjectDDLHash": "70857f10578fb0c546fadad713c72280f36249fd4e30115b5bbfb5aa1f117a9c"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "RESOLVE_SCENARIO_DATA()",
-    "ObjectDDLHash": "7fd021f6614161fbc9e9cf8897808b6a9b78ab1d94b027651c0d76eaf8878cd8"
+    "ObjectDDLHash": "cd46aa00f8782a6d9bea8045f7eb7bd5b2ae0a7d05293951583da7b679470d4f"
   },
   {
     "ObjectType": "TABLE",
@@ -459,91 +489,91 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "CALCULATE_MODEL()",
-    "ObjectDDLHash": "84249ccb81fbe9f31b6bd7e85965326d57da4110ad395b39cd13c7c4102f7428"
+    "ObjectDDLHash": "c8af67b7cae8ae3e9f49d8b47c0817d150abbc3e3e0933898e4185f527963b83"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "INSERT_NETPOSITION_CATCHALL()",
-    "ObjectDDLHash": "5ca4baa94ee742381363af9d8b5f53526e715ccd909f363078280ff83e8a11dd"
+    "ObjectDDLHash": "2e7ee20ec34b4798b43cf7a83be9ef13b69793d941e8ed8e884f04066421a62b"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_FX(SCENARIOID NUMBER)",
-    "ObjectDDLHash": "39b3396c7b9b591d78762e5c7873392dbd50be725fb0aeabcbdf95316ba04313"
+    "ObjectDDLHash": "72a8df61565e421690debd133a80767ccfe6d14c110fd17a91564e64c998f2c3"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_PORTFOLIOS()",
-    "ObjectDDLHash": "af988258a2698c1ba3fe3c0246da03698c2c01fcc473bea164b2be34195025c1"
+    "ObjectDDLHash": "37013e1956db2412f704c244ad11d81f8e955138d05b9e97b80899b2301f6b55"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_PORTLAYERCESSIONS()",
-    "ObjectDDLHash": "200d395cb0f721900f214aad265bde8e838ea0f01174052b36031b3b43a5e9d1"
+    "ObjectDDLHash": "84df355740d32675052c466c1f99e101681ece576b4c28a90feba5424ea4e8f9"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_PORTLAYERPERIODS()",
-    "ObjectDDLHash": "cc5a5001aaee86c5e5d9da5b3273cd70f9c8ee6caf54c972ed564a2973df9f96"
+    "ObjectDDLHash": "08a3c09d074f3c6faec806d05ccbb4572eab13c805a08119845feac8e5cd0948"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_PORTLAYERS()",
-    "ObjectDDLHash": "ee5834bb1f663f6aec441b50e0ed2ec8785c9bb645e72c6737e296455d5c0a25"
+    "ObjectDDLHash": "73eb52c53c7fd260dee1019159e182308415cbd3d2d2881dbaa39cd990314346"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_PROGRAMS()",
-    "ObjectDDLHash": "ff89c63c780a3d0a8a138d2a12178aa0eab7c9afd598506b7b6b009d576552ac"
+    "ObjectDDLHash": "c11df60f8b370d2578cdaeeed645489fe9224b1553a92bbe66129eaba90c4fd3"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_RETROCONFIGURATIONS()",
-    "ObjectDDLHash": "39b0922f2f3e1be4c606c1d6497067d8557631938931a83fcbab0f9087860ce8"
+    "ObjectDDLHash": "d2538999a24a1d32bb707845f5a081af0bf51958022876c5e7c23188453932af"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_RETROCONTRACTS()",
-    "ObjectDDLHash": "8a7bbf61ea6ddb8d854097a9dca6b51a6a313814b1b00afc4b8c8cdf7c6668ec"
+    "ObjectDDLHash": "2707c73199c1ec1aa0ab330cff0830a9915f3e5b441477ddc3703efbc1386eef"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_RETROINVESTOR_DATA()",
-    "ObjectDDLHash": "58ed989ea4ebe900a26220b924c096912801f4f2d41af31ea19c470357879c0d"
+    "ObjectDDLHash": "ab82c3c2926600b10f9d9b24c3988d2cbf151f93c54b52eafdc35606f4326adb"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_RETROPROGRAMS()",
-    "ObjectDDLHash": "c1f57496b73ca7951d9decfcd3e4af0033b40e2513658945f3d8f58349ef4aaa"
+    "ObjectDDLHash": "7949d3f7ccd5e325a88d9183a0d7e3b6887464cc6106ad02777dc0dafc2e86c9"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_RETROTAGS()",
-    "ObjectDDLHash": "bd5a29d6a9c65728d8bcf3c77f17cad94979dea3188109fcfdb5bd6877be5610"
+    "ObjectDDLHash": "f98b819c691b6548fb736c8feb15ee99f5fe872b419fbcd4c9671524cbb66f95"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_SUBMISSIONS()",
-    "ObjectDDLHash": "ec1a3608f9b9a28b1058f323bddc7c368f3d72a1f3010a9626bfdb45167346e9"
+    "ObjectDDLHash": "d88fd1efdf31fadeb42f711f209eb2f4489589c6ad6c73fcafba81255333db16"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_YELPT()",
-    "ObjectDDLHash": "73700c5fba072c72885d3334e3e897de8feb837ce043349be1c16449340175ed"
+    "ObjectDDLHash": "3d7ed746454e0ddbb7dfc36d4341000f3c811ba66dbbfdf5579bce1acb630584"
   },
   {
     "ObjectType": "TABLE",
@@ -616,6 +646,12 @@
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "RETROTAG",
     "ObjectDDLHash": "fa0ad4844d75a763eb04f9ef2634ac744fa5417e891382b7e75c4c48bb29bfa6"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_STAGING",
+    "ObjectName": "SEASONALITY",
+    "ObjectDDLHash": "f1bf9773787e10fa1ca81ce8fa1798fa0c12b06461b688166e220dca6a19ab1b"
   },
   {
     "ObjectType": "TABLE",
