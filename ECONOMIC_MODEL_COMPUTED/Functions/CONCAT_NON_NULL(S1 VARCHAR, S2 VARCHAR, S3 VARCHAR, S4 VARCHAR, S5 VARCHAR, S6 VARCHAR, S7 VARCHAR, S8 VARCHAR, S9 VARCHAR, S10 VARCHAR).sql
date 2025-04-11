@@ -1,12 +1,8 @@
-CREATE OR REPLACE FUNCTION economic_model_computed.concat_non_null(
-    -- delimiter string,// commenting out delimiter, I want to control this centrally, all places should use the same delimiter
-    s1 STRING, s2 STRING default null, s3 STRING default null, s4 STRING default null, s5 STRING default null,
-    s6 STRING default null, s7 STRING default null, s8 STRING default null, s9 STRING default null, s10 STRING default null
-)
-RETURNS STRING
-LANGUAGE SQL
+CREATE OR REPLACE FUNCTION ECONOMIC_MODEL_COMPUTED.CONCAT_NON_NULL(S1 VARCHAR, S2 VARCHAR, S3 VARCHAR, S4 VARCHAR, S5 VARCHAR, S6 VARCHAR, S7 VARCHAR, S8 VARCHAR, S9 VARCHAR, S10 VARCHAR)
+RETURNS VARCHAR(16777216)
 AS
 $$
+
   ARRAY_TO_STRING(
     ARRAY_CONSTRUCT_COMPACT(
       case when s1 = '' then null else s1 end, 
@@ -21,5 +17,5 @@ $$
       case when s10 = '' then null else s10 end),
     ', '
   )
-$$;
 
+$$;

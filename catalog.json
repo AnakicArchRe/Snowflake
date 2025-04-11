@@ -1,5 +1,17 @@
 [
   {
+    "ObjectType": "FUNCTION",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "CONCAT_NON_NULL(S1 VARCHAR, S2 VARCHAR, S3 VARCHAR, S4 VARCHAR, S5 VARCHAR, S6 VARCHAR, S7 VARCHAR, S8 VARCHAR, S9 VARCHAR, S10 VARCHAR)",
+    "ObjectDDLHash": "14a11f36dda22dca6542812835a4b32e6896ed2d7b3dc1ebdb1c157e882ab5b3"
+  },
+  {
+    "ObjectType": "FUNCTION",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "FORMAT_PERCENT(N NUMBER, MAX_DECIMALS NUMBER)",
+    "ObjectDDLHash": "ddcf61949bd21e9aa111c7a360f97da86bf9daa2b9a41f28c38b7a49745f69ae"
+  },
+  {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "BLOCKOPERATIONS_EXPANDFROMDIFF()",
@@ -63,7 +75,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(NUMBER)",
-    "ObjectDDLHash": "1d882e39020f8045204a5e4539882b341dbc6fd23eb29c6769b772eb2343e9f2"
+    "ObjectDDLHash": "b4db4060304e4640fa64c12e7a0c3e9357bd730268b22c9a1e92c79aa847f383"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -111,7 +123,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CEDEDBLOCK",
-    "ObjectDDLHash": "b1de2addfb1f938c0a804372c2573bf2eda37e6989551abacbde24b93d5dcd66"
+    "ObjectDDLHash": "2085f7c8b32e12ab398e8693364602f2fc3b7ac156d76edf545d5e3f31d5a318"
   },
   {
     "ObjectType": "TABLE",
@@ -368,8 +380,8 @@
   {
     "ObjectType": "FUNCTION",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "COMPARE_AND_NOTE(RESOLVEDVALUE VARCHAR, ORIGINALVALUE VARCHAR, FIELDNAME VARCHAR)",
-    "ObjectDDLHash": "b3e75df97bc74da944c0f32910baef654b10d4b56e4a66cfc91bf730ac83a771"
+    "ObjectName": "COMPARE_AND_NOTE(RESOLVEDVALUE VARIANT, ORIGINALVALUE VARIANT, FIELDNAME VARCHAR)",
+    "ObjectDDLHash": "08bc9a346dcc4cf76ad1c007b737ccc5f89eebb69b10ef21e8cc1d29c943ed23"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -387,7 +399,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "RESOLVE_SCENARIO_DATA()",
-    "ObjectDDLHash": "b27321d58c835d9ab82bf72fc9b7b135aaf15d962014b67c69336e5e4bef2030"
+    "ObjectDDLHash": "bb2d7c13729bf90fc1641855a92b2dac743569f8022844d3a303204069fceb7f"
   },
   {
     "ObjectType": "TABLE",
@@ -423,7 +435,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "RETROCONTRACT_SCENARIO",
-    "ObjectDDLHash": "78ebaf14c31f37da919576b12789faedfe5b1fb6b201a88002c8aee2f04296a2"
+    "ObjectDDLHash": "0a2de234ac669df7a61b31c212e48b802869813d5e307ed120f600578d964aff"
   },
   {
     "ObjectType": "TABLE",
