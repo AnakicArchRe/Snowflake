@@ -34,7 +34,7 @@ begin
     truncate economic_model_computed.calculationcontract;
     insert into economic_model_computed.calculationcontract
         with targetCollateralUsed as (
-            select retrocontractid, scenarioid, coalesce(max_by(targetcollateraloverride, startdate), max_by(targetcollateralrevo, startdate)) collateral from economic_model_scenario.retroconfiguration_scenario rc 
+            select retrocontractid, scenarioid, coalesce(max_by(targetcollateraloverride, startdate), max_by(targetcollateralrevo, startdate)) collateral from economic_model_computed.retroconfiguration_scenario rc 
             group by retrocontractid, scenarioid
         )
         select 
@@ -57,7 +57,7 @@ begin
             case when retroprogramtype = 2 then 'RAD' else 'LOD' end
         from 
             economic_model_computed.ScenarioFiltered sc
-            inner join economic_model_scenario.retrocontract_scenario r on r.scenarioid = sc.scenarioid
+            inner join economic_model_computed.retrocontract_scenario r on r.scenarioid = sc.scenarioid
             inner join targetCollateralUsed tc on tc.scenarioid = r.scenarioid and tc.retrocontractid = r.retrocontractid
         where 
             r.scenarioid is not null
@@ -112,10 +112,10 @@ begin
             // cross join so we get blocks with "IsSpecific" for all scenarios (filtered)
             cross join economic_model_computed.scenariofiltered sf
             inner join economic_model_staging.portlayerperiod per on b.periodid = per.periodid
-            inner join economic_model_scenario.portLayer_scenario pls on per.portlayerid = pls.portlayerid and pls.scenarioid = sf.scenarioid
+            inner join economic_model_computed.portLayer_scenario pls on per.portlayerid = pls.portlayerid and pls.scenarioid = sf.scenarioid
             inner join economic_model_staging.submission s on s.submissionid = pls.submissionid
             inner join economic_model_staging.retroconfiguration rc on b.retroconfigurationid = rc.retroconfigurationid
-            inner join economic_model_scenario.retrocontract_scenario rps on rps.scenarioid = sf.scenarioid and rps.retrocontractid = rc.retrocontractid
+            inner join economic_model_computed.retrocontract_scenario rps on rps.scenarioid = sf.scenarioid and rps.retrocontractid = rc.retrocontractid
         where 
             rps.isactive = 1;
 
@@ -127,7 +127,7 @@ begin
             from 
                 economic_model_staging.retroconfiguration rc
                 cross join economic_model_computed.scenariofiltered sf
-                inner join economic_model_scenario.retroinvestmentleg_scenario rls on rls.retroconfigurationid = rc.retroconfigurationid and rls.scenarioid = sf.scenarioid
+                inner join economic_model_computed.retroinvestmentleg_scenario rls on rls.retroconfigurationid = rc.retroconfigurationid and rls.scenarioid = sf.scenarioid
             group by 
                 rls.scenarioid, rc.retrocontractid, rc.retroconfigurationid, rc.startdate
         )
@@ -166,7 +166,7 @@ begin
             economic_model_computed.concat_non_null('Fixed gross/net for specific retro', b.notes)
         from 
             economic_model_computed.baseblockinfo b
-            inner join economic_model_scenario.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
+            inner join economic_model_computed.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
             inner join economic_model_staging.retroallocation ra on ra.layerid = b.layerid and ra.retrocontractinvestorid = rci.retrocontractinvestorid
         where
             b.isspecific = 1;
@@ -212,7 +212,7 @@ begin
                         inner join economic_model_staging.retrotag t on t.periodid = sbi.periodid
                         -- ensure that the level of those retrotags is less than the current one
                         inner join economic_model_staging.retroconfiguration rc on rc.retroconfigurationid = t.retroconfigurationid
-                        inner join economic_model_scenario.retrocontract_scenario r on r.retrocontractid = rc.retrocontractid and r.scenarioid = sbi.scenarioid and r.level < sbi.level
+                        inner join economic_model_computed.retrocontract_scenario r on r.retrocontractid = rc.retrocontractid and r.scenarioid = sbi.scenarioid and r.level < sbi.level
                             -- optionally we can ensure that the start date is <= to the inception of the subject block's retro
                             -- note: currently commenting this out as it's not yet decided if this will be the desired behavior
                             -- and r.inception <= sbi.inception
@@ -373,7 +373,7 @@ begin
         -- 2.2.4. update the _scenario tables so we can use them to read the investor % in each block 
         -- note: we'll update the _override tables after the loop for perf reasons
         MERGE INTO
-            economic_model_scenario.retrocontract_scenario r_s 
+            economic_model_computed.retrocontract_scenario r_s 
         USING 
             (select * from economic_model_computed.calculationcontractmetrics where usableForAutomaticInvestmentShareCalc = true) AS m ON 
                 m.calculationcontractid = r_s.retrocontractid 
@@ -403,7 +403,7 @@ begin
                 from 
                     economic_model_computed.calculationcontractmetrics m
                     inner join retrocontractlatestconfigid lc on m.calculationcontractid = lc.retrocontractid
-                    inner join economic_model_scenario.retroinvestmentleg_scenario rci on rci.retroconfigurationid = lc.latestRetroConfigurationId and rci.scenarioid = m.scenarioid
+                    inner join economic_model_computed.retroinvestmentleg_scenario rci on rci.retroconfigurationid = lc.latestRetroConfigurationId and rci.scenarioid = m.scenarioid
                 where 
                     investmentsignedamt > 0
                     and m.usableForAutomaticInvestmentShareCalc = true
@@ -413,7 +413,7 @@ begin
         -- run the query (in the using block) and see if it makes changes to retros with IsSpecific and if they are ok.
 
         MERGE INTO
-            economic_model_scenario.retroinvestmentleg_scenario rci_s
+            economic_model_computed.retroinvestmentleg_scenario rci_s
         using
             economic_model_computed.retroinvestor_calculatedinvpctdata as invShareOvrd on invShareOvrd.retroinvestmentlegid = rci_s.retroinvestmentlegid and invShareOvrd.scenarioid = rci_s.scenarioid
         WHEN MATCHED THEN 
@@ -462,7 +462,7 @@ begin
                 ) as notes
             from 
                 economic_model_computed.subjectBlockInfo b
-                inner join economic_model_scenario.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
+                inner join economic_model_computed.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
             where
                 CessionGross > 0
         ;
@@ -479,7 +479,7 @@ begin
     set 
         r_o.targetcollateralcalculated = r_s.targetcollateralcalculated
     from 
-        economic_model_scenario.retrocontract_scenario r_s
+        economic_model_computed.retrocontract_scenario r_s
     where 
         r_s.retrocontractid = r_o.retrocontractid 
         and r_s.scenarioid = r_o.scenarioid 
@@ -492,7 +492,7 @@ begin
     set 
         rci_o.investmentcalculatedpct = rci_s.investmentcalculatedpct
     from 
-        economic_model_scenario.retroinvestmentleg_scenario rci_s
+        economic_model_computed.retroinvestmentleg_scenario rci_s
     where 
         rci_s.retroinvestmentlegid = rci_o.retroinvestmentlegid 
         and rci_s.scenarioid = rci_o.scenarioid 
@@ -508,7 +508,7 @@ begin
 
     insert into economic_model_computed.calculationcontract
         with investmentAmtByInvestor as (
-            select distinct rl.scenarioid, rl.retrocontractinvestorid, max_by(investmentsignedamt, startdate) investmentsignedamt from economic_model_scenario.retroinvestmentleg_scenario rl
+            select distinct rl.scenarioid, rl.retrocontractinvestorid, max_by(investmentsignedamt, startdate) investmentsignedamt from economic_model_computed.retroinvestmentleg_scenario rl
             inner join economic_model_staging.retroconfiguration rc on rl.retroconfigurationid = rc.retroconfigurationid
             inner join economic_model_staging.retrocontractinvestor rci on rl.retrocontractinvestorid = rci.retrocontractinvestorid
             group by rl.scenarioid, rl.retrocontractinvestorid
@@ -534,7 +534,7 @@ begin
         from 
             economic_model_staging.retrocontractinvestor ri
             cross join economic_model_computed.ScenarioFiltered sf
-            inner join economic_model_scenario.retrocontract_scenario r on ri.retrocontractid = r.retrocontractid and r.scenarioid = sf.scenarioid
+            inner join economic_model_computed.retrocontract_scenario r on ri.retrocontractid = r.retrocontractid and r.scenarioid = sf.scenarioid
             inner join investmentAmtByInvestor amt on amt.retrocontractinvestorid = ri.retrocontractinvestorid and amt.scenarioid = sf.scenarioid
         where 
             r.scenarioid is not null
@@ -594,7 +594,7 @@ begin
             pl.reinstcount
         from 
             economic_model_computed.scenariofiltered sf
-            inner join economic_model_scenario.portlayer_scenario pl on pl.scenarioid = sf.scenarioid
+            inner join economic_model_computed.portLayer_scenario pl on pl.scenarioid = sf.scenarioid
             inner join economic_model_staging.submission s on pl.submissionid = s.submissionid
     ;
 end

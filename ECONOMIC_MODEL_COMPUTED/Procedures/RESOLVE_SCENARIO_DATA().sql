@@ -53,7 +53,7 @@ begin
             economic_model_scenario.scenario_parts;
 
     -- retrocontract
-    create or replace table economic_model_scenario.retrocontract_scenario as
+    create or replace table economic_model_computed.retrocontract_scenario as
         with scenarioRetroContracts as (
             select 
                 distinct scenarioid, retrocontractid
@@ -95,13 +95,13 @@ begin
         select
             * exclude (isactive_original, level_original, commissiononnetpremium_original, profitcommissionpctofprofit_original, ReinsuranceBrokerageOnNetPremium_original, ReinsuranceExpensesOnCededCapital_original, ReinsuranceExpensesOnCededPremium_original),
             economic_model_computed.concat_non_null(
-                economic_model_scenario.compare_and_note(isactive, isactive_original, 'IsActive'),
-                economic_model_scenario.compare_and_note(level, level_original, 'Level'),
-                economic_model_scenario.compare_and_note(commissiononnetpremium, commissiononnetpremium_original, 'CommissionOnNetPremium'),
-                economic_model_scenario.compare_and_note(profitcommissionpctofprofit, profitcommissionpctofprofit_original, 'ProfitCommissionPctOfProfit'),
-                economic_model_scenario.compare_and_note(ReinsuranceBrokerageOnNetPremium, ReinsuranceBrokerageOnNetPremium_original, 'ReinsuranceBrokerageOnNetPremium'),
-                economic_model_scenario.compare_and_note(ReinsuranceExpensesOnCededCapital, ReinsuranceExpensesOnCededCapital_original, 'ReinsuranceExpensesOnCededCapital'),
-                economic_model_scenario.compare_and_note(ReinsuranceExpensesOnCededPremium, ReinsuranceExpensesOnCededPremium_original, 'ReinsuranceExpensesOnCededPremium')
+                economic_model_computed.compare_and_note(isactive, isactive_original, 'IsActive'),
+                economic_model_computed.compare_and_note(level, level_original, 'Level'),
+                economic_model_computed.compare_and_note(commissiononnetpremium, commissiononnetpremium_original, 'CommissionOnNetPremium'),
+                economic_model_computed.compare_and_note(profitcommissionpctofprofit, profitcommissionpctofprofit_original, 'ProfitCommissionPctOfProfit'),
+                economic_model_computed.compare_and_note(ReinsuranceBrokerageOnNetPremium, ReinsuranceBrokerageOnNetPremium_original, 'ReinsuranceBrokerageOnNetPremium'),
+                economic_model_computed.compare_and_note(ReinsuranceExpensesOnCededCapital, ReinsuranceExpensesOnCededCapital_original, 'ReinsuranceExpensesOnCededCapital'),
+                economic_model_computed.compare_and_note(ReinsuranceExpensesOnCededPremium, ReinsuranceExpensesOnCededPremium_original, 'ReinsuranceExpensesOnCededPremium')
             ) AS notes
         from 
             witOrigAndResolvedValues
@@ -168,7 +168,7 @@ begin
 
 
     -- portlayer
-    create or replace table economic_model_scenario.portlayer_scenario as
+    create or replace table economic_model_computed.portLayer_scenario as
         with scenarioPortfolios as (
             select 
                 scenarioid, portfolioid
@@ -205,8 +205,8 @@ begin
         select 
             * exclude (shareFactor_original, premiumFactor_original),
             economic_model_computed.concat_non_null(
-                economic_model_scenario.compare_and_note(sharefactor, sharefactor_original, 'ShareFactor'),
-                economic_model_scenario.compare_and_note(premiumfactor, premiumfactor_original, 'Premiumactor')
+                economic_model_computed.compare_and_note(sharefactor, sharefactor_original, 'ShareFactor'),
+                economic_model_computed.compare_and_note(premiumfactor, premiumfactor_original, 'Premiumactor')
             ) AS notes
         from 
             withResolvedAndOriginalValues
@@ -223,7 +223,7 @@ begin
 
 
     -- retroconfiguration
-    create or replace table economic_model_scenario.retroconfiguration_scenario as
+    create or replace table economic_model_computed.retroconfiguration_scenario as
         select distinct
             sp.scenarioid, 
             l.retroconfigurationid,
@@ -249,7 +249,7 @@ begin
 
     
     -- retroinvestmentleg
-    create or replace table economic_model_scenario.retroinvestmentleg_scenario as
+    create or replace table economic_model_computed.retroinvestmentleg_scenario as
         with
             withResolvedAndOriginalValues as (
                 select distinct
@@ -268,8 +268,8 @@ begin
             select 
                 * exclude (investmentsigned_original, investmentsignedamt_original),
                 economic_model_computed.concat_non_null(
-                    economic_model_scenario.compare_and_note(investmentsigned, investmentsigned_original, 'InvestmentSigned'),
-                    economic_model_scenario.compare_and_note(investmentsignedamt, investmentsignedamt_original, 'InvestmentsignedAmt')
+                    economic_model_computed.compare_and_note(investmentsigned, investmentsigned_original, 'InvestmentSigned'),
+                    economic_model_computed.compare_and_note(investmentsignedamt, investmentsignedamt_original, 'InvestmentsignedAmt')
                 ) AS notes
             from 
                 withResolvedAndOriginalValues

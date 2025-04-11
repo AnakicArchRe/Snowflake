@@ -49,7 +49,7 @@ begin
             economic_model_scenario.scenario_parts;
 
     -- retrocontract
-    create or replace temporary table economic_model_scenario.retrocontract_scenario_tmp as
+    create or replace temporary table economic_model_computed.retrocontract_scenario_tmp as
         with scenarioRetroContracts as (
             select 
                 distinct scenarioid, retrocontractid
@@ -138,7 +138,7 @@ begin
 
 
     -- portlayer
-    create or replace temporary table economic_model_scenario.portlayer_scenario_tmp as
+    create or replace temporary table economic_model_computed.portLayer_scenario_tmp as
         with scenarioPortfolios as (
             select 
                 scenarioid, portfolioid
@@ -181,7 +181,7 @@ begin
 
 
     -- retroconfiguration
-    create or replace temporary table economic_model_scenario.retroconfiguration_scenario_tmp as
+    create or replace temporary table economic_model_computed.retroconfiguration_scenario_tmp as
         select distinct
             sp.scenarioid, 
             l.retroconfigurationid,
@@ -209,7 +209,7 @@ begin
 
     
     -- retroinvestmentleg
-    create or replace temporary table economic_model_scenario.retroinvestmentleg_scenario_tmp as
+    create or replace temporary table economic_model_computed.retroinvestmentleg_scenario_tmp as
        select distinct
             sp.scenarioid, 
             l.* exclude (investmentsigned, investmentsignedamt),
@@ -248,8 +248,8 @@ begin
         from 
             economic_model_staging.portlayer pl
             cross join economic_model_scenario.scenario sc
-            left join economic_model_scenario.portlayer_scenario old on old.portlayerid = pl.portlayerid and old.scenarioid = sc.scenarioid
-            left join economic_model_scenario.portlayer_scenario_tmp new on new.portlayerid = pl.portlayerid and new.scenarioid = sc.scenarioid
+            left join economic_model_computed.portLayer_scenario old on old.portlayerid = pl.portlayerid and old.scenarioid = sc.scenarioid
+            left join economic_model_computed.portLayer_scenario_tmp new on new.portlayerid = pl.portlayerid and new.scenarioid = sc.scenarioid
         where 
             sc.isactive = 1
             and 
@@ -278,8 +278,8 @@ begin
         from 
             economic_model_staging.retroconfiguration rc
             cross join economic_model_scenario.scenario sc
-            left join economic_model_scenario.retroconfiguration_scenario old on rc.retroconfigurationid = old.retroconfigurationid and old.scenarioid = sc.scenarioid
-            left join economic_model_scenario.retroconfiguration_scenario_tmp new on rc.retroconfigurationid = new.retroconfigurationid and new.scenarioid = sc.scenarioid
+            left join economic_model_computed.retroconfiguration_scenario old on rc.retroconfigurationid = old.retroconfigurationid and old.scenarioid = sc.scenarioid
+            left join economic_model_computed.retroconfiguration_scenario_tmp new on rc.retroconfigurationid = new.retroconfigurationid and new.scenarioid = sc.scenarioid
         where 
             sc.isactive = 1
         group by
@@ -302,8 +302,8 @@ begin
         from 
             economic_model_revoext.retrocontract r
             cross join economic_model_scenario.scenario sc
-            left join economic_model_scenario.retrocontract_scenario old on r.retrocontractid = old.retrocontractid and old.scenarioid = sc.scenarioid
-            left join economic_model_scenario.retrocontract_scenario_tmp new on r.retrocontractid = new.retrocontractid and new.scenarioid = sc.scenarioid
+            left join economic_model_computed.retrocontract_scenario old on r.retrocontractid = old.retrocontractid and old.scenarioid = sc.scenarioid
+            left join economic_model_computed.retrocontract_scenario_tmp new on r.retrocontractid = new.retrocontractid and new.scenarioid = sc.scenarioid
             left join economic_model_scenario.volatileRetros vr on vr.retrocontractid = r.retrocontractid and vr.scenarioid = sc.scenarioid
         where
             sc.isactive = 1
@@ -341,8 +341,8 @@ begin
             economic_model_staging.retroinvestmentleg rl
             inner join economic_model_staging.retroconfiguration rc on rl.retroconfigurationid = rc.retroconfigurationid
             cross join economic_model_scenario.scenario sc
-            left outer join economic_model_scenario.retroinvestmentleg_scenario old on old.retroinvestmentlegid = rl.retroinvestmentlegid and old.scenarioid = sc.scenarioid
-            left outer join economic_model_scenario.retroinvestmentleg_scenario_tmp new on new.retroinvestmentlegid = rl.retroinvestmentlegid and new.scenarioid = sc.scenarioid
+            left outer join economic_model_computed.retroinvestmentleg_scenario old on old.retroinvestmentlegid = rl.retroinvestmentlegid and old.scenarioid = sc.scenarioid
+            left outer join economic_model_computed.retroinvestmentleg_scenario_tmp new on new.retroinvestmentlegid = rl.retroinvestmentlegid and new.scenarioid = sc.scenarioid
         where 
             sc.isactive = 1 
             and zeroifnull(old.INVESTMENTSIGNED) <> zeroifnull(new.INVESTMENTSIGNED)
@@ -351,11 +351,11 @@ begin
     // C: apply findings to scenario resolved tables
 
     -- C1: portlayer_s.requiresrecald
-    alter table economic_model_scenario.portlayer_scenario
+    alter table economic_model_computed.portLayer_scenario
     add column RequiresRecalc boolean;
 
     update 
-        economic_model_scenario.portlayer_scenario pls
+        economic_model_computed.portLayer_scenario pls
     set
        RequiresRecalc = true
     from 
@@ -365,11 +365,11 @@ begin
         and pls.scenarioid = plr.scenarioid;
 
     -- C2: retrocontract_s.requiresrecald
-    alter table economic_model_scenario.retrocontract_scenario
+    alter table economic_model_computed.retrocontract_scenario
     add column RequiresRecalc boolean;
     
     update 
-        economic_model_scenario.retrocontract_scenario rs
+        economic_model_computed.retrocontract_scenario rs
     set 
         requiresrecalc = true
     from (
@@ -385,7 +385,7 @@ begin
             rs.scenarioid, rs.retrocontractid
         from 
             economic_model_scenario.RetrosForRecalc_tmp tmp
-            inner join economic_model_scenario.retroconfiguration_scenario rs on tmp.level < rs.level and tmp.scenarioid = rs.scenarioid
+            inner join economic_model_computed.retroconfiguration_scenario rs on tmp.level < rs.level and tmp.scenarioid = rs.scenarioid
         where 
             tmp.includedependents = true
             and tmp.isactive = true
@@ -395,21 +395,21 @@ begin
         rs.retrocontractid = x.retrocontractid and rs.scenarioid = x.scenarioid;
             
     // D: apply new data and clean up temp tables
-    create or replace temporary table economic_model_scenario.retrocontract_scenario as
-    select * from economic_model_scenario.retrocontract_scenario_tmp;
-    drop table economic_model_scenario.retrocontract_scenario_tmp;
+    create or replace temporary table economic_model_computed.retrocontract_scenario as
+    select * from economic_model_computed.retrocontract_scenario_tmp;
+    drop table economic_model_computed.retrocontract_scenario_tmp;
    
-    create or replace temporary table economic_model_scenario.portlayer_scenario as
-    select * from economic_model_scenario.portlayer_scenario_tmp;  
-    drop table economic_model_scenario.portlayer_scenario_tmp;
+    create or replace temporary table economic_model_computed.portLayer_scenario as
+    select * from economic_model_computed.portLayer_scenario_tmp;  
+    drop table economic_model_computed.portLayer_scenario_tmp;
 
-    create or replace temporary table economic_model_scenario.retroconfiguration_scenario as
-    select * from economic_model_scenario.retroconfiguration_scenario_tmp;
-    drop table economic_model_scenario.retroconfiguration_scenario_tmp;
+    create or replace temporary table economic_model_computed.retroconfiguration_scenario as
+    select * from economic_model_computed.retroconfiguration_scenario_tmp;
+    drop table economic_model_computed.retroconfiguration_scenario_tmp;
 
-    create or replace temporary table economic_model_scenario.retroinvestmentleg_scenario as
-    select * from economic_model_scenario.retroinvestmentleg_scenario_tmp;
-    drop table economic_model_scenario.retroinvestmentleg_scenario_tmp;
+    create or replace temporary table economic_model_computed.retroinvestmentleg_scenario as
+    select * from economic_model_computed.retroinvestmentleg_scenario_tmp;
+    drop table economic_model_computed.retroinvestmentleg_scenario_tmp;
 
 end
 ;

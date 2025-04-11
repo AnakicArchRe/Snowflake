@@ -44,7 +44,7 @@ BEGIN
             inner join economic_model_staging.yelpt y on per.yeltperiodid = y.yeltperiodid
             inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
             inner join economic_model_staging.retroconfiguration rcf on t.retroconfigurationid = rcf.retroconfigurationid
-            inner join economic_model_scenario.retrocontract_scenario rcs on rcf.retrocontractid = rcs.retrocontractid and rcs.scenarioid = b.scenarioid
+            inner join economic_model_computed.retrocontract_scenario rcs on rcf.retrocontractid = rcs.retrocontractid and rcs.scenarioid = b.scenarioid
         // Note: commented out because we calculate net ylt for all scenarios, only the subjectylt calculation depends on the includeinanalysis flag.
         // The reason for this is that SubjectYLT is per-retro, so there are many more rows. To reduce the amount of data sent to powerbi, we skip
         // calculation of the subject ylt blocks that are outside the selected retros. We calculate net and gross YLT blocks regardless of if they

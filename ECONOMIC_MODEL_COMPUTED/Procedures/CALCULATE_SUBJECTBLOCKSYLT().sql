@@ -41,7 +41,7 @@ BEGIN
                 inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
                 inner join economic_model_staging.yelpt y on per.yeltperiodid = y.yeltperiodid
                 inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
-                inner join economic_model_scenario.retrocontract_scenario rcs on rcf.retrocontractid = rcs.retrocontractid and rcs.scenarioid = rb.scenarioid
+                inner join economic_model_computed.retrocontract_scenario rcs on rcf.retrocontractid = rcs.retrocontractid and rcs.scenarioid = rb.scenarioid
             where
                 // The reason for this is that SubjectYLT is per-retro, so there are many millions of rows. To reduce the amount of data sent to powerbi, we skip
                 // calculation of the subject ylt blocks that are outside the retros specified by the scenario. We do not check this flag fornet and gross YLT blocks

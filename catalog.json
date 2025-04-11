@@ -2,6 +2,12 @@
   {
     "ObjectType": "FUNCTION",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "COMPARE_AND_NOTE(RESOLVEDVALUE VARIANT, ORIGINALVALUE VARIANT, FIELDNAME VARCHAR)",
+    "ObjectDDLHash": "15c737f5f76df8ccae5baac9a7abfdd4c19500571f8fb61c75f28644cf4a36c2"
+  },
+  {
+    "ObjectType": "FUNCTION",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CONCAT_NON_NULL(S1 VARCHAR, S2 VARCHAR, S3 VARCHAR, S4 VARCHAR, S5 VARCHAR, S6 VARCHAR, S7 VARCHAR, S8 VARCHAR, S9 VARCHAR, S10 VARCHAR)",
     "ObjectDDLHash": "14a11f36dda22dca6542812835a4b32e6896ed2d7b3dc1ebdb1c157e882ab5b3"
   },
@@ -33,13 +39,13 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_NETBLOCKSYLT()",
-    "ObjectDDLHash": "7aa77c0126956cffb8cdb01745c0a0081493fa336a9f3880751e3862cdcfde94"
+    "ObjectDDLHash": "3fdebdaec52ea09c097db683142fab88e2dd86d01b5e240eb5b0b5507261859f"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_SUBJECTBLOCKSYLT()",
-    "ObjectDDLHash": "e5060ccc8165f0f1ecde4f61357e642699f83f3c2086c96ad13a5bbd7e2933df"
+    "ObjectDDLHash": "b1be4b467ac1e7a971d0c83ee4a4927bbbdcc3d9efe2c378de6d6146c8485460"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -51,7 +57,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CLEARALL()",
-    "ObjectDDLHash": "24f22b9aee7fe39b629377431592049df6f8281f8fe9be545c170d6b719f23c5"
+    "ObjectDDLHash": "ac9f2ae3a6f8b80f5eed50ba318dead19d618f9a8ba26842e7ee4d51b401ab9b"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -75,19 +81,19 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(NUMBER)",
-    "ObjectDDLHash": "5ca0e61dba00dd8bed949bd16a683726d060e39552f3a85f71b6f08f28c7970c"
+    "ObjectDDLHash": "f06400e0b7f85c768b7b2ffc43fc1e51845c5f6a5a19f1e6119449f0639ff813"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RESOLVE_SCENARIO_DATA_2()",
-    "ObjectDDLHash": "a39678365215ff8f3e63954ac319b749f6cf396404407cf6398b260efb3507f4"
+    "ObjectDDLHash": "dd5b60f7e6f6c72b9da1e965e5f44a9918541cf68dbcf5f04a85bbd22db5d601"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RESOLVE_SCENARIO_DATA()",
-    "ObjectDDLHash": "55c361cf77dc6819fe361943fefb01ad778b0ee26494ddd3ad3f9611d615f570"
+    "ObjectDDLHash": "b01e00ebca729201768ab6dd3b734a6815a2732c3eccf6616aaf672e8d015b4a"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -99,7 +105,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "VALIDATE_SCENARIOS()",
-    "ObjectDDLHash": "6f46b08dab653f491fa0b11a55c9b83d9394af1d16f0cb4fa4a94d78f4fcc413"
+    "ObjectDDLHash": "8d35b9c53cc88119eb579e4758b78d5c6a827c2aaeb923ae3c9ae19e6684eeb0"
   },
   {
     "ObjectType": "TABLE",
@@ -178,6 +184,30 @@
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "NETBLOCKYLT",
     "ObjectDDLHash": "c822d51ceaaf25eb4bc6d0dfec325ce33dc78e0c39aae292066d991635f791af"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "PORTLAYER_SCENARIO",
+    "ObjectDDLHash": "b9b23aa54da31827910fca7987a07cca88d12b82b858c29a4e05600c1ef3f62c"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "RETROCONFIGURATION_SCENARIO",
+    "ObjectDDLHash": "c4fb9f2fbb22e4240c992c3ea888837299c6c5cd02264da6d4b09667af349cc2"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "RETROCONTRACT_SCENARIO",
+    "ObjectDDLHash": "0a2de234ac669df7a61b31c212e48b802869813d5e307ed120f600578d964aff"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "RETROINVESTMENTLEG_SCENARIO",
+    "ObjectDDLHash": "6eee463fb8288f9c20108691fe4d2eefab1301f0a756089d66fe1e6ecc72525a"
   },
   {
     "ObjectType": "TABLE",
@@ -390,12 +420,6 @@
     "ObjectDDLHash": "2b52d1a4a8b368acfacbed1e9d4b2ebb28b7db32f9919c437fc5c25337afd85b"
   },
   {
-    "ObjectType": "FUNCTION",
-    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "COMPARE_AND_NOTE(RESOLVEDVALUE VARIANT, ORIGINALVALUE VARIANT, FIELDNAME VARCHAR)",
-    "ObjectDDLHash": "08bc9a346dcc4cf76ad1c007b737ccc5f89eebb69b10ef21e8cc1d29c943ed23"
-  },
-  {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "MIGRATE_SCENARIOS()",
@@ -410,20 +434,8 @@
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "PORTLAYER_SCENARIO",
-    "ObjectDDLHash": "b9b23aa54da31827910fca7987a07cca88d12b82b858c29a4e05600c1ef3f62c"
-  },
-  {
-    "ObjectType": "TABLE",
-    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "RETROCONFIGURATION_OVERRIDE",
     "ObjectDDLHash": "a01671853b9111674a900d5cdf1e0ec88f59ec1956ed75feea850d71486b98b6"
-  },
-  {
-    "ObjectType": "TABLE",
-    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "RETROCONFIGURATION_SCENARIO",
-    "ObjectDDLHash": "c4fb9f2fbb22e4240c992c3ea888837299c6c5cd02264da6d4b09667af349cc2"
   },
   {
     "ObjectType": "TABLE",
@@ -434,20 +446,8 @@
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "RETROCONTRACT_SCENARIO",
-    "ObjectDDLHash": "0a2de234ac669df7a61b31c212e48b802869813d5e307ed120f600578d964aff"
-  },
-  {
-    "ObjectType": "TABLE",
-    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "RETROINVESTMENTLEG_OVERRIDE",
     "ObjectDDLHash": "c3ec4bf8737ae9ef7e6c38783cb1865bf5ac9a46785299aa89a5870617537557"
-  },
-  {
-    "ObjectType": "TABLE",
-    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "RETROINVESTMENTLEG_SCENARIO",
-    "ObjectDDLHash": "6eee463fb8288f9c20108691fe4d2eefab1301f0a756089d66fe1e6ecc72525a"
   },
   {
     "ObjectType": "TABLE",

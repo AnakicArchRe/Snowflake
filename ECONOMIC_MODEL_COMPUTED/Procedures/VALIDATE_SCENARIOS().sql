@@ -17,9 +17,9 @@ begin
                     inner join economic_model_staging.RetroConfiguration rpc on rpc.RetroConfigurationid = rb.RetroConfigurationid
                     inner join economic_model_staging.portlayerperiod lp on lp.periodid = rb.periodid
                     inner join economic_model_scenario.scenario sc
-                    inner join economic_model_scenario.portlayer_scenario pl on pl.portlayerid = lp.portlayerid and pl.scenarioid = sc.scenarioid
-                    inner join economic_model_scenario.retroinvestmentleg_scenario rci on rci.retroconfigurationid = rpc.retroconfigurationid and rci.scenarioid = sc.scenarioid
-                    inner join economic_model_scenario.retrocontract_scenario r on rpc.retrocontractid = r.retrocontractid and r.scenarioid = sc.scenarioid
+                    inner join economic_model_computed.portLayer_scenario pl on pl.portlayerid = lp.portlayerid and pl.scenarioid = sc.scenarioid
+                    inner join economic_model_computed.retroinvestmentleg_scenario rci on rci.retroconfigurationid = rpc.retroconfigurationid and rci.scenarioid = sc.scenarioid
+                    inner join economic_model_computed.retrocontract_scenario r on rpc.retrocontractid = r.retrocontractid and r.scenarioid = sc.scenarioid
                     // left join because there will not be a retroallocation for projeted layers, this should only happen for retro with IsSpecific=1
                     left join economic_model_staging.retroallocation ra on ra.layerid = pl.layerid and ra.retrocontractinvestorid = rci.retrocontractinvestorid
                 group by 
@@ -46,7 +46,7 @@ begin
                     tmp_LayerPeriodCession_Scenario lpc_sc
                     inner join economic_model_staging.retrotag lpc on lpc.retroblockid = lpc_sc.retroblockid
                     inner join economic_model_staging.retroconfiguration rp_cfg on rp_cfg.retroconfigurationid = lpc.retroconfigurationid
-                    left join economic_model_scenario.RetroContract_Scenario rps on rp_cfg.retrocontractid = rps.retrocontractid and lpc_sc.scenarioid = rps.scenarioid
+                    left join economic_model_computed.retrocontract_scenario rps on rp_cfg.retrocontractid = rps.retrocontractid and lpc_sc.scenarioid = rps.scenarioid
                 where periodid = 'ARL_877327:1-151' and lpc_sc.scenarioid = 1
                 group by 
                     lpc_sc.scenarioid, periodid, level
