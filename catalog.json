@@ -420,6 +420,24 @@
     "ObjectDDLHash": "2b52d1a4a8b368acfacbed1e9d4b2ebb28b7db32f9919c437fc5c25337afd85b"
   },
   {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_REVOEXT",
+    "ObjectName": "REFERENCEPORTFOLIO",
+    "ObjectDDLHash": "d078cff2ca9488ca653a47bff6cd1b2ce15aa9a765cb6dc1230dff23c2c0d206"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_REVOEXT",
+    "ObjectName": "RETROCONTRACT",
+    "ObjectDDLHash": "d809a34c6206dd46cc331f58c5185c9ecc8cd6f05be16e0aa95edd58ecf62b4a"
+  },
+  {
+    "ObjectType": "TABLE",
+    "SchemaName": "ECONOMIC_MODEL_REVOEXT",
+    "ObjectName": "RETROPROGRAMCONTRACTMAPPING",
+    "ObjectDDLHash": "d2c5df9a8a3e4b4457ba814cdb400b01437d844a5dddf1b0e37fe7b791d2cd5f"
+  },
+  {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "MIGRATE_SCENARIOS()",
