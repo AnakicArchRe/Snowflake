@@ -75,7 +75,19 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(NUMBER)",
-    "ObjectDDLHash": "b4db4060304e4640fa64c12e7a0c3e9357bd730268b22c9a1e92c79aa847f383"
+    "ObjectDDLHash": "5ca0e61dba00dd8bed949bd16a683726d060e39552f3a85f71b6f08f28c7970c"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "RESOLVE_SCENARIO_DATA_2()",
+    "ObjectDDLHash": "a39678365215ff8f3e63954ac319b749f6cf396404407cf6398b260efb3507f4"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "RESOLVE_SCENARIO_DATA()",
+    "ObjectDDLHash": "55c361cf77dc6819fe361943fefb01ad778b0ee26494ddd3ad3f9611d615f570"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -390,18 +402,6 @@
     "ObjectDDLHash": "11dcfde7a998f0778ee66970f157a12f4756f8d6cbbe74f75be5fd80ca3e4ee2"
   },
   {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "RESOLVE_SCENARIO_DATA_2()",
-    "ObjectDDLHash": "70857f10578fb0c546fadad713c72280f36249fd4e30115b5bbfb5aa1f117a9c"
-  },
-  {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "RESOLVE_SCENARIO_DATA()",
-    "ObjectDDLHash": "bb2d7c13729bf90fc1641855a92b2dac743569f8022844d3a303204069fceb7f"
-  },
-  {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "PORTLAYER_OVERRIDE",
@@ -554,7 +554,7 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
-    "ObjectName": "populate_staging_data()",
+    "ObjectName": "POPULATE_STAGING_DATA()",
     "ObjectDDLHash": "756182b848736a48b167bf2d44ab5f3505b506f313a9999321f87cf853591748"
   },
   {

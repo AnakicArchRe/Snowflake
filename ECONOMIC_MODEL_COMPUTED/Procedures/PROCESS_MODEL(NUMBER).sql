@@ -10,7 +10,7 @@ begin
     -- 1. prepare
 
     -- resolve scenario data
-    call economic_model_scenario.resolve_scenario_data();
+    call economic_model_computed.resolve_scenario_data();
     
     --  prepare temp table with visible scenarios
     create or replace temporary table economic_model_computed.ScenarioFiltered as
