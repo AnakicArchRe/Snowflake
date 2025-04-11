@@ -88,10 +88,7 @@ begin
             pls.premiumfactor,
             per.shareoflayerduration,
             pls.expenses,
-
-            // todo: add side sign
             s.sidesign,
-
             pls.reinstcount,
 
             // calculated values
@@ -106,8 +103,9 @@ begin
             s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor as nonplaced_exposedPremium,
             s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor as nonplaced_exposedExpenses,
             s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * per.shareoflayerduration as nonplaced_proRataPremium,
-            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * per.shareoflayerduration * pls.expenses as nonplaced_proRataPremiumExpenses
+            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * per.shareoflayerduration * pls.expenses as nonplaced_proRataPremiumExpenses,
 
+            economic_model_computed.concat_non_null(pls.notes, rps.notes) AS notes
             // calculation (might need 4 more columns here: premium+expenses/placed+nonplaced for seasonal calc)
         from 
             economic_model_staging.retrotag b
@@ -121,6 +119,7 @@ begin
         where 
             rps.isactive = 1;
 
+    -- prepare table with amounts invested for each contract
     create or replace temporary table investedAmountByRetroContract as
         with investedAmountByRetroConfig as (
             select 
@@ -141,18 +140,15 @@ begin
             group by scenarioid, retrocontractid;
 
             
-    -- 2. let's start generating and saving blocks
+    -- 2. let's start generating blocks
 
--- todo: we need a unique id for ceded blocks composed of retroblock and investorid (check if this ever leads to duplicates... it should not)
-   
-    -- 2.1. Retros with isspecific flag are not scenario-dependent and they don't interact with other retros, so we can calculate their ceded blocks right away.
+    -- 2.1. Retros with isspecific flag don't interact with other retros, so we can calculate their ceded blocks right away.
     -- the cessiongross comes from the retroallocation table, and avilable is always 1 (todo: confirm with PC). 
-    -- Todo: we can put cessiongross in RetroTag in the staging schema, no need to have the retroallocation in the staging schema.
-    --      actually, we'd need a InvestorTag for that since RetroAllocations are at the investor granularity.
     -- Todo: It looks like some retros with IsSpecific=1 have multiple investors for a given layer. Is this expected? Investigate.
      insert into economic_model_computed.cededblock(
             scenarioid, retroblockid, retrocontractinvestorid, cessiongross, exposedlimit, exposedrp, exposedexpenses, premiumprorata, expensesprorata, reinstcount,
-            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign)
+            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign, 
+            notes)
         select
             b.scenarioid, 
             b.retroblockid,
@@ -166,7 +162,8 @@ begin
             b.nonplaced_proratapremiumexpenses * cessiongross as expensesprorata,
             reinstcount,
             limit100pct, premium100pct, share, sharefactor, placement, premiumfactor, shareoflayerduration, expenses, 1, 'Specific retros always have Available = 1',
-            b.sidesign
+            b.sidesign,
+            economic_model_computed.concat_non_null('Fixed gross/net for specific retro', b.notes)
         from 
             economic_model_computed.baseblockinfo b
             inner join economic_model_scenario.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
@@ -198,7 +195,16 @@ begin
                         sbi.level as subjectLevel,
                         r.level as lowerLevel,
                         sum(cessiongross) as cessiongross,
-                        listagg(concat(' ', cb.retrocontractinvestorid, '(', trim(to_varchar(CessionGross * 100, '999.00')), '%)'), '\n') within group (order by cb.retrocontractinvestorid asc) CessionGrossExplanation
+                        listagg(
+                            concat(
+                                ' ', 
+                                cb.retrocontractinvestorid, 
+                                '(', 
+                                economic_model_computed.format_percent(CessionGross, 2),
+                                '% )'
+                            ), 
+                            '\n'
+                        ) within group (order by cb.retrocontractinvestorid asc) CessionGrossExplanation
                     from 
                         -- start with subject blocks we're working on
                         economic_model_computed.baseblockinfo sbi
@@ -264,6 +270,8 @@ begin
                     
                     AvailableExplanation,
                     
+                    b.notes,
+
                     availableAtLevel * exposedLimit as exposedLimit,
                     availableAtLevel * exposedPremium as exposedPremium,
                     availableAtLevel * exposedExpenses as exposedExpenses,
@@ -274,8 +282,7 @@ begin
                     availableAtLevel * nonplaced_exposedLimit as nonplaced_exposedLimit,
                     availableAtLevel * nonplaced_exposedPremium as nonplaced_exposedPremium,
                     availableAtLevel * nonplaced_exposedExpenses as nonplaced_exposedExpenses,
-                    
-                    // todo: add seasonal premium calculation
+
                     availableAtLevel * nonplaced_proRataPremium as nonplaced_proRataPremium,
                     availableAtLevel * nonplaced_proRataPremiumExpenses as nonplaced_proRataPremiumExpenses
                 from 
@@ -289,12 +296,13 @@ begin
 
         -- 2.2.2. generate and save subject blocks, using placed version of columns from economic_model_computed.subjectBlockInfo
         -- Note: I'm no longer using diffs in order to make this calculation as quick as possible. Diffs still meke sense in data sent to powerbi, but
-        -- we want the Excel results to be ready as quickly as possible, so trimming down everything I can for that.
+        -- we want results to be ready in Excel as quickly as possible, so trimming down everything I can for that.
 
         // todo: expand subjectblock with columns for all factors we used (for auditing results)
         insert into economic_model_computed.subjectblock(
             scenarioid, retroblockid, exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
-            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign)
+            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign,
+            dialg_notes)
             select 
                 scenarioid,
                 retroblockid,
@@ -315,7 +323,8 @@ begin
                 expenses,
                 availableatlevel,
                 availableExplanation,
-                sidesign
+                sidesign,
+                notes
             from 
                 economic_model_computed.subjectBlockInfo;
 
@@ -410,6 +419,7 @@ begin
         WHEN MATCHED THEN 
              UPDATE SET rci_s.investmentcalculatedpct = invShareOvrd.investmentcalculatedpct;
 
+
         -- Now that we've updated the investmentcalculatedpct of each investor (in case the retro wasn't using REVO/Override collateral), we can finally calculate and insert ceded blocks for this level
         -- We're going to use the ceded blocks for calculating the "available" factor in the next level
         insert into economic_model_computed.cededblock(
@@ -418,7 +428,9 @@ begin
             -- Since I'm also using it for available I didn't add the diag_ prefix this is an internal detail so I'm on the fence about it.
             cessiongross, 
             exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
-            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign)
+            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, 
+            diag_sidesign, 
+            notes)
              select
                 b.scenarioid, 
                 retroblockid,
@@ -442,7 +454,12 @@ begin
                 expenses,
                 availableatlevel,
                 availableExplanation,
-                sidesign
+                sidesign,
+                economic_model_computed.concat_non_null(
+                    rci.notes,
+                    case when rci.investmentsigned is null then 'Using calculated investment %' else null end,
+                    b.notes
+                ) as notes
             from 
                 economic_model_computed.subjectBlockInfo b
                 inner join economic_model_scenario.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
@@ -561,6 +578,7 @@ begin
    
 
     // 5. generate gross blocks
+    -- todo: add diag info
     insert into economic_model_computed.grossblock (scenarioid, portlayerid, exposedlimit, exposedrp, premium, expenses, exposedExpenses, reinstcount)
         select 
             pl.scenarioid, 

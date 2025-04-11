@@ -4,7 +4,9 @@ LANGUAGE SQL
 AS
 begin
 
-    -- todo: Consider if I need the original values inside these tables (those "union" blocks)? Is this not just for the scenario editor? If so, I should I should remove that code here and put it just in the scenario editor.
+    -- todo: Consider if I need the original values inside these tables (those "union" blocks)? 
+    -- Is this not just for the scenario editor? If so, I should I should remove that code here 
+    -- and put it just in the scenario editor.
 
     -- scenario parts
     create or replace table economic_model_scenario.scenario_parts as
@@ -92,8 +94,7 @@ begin
         )
         select
             * exclude (isactive_original, level_original, commissiononnetpremium_original, profitcommissionpctofprofit_original, ReinsuranceBrokerageOnNetPremium_original, ReinsuranceExpensesOnCededCapital_original, ReinsuranceExpensesOnCededPremium_original),
-            ARRAY_TO_STRING(
-                ARRAY_CONSTRUCT_COMPACT(
+            economic_model_computed.concat_non_null(
                 economic_model_scenario.compare_and_note(isactive, isactive_original, 'IsActive'),
                 economic_model_scenario.compare_and_note(level, level_original, 'Level'),
                 economic_model_scenario.compare_and_note(commissiononnetpremium, commissiononnetpremium_original, 'CommissionOnNetPremium'),
@@ -101,7 +102,6 @@ begin
                 economic_model_scenario.compare_and_note(ReinsuranceBrokerageOnNetPremium, ReinsuranceBrokerageOnNetPremium_original, 'ReinsuranceBrokerageOnNetPremium'),
                 economic_model_scenario.compare_and_note(ReinsuranceExpensesOnCededCapital, ReinsuranceExpensesOnCededCapital_original, 'ReinsuranceExpensesOnCededCapital'),
                 economic_model_scenario.compare_and_note(ReinsuranceExpensesOnCededPremium, ReinsuranceExpensesOnCededPremium_original, 'ReinsuranceExpensesOnCededPremium')
-                ), ', '
             ) AS notes
         from 
             witOrigAndResolvedValues
@@ -204,11 +204,9 @@ begin
         )
         select 
             * exclude (shareFactor_original, premiumFactor_original),
-            ARRAY_TO_STRING(
-                ARRAY_CONSTRUCT_COMPACT(
+            economic_model_computed.concat_non_null(
                 economic_model_scenario.compare_and_note(sharefactor, sharefactor_original, 'ShareFactor'),
                 economic_model_scenario.compare_and_note(premiumfactor, premiumfactor_original, 'Premiumactor')
-                ), ', '
             ) AS notes
         from 
             withResolvedAndOriginalValues
@@ -269,11 +267,9 @@ begin
             )
             select 
                 * exclude (investmentsigned_original, investmentsignedamt_original),
-                ARRAY_TO_STRING(
-                    ARRAY_CONSTRUCT_COMPACT(
-                        economic_model_scenario.compare_and_note(investmentsigned, investmentsigned_original, 'InvestmentSigned'),
-                        economic_model_scenario.compare_and_note(investmentsignedamt, investmentsignedamt_original, 'InvestmentsignedAmt')
-                    ), ', '
+                economic_model_computed.concat_non_null(
+                    economic_model_scenario.compare_and_note(investmentsigned, investmentsigned_original, 'InvestmentSigned'),
+                    economic_model_scenario.compare_and_note(investmentsignedamt, investmentsignedamt_original, 'InvestmentsignedAmt')
                 ) AS notes
             from 
                 withResolvedAndOriginalValues
