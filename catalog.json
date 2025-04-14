@@ -93,7 +93,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RESOLVE_SCENARIO_DATA()",
-    "ObjectDDLHash": "b01e00ebca729201768ab6dd3b734a6815a2732c3eccf6616aaf672e8d015b4a"
+    "ObjectDDLHash": "7bf81130bac65a17a43c9b5e7e90599b11088052daa21fb4507cb4ad30cef6a9"
   },
   {
     "ObjectType": "PROCEDURE",

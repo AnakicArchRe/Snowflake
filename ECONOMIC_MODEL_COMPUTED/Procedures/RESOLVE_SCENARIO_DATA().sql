@@ -105,23 +105,6 @@ begin
             ) AS notes
         from 
             witOrigAndResolvedValues
-        union
-        select 
-            null as scenarioid,
-            rc.* exclude (commissiononnetpremium, level, isactive, profitcommissionpctofprofit, ReinsuranceBrokerageOnNetPremium, ReinsuranceExpensesOnCededCapital, ReinsuranceExpensesOnCededPremium),
-            rc.isactive,
-            rc.level,
-            rc.commissiononnetpremium commission,
-            rc.profitcommissionpctofprofit profitcommission,
-            rc.ReinsuranceBrokerageOnNetPremium, 
-            rc.ReinsuranceExpensesOnCededCapital, 
-            rc.ReinsuranceExpensesOnCededPremium,
-            false includeInAnalysis,
-            false HasOverride,
-            null TargetCollateralCalculated,
-            null notes
-        from
-            economic_model_revoext.retrocontract rc
         ;
 
 
@@ -210,16 +193,7 @@ begin
             ) AS notes
         from 
             withResolvedAndOriginalValues
-        union
-        -- include the base values too. This is primarily needed in the scenarioeditor which has to show the parent scenario values or the original values in case of null parent scenario.
-        select 
-            null as scenarioid,
-            pl.* exclude (sharefactor, premiumfactor),
-            pl.sharefactor,
-            pl.premiumfactor,
-            null as notes
-        from
-            economic_model_staging.portlayer pl;
+        ;
 
 
     -- retroconfiguration
@@ -235,16 +209,6 @@ begin
             economic_model_staging.retroconfiguration l
             cross join economic_model_scenario.scenario_parts sp
             left outer join economic_model_scenario.retroconfiguration_override l_o on sp.partid = l_o.scenarioid and l.retroconfigurationid = l_o.retroconfigurationid
-        union
-        select 
-            null as scenarioid, 
-            retroconfigurationid,
-            retrocontractid,
-            startdate,
-            targetcollateral,
-            null
-        from 
-            economic_model_staging.retroconfiguration
         ;
 
     
@@ -273,18 +237,6 @@ begin
                 ) AS notes
             from 
                 withResolvedAndOriginalValues
-        union 
-        select
-            null scenarioid,
-            l.retroinvestmentlegid,
-            l.retroconfigurationid,
-            l.retrocontractinvestorid,
-            l.investmentsigned,
-            l.investmentsignedamt,
-            null as investmentcalculatedpct,
-            null as notes
-        from
-            economic_model_staging.retroinvestmentleg l
             ;
 
 end
