@@ -302,7 +302,7 @@ begin
         insert into economic_model_computed.subjectblock(
             scenarioid, retroblockid, exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
             diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign,
-            dialg_notes)
+            diag_notes)
             select 
                 scenarioid,
                 retroblockid,
