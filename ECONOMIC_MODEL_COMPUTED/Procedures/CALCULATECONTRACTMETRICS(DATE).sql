@@ -175,6 +175,8 @@ begin
                     // using the required collateral as a fallback option
                     zeroifnull(coalesce(c.availablecapital, rc.requiredcapital)) as capital,
                     premiumprorata - premiumprorata_expenses as netPremium,
+                    rp,
+                    rb,
                     rp - rb as netRP,
                     (1 - c.commissiononnetpremium - c.reinsurancebrokerageonnetpremium) as netinvestorshare,
                     netPremium * netinvestorshare as netPremiumToInvestor,
@@ -195,7 +197,12 @@ begin
                     uwProfit - commissionamount - c.reinsuranceexpensesoncededcapital * capital - c.reinsuranceexpensesoncededpremium * netPremGrossOfOverrideBase as profit,
                     greatest(profit, 0) * profitcommission as profitComissionAmount,
                     netPremGrossOfOverride - override2 - profitComissionAmount - coveredLosses as investorResult,
-                    (loss - rp) * (1 - coveredMarginalShare) as tail
+                    (loss - rp) * (1 - coveredMarginalShare) as tail,
+                    netPremium + netRP as totalPremiumNetOfOriginalDeductions,
+                    capital + totalPremiumNetOfOriginalDeductions * (1 - commissiononnetpremium) as availableForClaims,
+                    premiumprorata_expenses / premiumprorata as estimatedOriginalExpensesOnPremium,
+                    coveredMarginalShare * loss / (premiumprorata + rp * coveredMarginalShare) as lossRatio,
+                    (coveredMarginalShare * loss + premiumprorata_expenses + rb) / (premiumprorata + rp * coveredMarginalShare) as combinedRatio
                 from
                     economic_model_computed.yltByContract y
                     inner join economic_model_computed.calculationcontract c on y.calculationcontractid = c.calculationcontractid and y.scenarioid = c.scenarioid
@@ -211,17 +218,31 @@ begin
                     avg(y.investorresult) avgResult,
                     max(y.investorresult) bestResult,
                     min(y.investorresult) worstResult,
+                    median(y.investorresult) medianResult,
                     case when chosenCapitalForMetrics > 0 then avgresult / chosenCapitalForMetrics else null end as avgResultPct,
+                    case when chosenCapitalForMetrics > 0 then bestresult / chosenCapitalForMetrics else null end as bestResultPct,
+                    case when chosenCapitalForMetrics > 0 then medianResult / chosenCapitalForMetrics else null end as medianResultPct,
+                    avgResult / STDDEV_POP(y.investorresult) as sharpeRatio,
                     // bep = break even point
                     -- min_by(yeltrank, abs(y.investorresult)) / 10e3 as bep1,
                     1 - count_if(y.investorresult < 0) / 10e3 as chanceOfPositiveResult,
                     -- count_if(y.investorresult >= 0) / 10e3 as bep3,
-                    median(y.investorresult) medianResult,
                     max(premiumprorata) expectedPremium,
-                    sum(netrpcovered) / 10e3 as expectedRP,
+                    sum(netrpcovered) / 10e3 as expectedRPCovered,
                     sum(loss) / 10e3 as expectedLosses,
-                    expectedPremium + expectedRP as expectedPremiumTotal,
-                    max(tail) maxTail
+                    sum(rp) / 10e3 as expectedRP,
+                    expectedPremium + expectedRPCovered as expectedPremiumTotal,
+                    case when chosenCapitalForMetrics > 0 then expectedPremiumTotal / chosenCapitalForMetrics else null end as expectedPremiumToChosenCollateral,
+                    max(tail) maxTail,
+                    avg(availableForClaims) availableForClaims,
+                    avg(override2) as commissionOverride,
+                    avg(profitComissionAmount) as profitCommissionAmount,
+                    avg(estimatedOriginalExpensesOnPremium) as estimatedOriginalExpensesOnPremium,
+                    sum(rb)/sum(rp) as estimatedOriginalExpensesOnReinstatementPremium,
+                    avg(lossRatio) as lossRatio,
+                    avg(combinedratio) as combinedratio,
+                    avg(coveredlosses) as coveredlosses,
+
                 from
                     yltDerivedMeasures y
                 group by 
@@ -271,6 +292,10 @@ begin
                 l.* exclude (scenarioid, calculationcontractid),
                 -- indicates if the required capital for this lossview should be used for automatic investment % calculation ()
                 (y.lossviewgroup = capitalcalculationlossview) as usableForAutomaticInvestmentShareCalc,
+                maxDailyLimitAgg / availableForClaims as structuralLeverageMultiple,
+                y.coveredlosses / maxDailyLimit as expectedLossToOccurrenceLimitRatio,
+                y.coveredlosses / maxDailyLimitAgg as expectedLossToAggregateLimitRatio,
+                ExpectedPremium / maxDailyLimit as RateOnLine
             from 
                 calculatedmeasures y
                 inner join limitDailyMaxUSD l on y.scenarioid = l.scenarioid and y.calculationcontractid = l.calculationcontractid            

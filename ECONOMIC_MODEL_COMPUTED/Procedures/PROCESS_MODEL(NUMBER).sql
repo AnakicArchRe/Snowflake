@@ -344,7 +344,8 @@ begin
         // todo: review and update the metrics we expose here. we need to keep this table synced with the calculationcontractmetrics table, as far as included columns go
         insert into economic_model_computed.contractresult(
             scenarioid, retrocontractid, lossviewgroup, chosencapital, calculatedcapital, investedcapital, avgresult, bestresult, worstresult, avgresultpct, chanceofpositiveresult, medianresult, expectedpremium,
-            expectedrp,expectedlosses, expectedpremiumtotal, maxtail, maxdailylimit, maxdailylimitagg)
+            expectedrp,expectedlosses, expectedpremiumtotal, maxtail, maxdailylimit, maxdailylimitagg,
+            bestresultpct, medianresultpct, sharperatio, expectedrpcovered, expectedpremiumtochosencollateral, availableforclaims, commissionoverride, profitcommissionamount, estimatedoriginalexpensesonpremium, estimatedoriginalexpensesonreinstatementpremium, lossratio, combinedratio, coveredlosses, structuralleveragemultiple, expectedlosstooccurrencelimitratio, expectedlosstoaggregatelimitratio, rateonline)
             select 
                 m.scenarioid, 
                 calculationcontractid, 
@@ -364,7 +365,8 @@ begin
                 expectedpremiumtotal,
                 maxtail,
                 maxdailylimit,
-                maxdailylimitagg
+                maxdailylimitagg,
+                bestresultpct, medianresultpct, sharperatio, expectedrpcovered, expectedpremiumtochosencollateral, availableforclaims, commissionoverride, profitcommissionamount, estimatedoriginalexpensesonpremium, estimatedoriginalexpensesonreinstatementpremium, lossratio, combinedratio, coveredlosses, structuralleveragemultiple, expectedlosstooccurrencelimitratio, expectedlosstoaggregatelimitratio, rateonline
             from 
                 economic_model_computed.calculationcontractmetrics m
                 left join investedAmountByRetroContract ri on ri.scenarioid = m.scenarioid and ri.retrocontractid = m.calculationcontractid;
@@ -553,7 +555,8 @@ begin
     // todo: review and update the metrics we expose here. we need to keep this table synced with the calculationcontractmetrics table, as far as included columns go
     insert into economic_model_computed.investorresult(
         scenarioid, retrocontractinvestorid, lossviewgroup, investedcapital, avgresult, bestresult, worstresult, avgresultpct, chanceofpositiveresult, medianresult, expectedpremium,
-        expectedrp,expectedlosses, expectedpremiumtotal, maxtail, maxdailylimit, maxdailylimitagg)
+        expectedrp,expectedlosses, expectedpremiumtotal, maxtail, maxdailylimit, maxdailylimitagg,
+        bestresultpct, medianresultpct, sharperatio, expectedrpcovered, expectedpremiumtochosencollateral, availableforclaims, commissionoverride, profitcommissionamount, estimatedoriginalexpensesonpremium, estimatedoriginalexpensesonreinstatementpremium, lossratio, combinedratio, coveredlosses, structuralleveragemultiple, expectedlosstooccurrencelimitratio, expectedlosstoaggregatelimitratio, rateonline)
         select 
             m.scenarioid, 
             calculationcontractid, 
@@ -571,7 +574,8 @@ begin
             expectedpremiumtotal,
             maxtail,
             maxdailylimit,
-            maxdailylimitagg
+            maxdailylimitagg,
+            bestresultpct, medianresultpct, sharperatio, expectedrpcovered, expectedpremiumtochosencollateral, availableforclaims, commissionoverride, profitcommissionamount, estimatedoriginalexpensesonpremium, estimatedoriginalexpensesonreinstatementpremium, lossratio, combinedratio, coveredlosses, structuralleveragemultiple, expectedlosstooccurrencelimitratio, expectedlosstoaggregatelimitratio, rateonline
         from 
             economic_model_computed.calculationcontractmetrics m
             left join investedAmountByRetroContract ri on ri.scenarioid = m.scenarioid and ri.retrocontractid = m.calculationcontractid;

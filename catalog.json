@@ -51,7 +51,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATECONTRACTMETRICS(DATE)",
-    "ObjectDDLHash": "7d233dc27aecacb00bdbc112b8887c50918b27615940bcf8cccb0a38a11267ad"
+    "ObjectDDLHash": "a1824d69d559a8f18fa3d99cd3c657da774e670fee2f9be9b059f01987b5bf0f"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -81,7 +81,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(NUMBER)",
-    "ObjectDDLHash": "0bd06a5ef72d5bf361736213400ab05498d9c2b3129221c25f92b6c730510e0d"
+    "ObjectDDLHash": "c271bfa0db61a94833a25056845145674f5d193fb0b4402b51be4f71cd2cfaa8"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -135,7 +135,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATIONCONTRACTMETRICS",
-    "ObjectDDLHash": "754ba2cd9f78533cd39e011b139019b9b4a94c882c8ec3f81ec2c687a6e1be0b"
+    "ObjectDDLHash": "cc488f1df5029b8651fc9efad5e5a013329f63d41bd2ef3aacc9fac81c097e50"
   },
   {
     "ObjectType": "TABLE",
@@ -147,7 +147,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CONTRACTRESULT",
-    "ObjectDDLHash": "261607632da05ce51cea7728230e0cda4fb2aca2cbdcb9d257c0e50f8d0b538b"
+    "ObjectDDLHash": "7db3a27172a78ecb5bfbfc17d9b55db14e561c355c9894ccad35ae3360baec95"
   },
   {
     "ObjectType": "TABLE",
@@ -171,7 +171,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "INVESTORRESULT",
-    "ObjectDDLHash": "c2de1ca8fa6bb875e9d34379323aac7cb837312c67649c8ebab9b93d3ee9a44d"
+    "ObjectDDLHash": "ede3218dbaf3d5436b9f86cc475052b44a92498c4199695031eb16799ea6fcd3"
   },
   {
     "ObjectType": "TABLE",
