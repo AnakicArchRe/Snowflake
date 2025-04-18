@@ -1,4 +1,4 @@
-create or replace view V_YELT(
+create or replace view ACTUARIAL_ILS_POC.ECONOMIC_MODEL_RAW.V_YELT(
 	SOURCE_DB,
 	LOSSANALYSISID,
 	LAYERID,
