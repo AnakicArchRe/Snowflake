@@ -8,7 +8,7 @@ BEGIN
     -- It's possible that for such layers, we get blocks that are also >12 months long
     -- and these blocks will not 
 
-    create or replace table economic_model_staging.PortLayerPeriod as
+    create or replace temporary table economic_model_staging.PortLayerPeriod_without12MonthCuts as
         -- 1. break up portleayers into stable periods 
         -- (portlayer start/end, cession start/end, retro reset)
         with portlayerevents as
@@ -36,24 +36,81 @@ BEGIN
             from
                 grouped
         )
-        , periods as (
+        select 
+            r1.portlayerid, 
+            r1.date as PeriodStart, 
+            dateadd(day, -1, r2.date) as periodend, 
+            r1.description as StartPointDescription, 
+            r2.description as EndPointDescription
+        from 
+            ranked r1
+        inner join ranked r2 
+            on r1.portlayerid = r2.portlayerid
+            and r1.rank = r2.rank -1
+        order by 
+            portlayerid, periodstart
+    ;
+
+    create or replace table economic_model_staging.PortLayerPeriod as
+        with recursive longBlockParts as (
             select 
-                r1.portlayerid, 
-                r1.date as PeriodStart, 
-                dateadd(day, -1, r2.date) as periodend, 
-                r1.description as StartPointDescription, 
-                r2.description as EndPointDescription,
+                portlayerid, 
+                dateadd(year, 1, periodstart) as nextPeriodStart, 
+                periodEnd as originalPeriodEnd,
+                periodstart as newPeriodStart,
+                dateadd(day, -1, nextPeriodStart) as newPeriodEnd,
+                StartPointDescription as StartPointDescription,
+                'Block 12 month max cutoff' as EndPointDescription
+            from 
+                economic_model_staging.PortLayerPeriod_without12MonthCuts
+            where 
+                nextPeriodStart <= originalPeriodEnd
+            union all
+            select 
+                portlayerid, 
+                dateadd(year, 1, nextPeriodStart) as this_nextPeriodStart, 
+                originalPeriodEnd,
+                nextPeriodStart as newPeriodStart,
+                dateadd(day, -1, this_nextPeriodStart) as newPeriodEnd,
+                'Block 12 month max cutoff' as StartPointDescription,
+                'Block 12 month max cutoff' as EndPointDescription
+            from 
+                longBlockParts
+            where 
+                this_nextPeriodStart < originalPeriodEnd
+        )
+        , PortLayerPeriodData as (
+            -- ones shorter than a year can stay, but the ones longer than that must be replaced with their parts
+            select
+                portlayerid, 
+                PeriodStart, 
+                periodend, 
+                StartPointDescription, 
+                EndPointDescription
+            from 
+                economic_model_staging.PortLayerPeriod_without12MonthCuts
+            where
+                dateadd(year, 1, periodStart) > periodend
+            union
+            -- add new blocks created by breaking up the ones longer than 12 months
+            select 
+                portlayerid, 
+                newPeriodStart, 
+                newPeriodEnd,
+                StartPointDescription,
+                EndPointDescription
+            from 
+                longBlockParts
+        )
+        , withNonLeapDates as (
+            select
+                *,
                 -- note: to avoid different yeltperiods for leap years (e.g. inforce is non-leap year, projection is leap year),
-                -- we use a non-leap year e.g. 2025 for calculating yelt days. The yelt days go up to 365 anyway.
+                -- we use a non-leap year e.g. 2025 for calculating yelt days. More importantly, this is also because yelt days go up to 365.
                 dayofyear(date_from_parts(2025,month(PeriodStart), day(PeriodStart))) as PeriodStartDayOfYear_NonLeap,
                 dayofyear(date_from_parts(2025,month(PeriodEnd), day(PeriodEnd))) as PeriodEndDayOfYeay_NonLeap
-            from 
-                ranked r1
-            inner join ranked r2 
-                on r1.portlayerid = r2.portlayerid
-                and r1.rank = r2.rank -1
-            order by 
-                portlayerid, periodstart
+            from
+                PortLayerPeriodData
         )
         select 
             pl.portlayerid,
@@ -62,6 +119,7 @@ BEGIN
             concat(pl.PortLayerid, ':', dayofyear(PeriodStart), '-', dayofyear(PeriodEnd)) as PeriodId,
             -- note: yelt references layers, not portlayers, so using layerid here.
             concat(pl.LayerId, ':', PeriodStartDayOfYear_NonLeap, '-', PeriodEndDayOfYeay_NonLeap) as YeltPeriodId,
+                
             PeriodStart, 
             PeriodEnd, 
             
@@ -74,7 +132,7 @@ BEGIN
             StartPointDescription,
             EndPointDescription
         from
-            periods p
+            withNonLeapDates p
             inner join economic_model_staging.portlayer pl on p.portlayerid = pl.portlayerid;
     
 END
