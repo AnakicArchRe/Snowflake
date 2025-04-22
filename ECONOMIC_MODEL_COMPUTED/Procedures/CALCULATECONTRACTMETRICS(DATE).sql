@@ -231,6 +231,7 @@ begin
                     sum(netrpcovered) / 10e3 as expectedRPCovered,
                     sum(loss) / 10e3 as expectedLosses,
                     sum(rp) / 10e3 as expectedRP,
+                    sum(rb) / 10e3 as expectedRB,
                     expectedPremium + expectedRPCovered as expectedPremiumTotal,
                     case when chosenCapitalForMetrics > 0 then expectedPremiumTotal / chosenCapitalForMetrics else null end as expectedPremiumToChosenCollateral,
                     max(tail) maxTail,
@@ -238,11 +239,10 @@ begin
                     avg(override2) as commissionOverride,
                     avg(profitComissionAmount) as profitCommissionAmount,
                     avg(estimatedOriginalExpensesOnPremium) as estimatedOriginalExpensesOnPremium,
-                    sum(rb)/sum(rp) as estimatedOriginalExpensesOnReinstatementPremium,
+                    case when expectedRP > 0 then expectedRB / expectedRP else null end as estimatedOriginalExpensesOnReinstatementPremium,
                     avg(lossRatio) as lossRatio,
                     avg(combinedratio) as combinedratio,
                     avg(coveredlosses) as coveredlosses,
-
                 from
                     yltDerivedMeasures y
                 group by 
