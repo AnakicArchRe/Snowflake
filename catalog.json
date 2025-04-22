@@ -525,7 +525,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_PORTLAYERPERIODS()",
-    "ObjectDDLHash": "db36ad5f5bee70e68c68006dfb123b7cdfef381846ecf813406bb7c85ab9cb0d"
+    "ObjectDDLHash": "172170a61faaa3c817311fb4878e0e1ef44af4c7795617bc8ca5de71c6b52522"
   },
   {
     "ObjectType": "PROCEDURE",
