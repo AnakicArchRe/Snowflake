@@ -11,7 +11,7 @@ begin
                 select
                     sc.scenarioid,
                     rb.retroblockid,
-                    sum(rb.placement * case when r.isspecific =1 then ra.cessiongross else coalesce(rci.investmentsigned, rci.investmentsignedpctcalculated) end) as CessionGross
+                    sum(rb.placement * case when r.isspecific =1 then ra.cessiongross else coalesce(rci.investmentsigned, rci.investmentcalculatedpct) end) as CessionGross
                 from 
                     economic_model_staging.retrotag rb
                     inner join economic_model_staging.RetroConfiguration rpc on rpc.RetroConfigurationid = rb.RetroConfigurationid

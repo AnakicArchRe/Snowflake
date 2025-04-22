@@ -105,7 +105,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "VALIDATE_SCENARIOS()",
-    "ObjectDDLHash": "8d35b9c53cc88119eb579e4758b78d5c6a827c2aaeb923ae3c9ae19e6684eeb0"
+    "ObjectDDLHash": "1fb986939190eda626920a011e5a5e10a64941d02bf8b453d069cc3f9d4a1346"
   },
   {
     "ObjectType": "TABLE",
