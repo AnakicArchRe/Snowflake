@@ -93,7 +93,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RESOLVE_SCENARIO_DATA()",
-    "ObjectDDLHash": "7bf81130bac65a17a43c9b5e7e90599b11088052daa21fb4507cb4ad30cef6a9"
+    "ObjectDDLHash": "b5f3216b4e45e91039515890b1eeae2a35532f9c24ace068226b8f875c597520"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -472,12 +472,6 @@
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "SCENARIO",
     "ObjectDDLHash": "fbd74dd675b1af8d3a32d6caf689c3ba6cfbe56ae3352d18df45a99b460825e8"
-  },
-  {
-    "ObjectType": "TABLE",
-    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "SCENARIO_META",
-    "ObjectDDLHash": "7eaa5a06e362157559a9b3397d350a1c68299732e0ac27e8a4f848a751fe9d0b"
   },
   {
     "ObjectType": "TABLE",
