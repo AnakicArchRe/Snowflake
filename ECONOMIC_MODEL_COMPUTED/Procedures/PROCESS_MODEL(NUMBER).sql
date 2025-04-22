@@ -73,6 +73,7 @@ begin
             pls.portlayerid,
             pls.layerid,
             b.retroblockid,
+            b.cessionstartperiodid,
             rc.retrocontractid,
             rc.retroconfigurationid,
             rps.level,
@@ -208,15 +209,15 @@ begin
                     from 
                         -- start with subject blocks we're working on
                         economic_model_computed.baseblockinfo sbi
-                        -- for each subject block, find all other tags in the same period
-                        inner join economic_model_staging.retrotag t on t.periodid = sbi.periodid
-                        -- ensure that the level of those retrotags is less than the current one
+                        -- for each subject block, find all other blocks that affects it (same period, lower level retro)
+                        -- note: we do not need a filter for level because we're procession levels from lower to higher, so only lower level cededblocks exist at this point
+                        inner join economic_model_staging.retrotag t on 
+                            -- if we're using cession data from current period we join on periodId
+                            t.periodid = sbi.periodid
+                            -- if we're using cession data from cession start and ignoring subsequent changes (lower level retros starting / stopping), we join on cessionstartperiodid.
+                            -- t.periodid = sbi.cessionstartperiodid
                         inner join economic_model_staging.retroconfiguration rc on rc.retroconfigurationid = t.retroconfigurationid
                         inner join economic_model_computed.retrocontract_scenario r on r.retrocontractid = rc.retrocontractid and r.scenarioid = sbi.scenarioid and r.level < sbi.level
-                            -- optionally we can ensure that the start date is <= to the inception of the subject block's retro
-                            -- note: currently commenting this out as it's not yet decided if this will be the desired behavior
-                            -- and r.inception <= sbi.inception
-                        -- now get the actual ceded blocks. to summarize, they are blocks in the same scenario and period, at a lower level, and (optionally) whose retros have not started after the one we're looking at.
                         inner join economic_model_computed.cededblock cb on cb.scenarioid = sbi.scenarioid and cb.retroblockid = t.retroblockid
                         cross join currentLevel
                     where

@@ -3,13 +3,15 @@ RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
 BEGIN
-    
+
     -- Tag each period with a list of retroconfigurations it cedes to.
     create or replace table economic_model_staging.RetroTag as
         with 
             periodRetros as (
                 select
+                    p.portlayerid,
                     p.periodid, 
+                    p.periodstart,
                     plc.retroprogramid, 
                     plc.placement, 
                     
@@ -32,20 +34,32 @@ BEGIN
             , byContract as (
                 select 
                     -- distinct because we can have more than one retroprogram in a retrocontract (but they all have the same placement on the same config date)
-                    distinct pr.periodid, m.retrocontractid, pr.placement, pr.configdate
+                    distinct pr.portlayerid, pr.periodid, periodstart, m.retrocontractid, pr.placement, pr.configdate
                 from 
                     periodretros pr
                     inner join economic_model_revoext.retroprogramcontractmapping m on pr.retroprogramid = m.retroprogramid
+            )
+            , withFirstInteractionPeriod as (
+                select 
+                    *,
+                    -- note: this column can be used by the economic_model_computed.process_model stored procedure if we want to make sure 
+                    -- all blocks of a cession use the same parameters that were present when the cession started (e.g. cession is 
+                    -- unaffected by new retros starting or lower-level retros ending). At the time of writing this comment, this is 
+                    -- not the case, but I've put this in place so it's easy to switch to this method of calculation.
+                    first_value(periodId) over(partition by portlayerid, retrocontractid order by periodstart asc) as cessionstartperiodid
+                from 
+                    byContract
             )
             -- find the configuration applicable to the block...
             , withConfigsRanked as (
                 select 
                     pr.*, 
                     retroconfigurationid, 
+                    -- take the newest configuration on or before the startdate for the period
                     rank() over (partition by periodid, cfg.retrocontractid order by cfg.startdate desc) rank
                 from 
-                    byContract pr
-                    // find all configs or or before the config date
+                    withFirstInteractionPeriod pr
+                    // find all configs on or before the config date
                     left join economic_model_staging.retroconfiguration cfg on 
                         pr.retrocontractid = cfg.retrocontractid 
                         and cfg.startdate <= pr.configDate
@@ -54,7 +68,8 @@ BEGIN
             ,withConfigs as (
                 select 
                     concat(periodid, '->', RetroConfigurationid) as RetroBlockId, 
-                    periodid, 
+                    periodid,
+                    cessionstartperiodid,
                     RetroConfigurationid, 
                     placement
                 from 
@@ -66,7 +81,6 @@ BEGIN
                 *
             from
                 withConfigs
-            order by 
-                periodid;
+                ;
 end
 ;
