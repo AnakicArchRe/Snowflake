@@ -440,6 +440,12 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
+    "ObjectName": "DUPLICATE_SCENARIO(NUMBER, VARCHAR)",
+    "ObjectDDLHash": "718ebc0b2d52ee6ab5c80ae103d44fe44cd95e2b1854e6a7218804cec74f770c"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "MIGRATE_SCENARIOS()",
     "ObjectDDLHash": "11dcfde7a998f0778ee66970f157a12f4756f8d6cbbe74f75be5fd80ca3e4ee2"
   },
