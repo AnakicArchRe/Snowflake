@@ -471,7 +471,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "SCENARIO",
-    "ObjectDDLHash": "fbd74dd675b1af8d3a32d6caf689c3ba6cfbe56ae3352d18df45a99b460825e8"
+    "ObjectDDLHash": "7efcca2a3f485da26688b1a41ec25dfd050e56e416e1996911adf79b37c815bb"
   },
   {
     "ObjectType": "TABLE",
