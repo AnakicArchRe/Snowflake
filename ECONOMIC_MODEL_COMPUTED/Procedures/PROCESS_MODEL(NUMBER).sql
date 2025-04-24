@@ -73,12 +73,16 @@ begin
             pls.portlayerid,
             pls.layerid,
             b.retroblockid,
-            b.cessionstartperiodid,
             rc.retrocontractid,
             rc.retroconfigurationid,
             rps.level,
             rps.inception,
             rps.isspecific,
+
+            -- if netcessionlockin is set, all blocks of a portlayer that cede to a retro look at the the first period 
+            -- where the cession started to find how much was available after lower levels retros are done. If it is not set,
+            -- each block looks for lower level retros in the same period it occupies.
+            case when sf.netcessionlockin then b.cessionstartperiodid else per.periodid end as netCessionDefinitionPeriod,
 
             // calculation factors for premium, expensesAmt, and exposed limit/premium
             pls.limit100pct,
@@ -211,11 +215,7 @@ begin
                         economic_model_computed.baseblockinfo sbi
                         -- for each subject block, find all other blocks that affects it (same period, lower level retro)
                         -- note: we do not need a filter for level because we're procession levels from lower to higher, so only lower level cededblocks exist at this point
-                        inner join economic_model_staging.retrotag t on 
-                            -- if we're using cession data from current period we join on periodId
-                            t.periodid = sbi.periodid
-                            -- if we're using cession data from cession start and ignoring subsequent changes (lower level retros starting / stopping), we join on cessionstartperiodid.
-                            -- t.periodid = sbi.cessionstartperiodid
+                        inner join economic_model_staging.retrotag t on t.periodid = sbi.netCessionDefinitionPeriod
                         inner join economic_model_staging.retroconfiguration rc on rc.retroconfigurationid = t.retroconfigurationid
                         inner join economic_model_computed.retrocontract_scenario r on r.retrocontractid = rc.retrocontractid and r.scenarioid = sbi.scenarioid and r.level < sbi.level
                         inner join economic_model_computed.cededblock cb on cb.scenarioid = sbi.scenarioid and cb.retroblockid = t.retroblockid
