@@ -125,7 +125,7 @@ begin
             rps.isactive = 1;
 
     -- prepare table with amounts invested for each contract
-    create or replace temporary table investedAmountByRetroContract as
+    create or replace temporary table economic_model_computed.investedAmountByRetroContract as
         with investedAmountByRetroConfig as (
             select 
                 rls.scenarioid, rc.retrocontractid, rc.retroconfigurationid, rc.startdate, sum(rls.investmentsignedamt) totalInvestedAmount
@@ -339,8 +339,6 @@ begin
         from economic_model_computed.subjectblockinfo;
 
         call economic_model_computed.calculatecontractmetrics(null);
-
-
         
         // todo: review and update the metrics we expose here. we need to keep this table synced with the calculationcontractmetrics table, as far as included columns go
         insert into economic_model_computed.contractresult(
@@ -370,7 +368,7 @@ begin
                 bestresultpct, medianresultpct, sharperatio, expectedrpcovered, expectedpremiumtochosencollateral, availableforclaims, commissionoverride, profitcommissionamount, estimatedoriginalexpensesonpremium, estimatedoriginalexpensesonreinstatementpremium, lossratio, combinedratio, coveredlosses, structuralleveragemultiple, expectedlosstooccurrencelimitratio, expectedlosstoaggregatelimitratio, rateonline
             from 
                 economic_model_computed.calculationcontractmetrics m
-                left join investedAmountByRetroContract ri on ri.scenarioid = m.scenarioid and ri.retrocontractid = m.calculationcontractid;
+                left join economic_model_computed.investedAmountByRetroContract ri on ri.scenarioid = m.scenarioid and ri.retrocontractid = m.calculationcontractid;
         
 
         -- 2.2.4. update the _scenario tables so we can use them to read the investor % in each block 
@@ -505,8 +503,6 @@ begin
 
     // 4. load ceded blocks and investor contract data and calculate investor metrics
 
-     // 2.2.3. calculate metrics using the subject blocks
-    
     truncate economic_model_computed.calculationcontract;
 
     insert into economic_model_computed.calculationcontract
@@ -519,7 +515,7 @@ begin
         select 
             amt.scenarioid, 
             ri.retrocontractinvestorid, 
-            1 /*1=retrocontract*/, 
+            2 /*2=retroinvestor, this is just info, not used*/, 
             r.climateload, 
             r.nonmodeledload, 
             ri.brokerage, 
@@ -580,7 +576,6 @@ begin
         from 
             economic_model_computed.calculationcontractmetrics m
             left join investedAmountByRetroContract ri on ri.scenarioid = m.scenarioid and ri.retrocontractid = m.calculationcontractid;
-   
 
     // 5. generate gross blocks
     -- todo: add diag info
