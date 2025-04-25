@@ -5,9 +5,12 @@ AS
 begin
     
     -- Insert the catch-all retrocontract
-    insert into economic_model_revoext.retrocontract (retrocontractid, retroprogramtype, name, level, inception, expiration, exposurestart, exposureend, isspecific, reinsurancebrokerageonnetpremium, commissiononnetpremium, profitcommissionpctofprofit, reinsuranceexpensesoncededcapital, reinsuranceexpensesoncededpremium, isactive, groupname, nonmodeledload, climateload, capitalcalculationlossview, capitalcalculationtargetreturnperiod, pmlload)
+    insert into economic_model_revoext.retrocontract (retrocontractid, retroprogramtype, name, level, inception, expiration, exposurestart, exposureend, isspecific, reinsurancebrokerageonnetpremium, commissiononnetpremium, profitcommissionpctofprofit, reinsuranceexpensesoncededcapital, reinsuranceexpensesoncededpremium, isactive, groupname, nonmodeledload, climateload, capitalcalculationlossview, capitalcalculationtargetreturnperiod, pmlload, netcessionlockin)
     select * from
-    values('NET_POSITION', 1, 'ARCH Net Position Catch-All', 10, '2000-1-1', '2100-1-1', '2024-1-1', '2025-1-1', FALSE, 0, 0, 0,0 ,0, TRUE, 'Catch-All'	, 1, 1, 'ARCH', 4, 1 )
+    values('NET_POSITION', 1, 'ARCH Net Position Catch-All', 10, '2000-1-1', '2100-1-1', '2024-1-1', '2025-1-1', FALSE, 0, 0, 0,0 ,0, TRUE, 'Catch-All'	, 1, 1, 'ARCH', 4, 1, 
+        // Note: The net-position-catch-all retro MUST not have the netCessionLockin flag set. It must be affected by all other retros. 
+        // It starts earlier than all other retros and acts as a catch-all, so everything other retros do, regardless of when they start, affects it.
+        false)
     -- ...but only if it doesn't already exist. If it's already in the DB, the user might have adjusted its settings and we don't want to lose those
     where not exists (select * from economic_model_revoext.retrocontract where retrocontractid = 'NET_POSITION');
 
