@@ -119,7 +119,7 @@ begin
                 y.year;
 
 
-    create or replace table economic_model_computed.calculationcontractmetrics as
+    create or replace table economic_model_computed.yltDerivedMeasures as
         // Once we have the ytl for each contract/scenario, we can calculate the required collateral, and then the metrics. 
         // We calculate the required collateral first, because it will be used for calculating metrics for contracts that do not have revo/override collateral set.
         with
@@ -163,145 +163,153 @@ begin
                 group by 
                     scenarioid, lossviewgroup, calculationcontractid
             )
-            , yltDerivedMeasures as (
-                -- now prepare everything we need (still at the ylt level) for calculating metrics
-                select 
-                    y.scenarioid,
-                    y.calculationcontractid,
-                    y.lossviewgroup,
-                    y.year,
-                    premiumprorata,
-                    rc.requiredcapital,
-                    // using the required collateral as a fallback option
-                    zeroifnull(coalesce(c.availablecapital, rc.requiredcapital)) as capital,
-                    premiumprorata - premiumprorata_expenses as netPremium,
-                    rp,
-                    rb,
-                    rp - rb as netRP,
-                    (1 - c.commissiononnetpremium - c.reinsurancebrokerageonnetpremium) as netinvestorshare,
-                    netPremium * netinvestorshare as netPremiumToInvestor,
-                    netRP * netinvestorshare as netRpToInvestorFull,
-                    loss,
-                    (loss - netRpToInvestorFull) as lossesToCover,
-                    // if capital is 0 or null we have unlimited funds available for losses.
-                    case when capital = 0 then lossesToCover else (capital + netPremiumToInvestor) end as availableFundsForLosses,        
-                    case when lossesToCover = 0 then 1 else least(greatest(availableFundsForLosses / lossesToCover, 0), 1) end as coveredMarginalShare,
-                    netRpToInvestorFull * coveredMarginalShare as netRpToInvestorCovered,
-                    netRp * coveredMarginalShare as netRpCovered,
-                    loss * coveredMarginalShare as coveredLosses,
-                    netPremium + netRpCovered as netPremGrossOfOverrideBase,
-                    netPremGrossOfOverrideBase * c.commissiononnetpremium as override2,
-                    netPremGrossOfOverrideBase * (1 - c.reinsurancebrokerageonnetpremium) as netPremGrossOfOverride,
-                    netPremGrossOfOverride * c.commissiononnetpremium as commissionamount,
-                    netpremium + rp - coveredLosses as uwProfit,
-                    uwProfit - commissionamount - c.reinsuranceexpensesoncededcapital * capital - c.reinsuranceexpensesoncededpremium * netPremGrossOfOverrideBase as profit,
-                    greatest(profit, 0) * profitcommission as profitComissionAmount,
-                    netPremGrossOfOverride - override2 - profitComissionAmount - coveredLosses as investorResult,
-                    (loss - rp) * (1 - coveredMarginalShare) as tail,
-                    netPremium + netRP as totalPremiumNetOfOriginalDeductions,
-                    capital + totalPremiumNetOfOriginalDeductions * (1 - commissiononnetpremium) as availableForClaims,
-                    premiumprorata_expenses / premiumprorata as estimatedOriginalExpensesOnPremium,
-                    coveredMarginalShare * loss / (premiumprorata + rp * coveredMarginalShare) as lossRatio,
-                    (coveredMarginalShare * loss + premiumprorata_expenses + rb) / (premiumprorata + rp * coveredMarginalShare) as combinedRatio
-                from
-                    economic_model_computed.yltByContract y
-                    inner join economic_model_computed.calculationcontract c on y.calculationcontractid = c.calculationcontractid and y.scenarioid = c.scenarioid
-                    inner join requiredCapitalCalc rc on y.scenarioid = rc.scenarioid and y.lossviewgroup = rc.lossviewgroup and y.calculationcontractid = rc.calculationcontractid
-            )
-            , calculatedmeasures as (
-                select
-                    y.scenarioid,
-                    y.calculationcontractid,
-                    y.lossviewgroup,
-                    avg(requiredcapital) as requiredcapital,
-                    avg(capital) as chosenCapitalForMetrics,
-                    avg(y.investorresult) avgResult,
-                    max(y.investorresult) bestResult,
-                    min(y.investorresult) worstResult,
-                    median(y.investorresult) medianResult,
-                    case when chosenCapitalForMetrics > 0 then avgresult / chosenCapitalForMetrics else null end as avgResultPct,
-                    case when chosenCapitalForMetrics > 0 then bestresult / chosenCapitalForMetrics else null end as bestResultPct,
-                    case when chosenCapitalForMetrics > 0 then medianResult / chosenCapitalForMetrics else null end as medianResultPct,
-                    avgResult / STDDEV_POP(y.investorresult) as sharpeRatio,
-                    // bep = break even point
-                    -- min_by(yeltrank, abs(y.investorresult)) / 10e3 as bep1,
-                    1 - count_if(y.investorresult < 0) / 10e3 as chanceOfPositiveResult,
-                    -- count_if(y.investorresult >= 0) / 10e3 as bep3,
-                    max(premiumprorata) expectedPremium,
-                    sum(netrpcovered) / 10e3 as expectedRPCovered,
-                    sum(loss) / 10e3 as expectedLosses,
-                    sum(rp) / 10e3 as expectedRP,
-                    sum(rb) / 10e3 as expectedRB,
-                    expectedPremium + expectedRPCovered as expectedPremiumTotal,
-                    case when chosenCapitalForMetrics > 0 then expectedPremiumTotal / chosenCapitalForMetrics else null end as expectedPremiumToChosenCollateral,
-                    max(tail) maxTail,
-                    avg(availableForClaims) availableForClaims,
-                    avg(override2) as commissionOverride,
-                    avg(profitComissionAmount) as profitCommissionAmount,
-                    avg(estimatedOriginalExpensesOnPremium) as estimatedOriginalExpensesOnPremium,
-                    case when expectedRP > 0 then expectedRB / expectedRP else null end as estimatedOriginalExpensesOnReinstatementPremium,
-                    avg(lossRatio) as lossRatio,
-                    avg(combinedratio) as combinedratio,
-                    avg(coveredlosses) as coveredlosses,
-                from
-                    yltDerivedMeasures y
-                group by 
-                    y.scenarioid, 
-                    y.calculationcontractid,
-                    y.lossviewgroup
-            )
-            -- (we're not done yet as we need information on limits and they are aggregated across a different dimension (date instead of yelt year)
-            -- so we couldn't have calculated them together with the ylt data.)
-            -- Find the list of dates when the limit changes
-            , periods as (
-                select periodstart, periodend from economic_model_computed.blockUSD b
-                inner join economic_model_staging.portlayerperiod per on b.periodid = per.periodid
-            )
-            , limitChangeDates as (
-                select distinct periodstart as date from periods
-                union 
-                select distinct periodend as date from periods
-            )
-            -- find the occurence and aggregate limit at each of the dates
-            , limitUSDOnChangeDates as (
-                select 
-                    scenarioid, calculationcontractid, date, 
-                    sum(exposedlimit) as exposedlimit, sum(exposedlimit * (1 + pl.reinstcount)) as exposedAggLimit
-                from 
-                    limitChangeDates d
-                    cross join economic_model_computed.blockUSD b
-                    -- todo: investigate if including the portlayer and period columns early on (in blocksylt) improves perf by reducing the need for these subequent joins
-                    inner join economic_model_staging.portlayerperiod per on b.periodid = per.periodid and per.periodstart <= d.date and d.date <= per.periodend
-                    inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
-                group by 
-                    scenarioid, calculationcontractid, date
-            )
-            -- find the highest occ/agg daily limit for each scenario/investor
-            , limitDailyMaxUSD as (
-                select 
-                    scenarioid, calculationcontractid, round(max(exposedlimit)) as maxDailyLimit, round(max(exposedagglimit)) as maxDailyLimitAgg
-                from 
-                    limitUSDOnChangeDates
-                group by 
-                    scenarioid, calculationcontractid
-            )
+            -- now prepare everything we need (still at the ylt level) for calculating metrics
             select 
-                -- output all investor metrics
-                y.*, 
-                -- and limit information (without duplicaing the join columns)
-                l.* exclude (scenarioid, calculationcontractid),
-                -- indicates if the required capital for this lossview should be used for automatic investment % calculation ()
-                (y.lossviewgroup = capitalcalculationlossview) as usableForAutomaticInvestmentShareCalc,
-                maxDailyLimitAgg / availableForClaims as structuralLeverageMultiple,
-                y.coveredlosses / maxDailyLimit as expectedLossToOccurrenceLimitRatio,
-                y.coveredlosses / maxDailyLimitAgg as expectedLossToAggregateLimitRatio,
-                ExpectedPremium / maxDailyLimit as RateOnLine
+                y.scenarioid,
+                y.calculationcontractid,
+                y.lossviewgroup,
+                y.year,
+                premiumprorata,
+                rc.requiredcapital,
+                // using the required collateral as a fallback option
+                zeroifnull(coalesce(c.availablecapital, rc.requiredcapital)) as capital,
+                premiumprorata - premiumprorata_expenses as netPremium,
+                rp,
+                rb,
+                rp - rb as netRP,
+                (1 - c.commissiononnetpremium - c.reinsurancebrokerageonnetpremium) as netinvestorshare,
+                netPremium * netinvestorshare as netPremiumToInvestor,
+                netRP * netinvestorshare as netRpToInvestorFull,
+                loss,
+                (loss - netRpToInvestorFull) as lossesToCover,
+                // if capital is 0 or null we have unlimited funds available for losses.
+                case when capital = 0 then lossesToCover else (capital + netPremiumToInvestor) end as availableFundsForLosses,        
+                case when lossesToCover = 0 then 1 else least(greatest(availableFundsForLosses / lossesToCover, 0), 1) end as coveredMarginalShare,
+                netRpToInvestorFull * coveredMarginalShare as netRpToInvestorCovered,
+                netRp * coveredMarginalShare as netRpCovered,
+                loss * coveredMarginalShare as coveredLosses,
+                netPremium + netRpCovered as netPremGrossOfOverrideBase,
+                netPremGrossOfOverrideBase * c.commissiononnetpremium as override2,
+                netPremGrossOfOverrideBase * (1 - c.reinsurancebrokerageonnetpremium) as netPremGrossOfOverride,
+                netPremGrossOfOverride * c.commissiononnetpremium as commissionamount,
+                netpremium + rp - coveredLosses as uwProfit,
+                uwProfit - commissionamount - c.reinsuranceexpensesoncededcapital * capital - c.reinsuranceexpensesoncededpremium * netPremGrossOfOverrideBase as profit,
+                greatest(profit, 0) * profitcommission as profitComissionAmount,
+                netPremGrossOfOverride - override2 - profitComissionAmount - coveredLosses as investorResult,
+                (loss - rp) * (1 - coveredMarginalShare) as tail,
+                netPremium + netRP as totalPremiumNetOfOriginalDeductions,
+                capital + totalPremiumNetOfOriginalDeductions * (1 - commissiononnetpremium) as availableForClaims,
+                premiumprorata_expenses / premiumprorata as estimatedOriginalExpensesOnPremium,
+                coveredMarginalShare * loss / (premiumprorata + rp * coveredMarginalShare) as lossRatio,
+                (coveredMarginalShare * loss + premiumprorata_expenses + rb) / (premiumprorata + rp * coveredMarginalShare) as combinedRatio
+            from
+                economic_model_computed.yltByContract y
+                inner join economic_model_computed.calculationcontract c on y.calculationcontractid = c.calculationcontractid and y.scenarioid = c.scenarioid
+                inner join requiredCapitalCalc rc on y.scenarioid = rc.scenarioid and y.lossviewgroup = rc.lossviewgroup and y.calculationcontractid = rc.calculationcontractid
+    ;
+
+    // I've split this up from previous cte chain due to grouping causing massive perf issues with empty resultset...
+    // todo: investigate query plan
+    create or replace table economic_model_computed.calculationcontractmetrics as
+        with calculatedmeasures as (
+            select
+                y.scenarioid,
+                y.calculationcontractid,
+                y.lossviewgroup,
+                avg(requiredcapital) as requiredcapital,
+                avg(capital) as chosenCapitalForMetrics,
+                avg(y.investorresult) avgResult,
+                max(y.investorresult) bestResult,
+                min(y.investorresult) worstResult,
+                median(y.investorresult) medianResult,
+                case when chosenCapitalForMetrics > 0 then avgresult / chosenCapitalForMetrics else null end as avgResultPct,
+                case when chosenCapitalForMetrics > 0 then bestresult / chosenCapitalForMetrics else null end as bestResultPct,
+                case when chosenCapitalForMetrics > 0 then medianResult / chosenCapitalForMetrics else null end as medianResultPct,
+                avgResult / STDDEV_POP(y.investorresult) as sharpeRatio,
+                // bep = break even point
+                -- min_by(yeltrank, abs(y.investorresult)) / 10e3 as bep1,
+                1 - count_if(y.investorresult < 0) / 10e3 as chanceOfPositiveResult,
+                -- count_if(y.investorresult >= 0) / 10e3 as bep3,
+                max(premiumprorata) expectedPremium,
+                sum(netrpcovered) / 10e3 as expectedRPCovered,
+                sum(loss) / 10e3 as expectedLosses,
+                sum(rp) / 10e3 as expectedRP,
+                sum(rb) / 10e3 as expectedRB,
+                expectedPremium + expectedRPCovered as expectedPremiumTotal,
+                case when chosenCapitalForMetrics > 0 then expectedPremiumTotal / chosenCapitalForMetrics else null end as expectedPremiumToChosenCollateral,
+                max(tail) maxTail,
+                avg(availableForClaims) availableForClaims,
+                avg(override2) as commissionOverride,
+                avg(profitComissionAmount) as profitCommissionAmount,
+                avg(estimatedOriginalExpensesOnPremium) as estimatedOriginalExpensesOnPremium,
+                case when expectedRP > 0 then expectedRB / expectedRP else null end as estimatedOriginalExpensesOnReinstatementPremium,
+                avg(lossRatio) as lossRatio,
+                avg(combinedratio) as combinedratio,
+                avg(coveredlosses) as coveredlosses,
+            from
+                economic_model_computed.yltDerivedMeasures y
+            group by 
+                y.scenarioid, 
+                y.calculationcontractid,
+                y.lossviewgroup
+        )
+        -- (we're not done yet as we need information on limits and they are aggregated across a different dimension (date instead of yelt year)
+        -- so we couldn't have calculated them together with the ylt data.)
+        -- Find the list of dates when the limit changes
+        , periods as (
+            select periodstart, periodend from economic_model_computed.blockUSD b
+            inner join economic_model_staging.portlayerperiod per on b.periodid = per.periodid
+        )
+        , limitChangeDates as (
+            select distinct periodstart as date from periods
+            union 
+            select distinct periodend as date from periods
+        )
+        -- find the occurence and aggregate limit at each of the dates
+        , limitUSDOnChangeDates as (
+            select 
+                scenarioid, calculationcontractid, date, 
+                sum(exposedlimit) as exposedlimit, sum(exposedlimit * (1 + pl.reinstcount)) as exposedAggLimit
             from 
-                calculatedmeasures y
-                inner join limitDailyMaxUSD l on y.scenarioid = l.scenarioid and y.calculationcontractid = l.calculationcontractid            
-                inner join economic_model_computed.calculationcontract c on c.scenarioid = y.scenarioid and c.calculationcontractid = y.calculationcontractid
-            order by 
-                calculationcontractid, lossviewgroup;
+                limitChangeDates d
+                cross join economic_model_computed.blockUSD b
+                -- todo: investigate if including the portlayer and period columns early on (in blocksylt) improves perf by reducing the need for these subequent joins
+                inner join economic_model_staging.portlayerperiod per on b.periodid = per.periodid and per.periodstart <= d.date and d.date <= per.periodend
+                inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
+            group by 
+                scenarioid, calculationcontractid, date
+        )
+        -- find the highest occ/agg daily limit for each scenario/investor
+        , limitDailyMaxUSD as (
+            select 
+                scenarioid, calculationcontractid, round(max(exposedlimit)) as maxDailyLimit, round(max(exposedagglimit)) as maxDailyLimitAgg
+            from 
+                limitUSDOnChangeDates
+            group by 
+                scenarioid, calculationcontractid
+        )
+        select 
+            -- output all investor metrics
+            y.*, 
+            -- and limit information (without duplicaing the join columns)
+            l.* exclude (scenarioid, calculationcontractid),
+            -- indicates if the required capital for this lossview should be used for automatic investment % calculation ()
+            (y.lossviewgroup = capitalcalculationlossview) as usableForAutomaticInvestmentShareCalc,
+            maxDailyLimitAgg / availableForClaims as structuralLeverageMultiple,
+            y.coveredlosses / maxDailyLimit as expectedLossToOccurrenceLimitRatio,
+            y.coveredlosses / maxDailyLimitAgg as expectedLossToAggregateLimitRatio,
+            ExpectedPremium / maxDailyLimit as RateOnLine
+        from 
+            calculatedmeasures y
+            inner join limitDailyMaxUSD l on y.scenarioid = l.scenarioid and y.calculationcontractid = l.calculationcontractid            
+            inner join economic_model_computed.calculationcontract c on c.scenarioid = y.scenarioid and c.calculationcontractid = y.calculationcontractid
+        order by 
+            calculationcontractid, lossviewgroup;
 
 end
 ;
+
+
+
+
+
