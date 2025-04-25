@@ -14,8 +14,14 @@
   {
     "ObjectType": "FUNCTION",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "FORMAT_PERCENT(N NUMBER, MAX_DECIMALS NUMBER)",
-    "ObjectDDLHash": "ddcf61949bd21e9aa111c7a360f97da86bf9daa2b9a41f28c38b7a49745f69ae"
+    "ObjectName": "FORMAT_NUMBER(N FLOAT, MAX_DECIMALS NUMBER)",
+    "ObjectDDLHash": "7b7bf0ff88f10bced7cb0245c027fee20c71fa9c1bf7e753167346bec6156f28"
+  },
+  {
+    "ObjectType": "FUNCTION",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "FORMAT_PERCENT(N FLOAT, MAX_DECIMALS NUMBER)",
+    "ObjectDDLHash": "07f4acd483a9b380219059791a02acbccbe7b3c864cbe78b61572bb5748cef2e"
   },
   {
     "ObjectType": "PROCEDURE",

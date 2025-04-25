@@ -205,8 +205,8 @@ begin
                                 ' ', 
                                 cb.retrocontractinvestorid, 
                                 '(', 
-                                economic_model_computed.format_percent(CessionGross, 2),
-                                '% )'
+                                economic_model_computed.format_percent(cb.CessionGross, 2),
+                                ')'
                             ), 
                             '\n'
                         ) within group (order by cb.retrocontractinvestorid asc) CessionGrossExplanation
