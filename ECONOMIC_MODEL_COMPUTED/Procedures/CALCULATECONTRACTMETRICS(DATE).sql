@@ -119,7 +119,7 @@ begin
                 y.year;
 
 
-    create or replace table economic_model_computed.yltDerivedMeasures as
+    create or replace temporary table economic_model_computed.yltDerivedMeasures as
         // Once we have the ytl for each contract/scenario, we can calculate the required collateral, and then the metrics. 
         // We calculate the required collateral first, because it will be used for calculating metrics for contracts that do not have revo/override collateral set.
         with
@@ -308,8 +308,3 @@ begin
 
 end
 ;
-
-
-
-
-
