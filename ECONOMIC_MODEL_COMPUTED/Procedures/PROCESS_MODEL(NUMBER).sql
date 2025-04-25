@@ -82,7 +82,7 @@ begin
             -- if netcessionlockin is set, all blocks of a portlayer that cede to a retro look at the the first period 
             -- where the cession started to find how much was available after lower levels retros are done. If it is not set,
             -- each block looks for lower level retros in the same period it occupies.
-            case when sf.netcessionlockin then b.cessionstartperiodid else per.periodid end as netCessionDefinitionPeriod,
+            case when rps.netcessionlockin then b.cessionstartperiodid else per.periodid end as netCessionDefinitionPeriod,
 
             // calculation factors for premium, expensesAmt, and exposed limit/premium
             pls.limit100pct,
