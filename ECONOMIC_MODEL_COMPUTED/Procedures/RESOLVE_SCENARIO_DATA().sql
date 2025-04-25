@@ -4,10 +4,6 @@ LANGUAGE SQL
 AS
 begin
 
-    -- todo: Consider if I need the original values inside these tables (those "union" blocks)? 
-    -- Is this not just for the scenario editor? If so, I should I should remove that code here 
-    -- and put it just in the scenario editor.
-
     -- scenario parts
     create or replace table economic_model_scenario.scenario_parts as
         with recursive cte as (
