@@ -192,24 +192,23 @@ begin
                         :currLevel 
                         as currLevel
                 )
-                , grossByLevelUnderRetroAndPeriod as (
+                , availability as (
                     select
                         sbi.scenarioid, 
                         sbi.periodid,
                         sbi.retrocontractid,
-                        sbi.level as subjectLevel,
-                        r.level as lowerLevel,
-                        sum(cessiongross) as cessiongross,
-                        listagg(
-                            concat(
-                                ' ', 
-                                cb.retrocontractinvestorid, 
-                                '(', 
-                                economic_model_computed.format_percent(cb.CessionGross, 2),
-                                ')'
-                            ), 
-                            '\n'
-                        ) within group (order by cb.retrocontractinvestorid asc) CessionGrossExplanation
+                        1 - sum(cessiongross * diag_available) as available,
+                        case when sbi.netCessionDefinitionPeriod <> sbi.periodid then '{Definition period: ' || sbi.netCessionDefinitionPeriod || '}\n' else '' end ||
+                            listagg(
+                                concat(
+                                    ' ', 
+                                    cb.retrocontractinvestorid, 
+                                    '(cession gross:', economic_model_computed.format_percent(cb.CessionGross, 2),
+                                    ', available: ', economic_model_computed.format_percent(diag_available, 2),
+                                    ')'
+                                ), 
+                                '\n'
+                            ) within group (order by cb.retrocontractinvestorid asc) AvailableExplanation
                     from 
                         -- start with subject blocks we're working on
                         economic_model_computed.baseblockinfo sbi
@@ -225,26 +224,8 @@ begin
                     group by 
                         sbi.scenarioid, 
                         sbi.periodid,
-                        sbi.retrocontractid,
-                        subjectLevel,
-                        lowerLevel
-                ),
-                availability as (
-                    select 
-                        scenarioid, 
-                        periodid,
-                        retrocontractid,
-                        subjectLevel,
-                        -- if a lower level grabbed 100%, then ln(0) would throw an exception. That's why we null the value in that case and use zeroifnull to convert it to 0.
-                        zeroifnull(exp(sum(ln(1 - case when cessiongross < 1 then cessiongross else null end)))) as available,
-                        listagg(concat('[', lowerLevel, ']: ', trim(to_varchar(cessiongross * 100, '999.00')), '%', ' {\n', CessionGrossExplanation,'\n}'), '\n') within group (order by lowerlevel asc) as AvailableExplanation
-                    from 
-                        grossByLevelUnderRetroAndPeriod
-                    group by 
-                        scenarioid, 
-                        periodid,
-                        retrocontractid,
-                        subjectLevel
+                        sbi.netCessionDefinitionPeriod,
+                        sbi.retrocontractid
                 )
                 select
                     b.scenarioid,
@@ -279,7 +260,7 @@ begin
                     availableAtLevel * proRataPremium as proRataPremium,
                     availableAtLevel * proRataPremiumExpenses as proRataPremiumExpenses,
 
-                    // we'll need non placed blocks for calculating cession (cession gross % includes placement)
+                    // we need non placed blocks for calculating cession (cession gross % includes placement)
                     availableAtLevel * nonplaced_exposedLimit as nonplaced_exposedLimit,
                     availableAtLevel * nonplaced_exposedPremium as nonplaced_exposedPremium,
                     availableAtLevel * nonplaced_exposedExpenses as nonplaced_exposedExpenses,
@@ -288,9 +269,8 @@ begin
                     availableAtLevel * nonplaced_proRataPremiumExpenses as nonplaced_proRataPremiumExpenses
                 from 
                     economic_model_computed.baseblockinfo b
-                    left join availability la on la.periodid = b.periodid and la.scenarioid = b.scenarioid and la.subjectlevel = b.level and la.retrocontractid = b.retrocontractid
+                    left join availability la on la.periodid = b.periodid and la.scenarioid = b.scenarioid and la.retrocontractid = b.retrocontractid
                     cross join currentLevel
-                    -- todo: join to retrocontract (program*<->*contract) so we can distribute the blocks to contracts and we can group them later by contract
                 where 
                     b.isspecific = 0 and b.level = currLevel
                     ;
