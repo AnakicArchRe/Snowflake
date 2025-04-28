@@ -52,6 +52,9 @@ BEGIN
                 y.year, 
                 y.peril, 
                 y.lossviewgroup, 
+                // If we need the the ability to filter by period, rather than by portlayer in powerbi, we'll need to to keep the granularity at period-level.
+                // If so, we should replace portlayerid with periodid in the grouping and select list.
+                // todo: Check with PC.
                 pl.portlayerid, 
                 rcf.retrocontractid, 
                 rb.scenarioid,
