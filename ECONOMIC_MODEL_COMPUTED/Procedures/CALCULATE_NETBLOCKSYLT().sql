@@ -33,9 +33,9 @@ BEGIN
             y.peril,
             pl.portlayerid,
             lockedFxRate,
-            round(sum(exposedlimit * totalloss * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor)))  loss,
-            round(sum(exposedrp * totalrp * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor)))  RP,
-            round(sum(exposedrp * totalrb * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor)))  RB
+            round(sum(exposedlimit * totalloss * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor))) loss,
+            round(sum(exposedrp * totalrp * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor))) RP,
+            round(sum(exposedrp * totalrb * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor))) RB
         from 
             economic_model_computed.blockoperations_out b
             inner join economic_model_staging.retrotag t on b.blockid = t.retroblockid

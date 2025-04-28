@@ -42,9 +42,9 @@ BEGIN
             
             lockedFxRate,
 
-            round(sum(exposedlimit * totalloss))  Loss,
-            round(sum(exposedrp * totalrp))  RP,
-            round(sum(exposedrp * totalrb))  RB,
+            round(sum(exposedlimit * totalloss)) Loss,
+            round(sum(exposedrp * totalrp)) RP,
+            round(sum(exposedrp * totalrb)) RB,
         from 
             economic_model_computed.blockoperations_out b
             inner join economic_model_computed.portlayer_scenario pl on b.blockid = pl.portlayerid and b.scenarioid = pl.scenarioid
