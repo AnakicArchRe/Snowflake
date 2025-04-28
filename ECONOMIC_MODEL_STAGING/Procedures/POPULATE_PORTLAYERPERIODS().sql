@@ -118,13 +118,16 @@ BEGIN
                 
             PeriodStart, 
             PeriodEnd, 
-            
+
             -- todo: we should really indicate that these days are non-leap year days in the column name
             PeriodStartDayOfYear_NonLeap StartDayOfYear, 
             PeriodEndDayOfYeay_NonLeap EndDayOfYear, 
-
+            
             datediff(day, PeriodStart, PeriodEnd) +1 as PeriodDuration,
-            (1.0 + datediff(day, PeriodStart, PeriodEnd)) / (1.0 + datediff(day, pl.Inception, pl.Expiration)) as ShareOfLayerDuration,
+            -- note: this cast is important, without it we get rounding errors that cause visible discrepancies, even for small integer division (<=365)
+            -- For example, the seasonal and pro-rata premiums should be the same for RAD retros, but were visibly different already at the 3rd decimal place
+            -- due to accumulated errors caused by low precision rounding here.
+            cast(PeriodDuration as float) / (1.0 + datediff(day, pl.Inception, pl.Expiration)) as ShareOfLayerDuration,
             StartPointDescription,
             EndPointDescription
         from

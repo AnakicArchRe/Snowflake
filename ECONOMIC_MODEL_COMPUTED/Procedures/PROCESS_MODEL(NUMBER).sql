@@ -571,11 +571,11 @@ begin
             // note: round all currency amounts to integer to save space in both snowflake and in PowerBI
             // I think this should be safe as the errors it introduce will tend to even out on aggregate and on aggregate we're interested in millions, not dollars.
             // That said, perhaps this is best reserved for the fact tables used only from powerbi.
-            round(pl.limit100pct   * pl.share * s.sidesign * pl.sharefactor, 0) as exposedlimit,
-            round(pl.premium100pct * pl.share * s.sidesign * pl.sharefactor, 0) as ExposedRP,
-            round(pl.premium100pct * pl.share * s.sidesign * pl.sharefactor * pl.premiumfactor, 0) as Premium,
-            round(Premium * pl.expenses, 0) as Expenses,
-            round(ExposedRP * pl.expenses, 0) as ExposedExpenses,
+            pl.limit100pct   * pl.share * s.sidesign * pl.sharefactor as exposedlimit,
+            pl.premium100pct * pl.share * s.sidesign * pl.sharefactor as ExposedRP,
+            pl.premium100pct * pl.share * s.sidesign * pl.sharefactor * pl.premiumfactor as Premium,
+            Premium * pl.expenses as Expenses,
+            ExposedRP * pl.expenses as ExposedExpenses,
             pl.reinstcount
         from 
             economic_model_computed.scenariofiltered sf
