@@ -91,6 +91,7 @@ begin
             pls.sharefactor,
             b.placement,
             pls.premiumfactor,
+            pls.lockedfxrate,
             per.shareoflayerduration,
             pls.expenses,
             s.sidesign,
@@ -247,6 +248,7 @@ begin
                     b.expenses,
                     b.reinstcount,
                     b.sidesign,
+                    b.lockedfxrate,
 
                     coalesce(la.available, 1) as availableAtLevel,
                     
@@ -275,13 +277,14 @@ begin
                     b.isspecific = 0 and b.level = currLevel
                     ;
 
+
         -- 2.2.2. generate and save subject blocks, using placed version of columns from economic_model_computed.subjectBlockInfo
         -- Note: I'm no longer using diffs in order to make this calculation as quick as possible. Diffs still meke sense in data sent to powerbi, but
         -- we want results to be ready in Excel as quickly as possible, so trimming down everything I can for that.
 
         // todo: expand subjectblock with columns for all factors we used (for auditing results)
         insert into economic_model_computed.subjectblock(
-            scenarioid, retroblockid, exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
+            scenarioid, retroblockid, exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount, lockedfxrate,
             diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign,
             diag_notes)
             select 
@@ -293,6 +296,7 @@ begin
                 proratapremium,
                 proratapremiumexpenses,
                 reinstcount,
+                lockedfxrate,
 
                 limit100pct,
                 premium100pct,
@@ -408,7 +412,7 @@ begin
             -- note: we save cessiongross for diagnostic purposes but also for calculating how much is available in the next leve. 
             -- Since I'm also using it for available I didn't add the diag_ prefix this is an internal detail so I'm on the fence about it.
             cessiongross, 
-            exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
+            exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount, lockedFxRate,
             diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, 
             diag_sidesign, 
             notes)
@@ -424,6 +428,7 @@ begin
                 b.nonplaced_proratapremium * cessiongross as premiumprorata,
                 b.nonplaced_proratapremiumexpenses * cessiongross as expensesprorata,
                 b.reinstcount,
+                b.lockedFxRate,
 
                 limit100pct,
                 premium100pct,

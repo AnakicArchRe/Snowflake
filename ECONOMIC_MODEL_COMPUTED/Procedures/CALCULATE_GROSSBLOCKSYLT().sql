@@ -19,6 +19,7 @@ BEGIN
     truncate economic_model_computed.blockoperations_in;
 
     // todo: rename columns to be agnostic about the kind of blocks, e.g. premiumprorata to premium
+    // todo #2: now that we've removed the diff operations from non-ylt blocks, we might as well remove premiums and expenses from the blockoperations table entirely since they are not used for ylt blocks.
     insert into economic_model_computed.blockoperations_in(scenarioid, blockid, exposedlimit, exposedrp, premiumprorata, expensesprorata, exposedpremium, exposedexpenses)
         select 
             b.scenarioid, portlayerid, exposedlimit, exposedrp, premium, expenses, exposedrp, exposedexpenses
@@ -31,25 +32,26 @@ BEGIN
 
     truncate economic_model_computed.grossblockylt;
 
-    insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, loss, rp, rb)
+    insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, lockedFxRate, loss, rp, rb)
         select 
             b.scenarioid,
             y.lossviewgroup,
             y.year,
             y.peril,
             pl.portlayerid,
-            -- cast(per.periodstart as date) periodstart,
-            -- cast(per.periodend as date) periodend,
+            
+            lockedFxRate,
+
             round(sum(exposedlimit * totalloss))  Loss,
             round(sum(exposedrp * totalrp))  RP,
-            round(sum(exposedrp * totalrb))  RB
+            round(sum(exposedrp * totalrb))  RB,
         from 
             economic_model_computed.blockoperations_out b
-            inner join economic_model_staging.portlayer pl on b.blockid = pl.portlayerid
+            inner join economic_model_computed.portlayer_scenario pl on b.blockid = pl.portlayerid and b.scenarioid = pl.scenarioid
             inner join economic_model_staging.portlayerperiod per on pl.portlayerid = per.portlayerid
             inner join economic_model_staging.yelpt y on per.yeltperiodid = y.yeltperiodid
         group by
-            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid
+            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, lockedfxrate
     ;
 
     -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.

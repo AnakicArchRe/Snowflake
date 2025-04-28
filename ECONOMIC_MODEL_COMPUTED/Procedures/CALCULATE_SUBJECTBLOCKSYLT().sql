@@ -6,6 +6,8 @@ BEGIN
 
     truncate economic_model_computed.blockoperations_in;
     
+    // todo: consider removing premiums and expenses from this table, because we no longer use diffs for non-ylt blocks.
+    // todo: also consider moving the diff operations into a separate schema for report optimizations (economic_model_reporting, along with ylt tables and procedures).
     insert into economic_model_computed.blockoperations_in(scenarioid, blockid, exposedlimit, exposedrp, premiumprorata, expensesprorata, exposedpremium, exposedexpenses)
         select 
             b.scenarioid, retroblockid, exposedlimit, exposedrp, premiumprorata, expensesprorata, exposedrp, exposedexpenses
@@ -18,7 +20,7 @@ BEGIN
 
     truncate economic_model_computed.subjectblockylt;
     
-    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, periodStart, periodEnd, subjectLoss, subjectRP, subjectRB, maxlossscalefactor)
+    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, lockedfxrate, subjectLoss, subjectRP, subjectRB, maxlossscalefactor)
         with cte as (
             select 
                 y.year, 
@@ -27,8 +29,7 @@ BEGIN
                 pl.portlayerid, 
                 rcf.retrocontractid, 
                 rb.scenarioid,
-                cast(per.periodstart as date) periodstart,
-                cast(per.periodend as date) periodend,
+                pl.lockedfxrate,
                 coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor) as scaleFactor,
                 round(scaleFactor * exposedlimit * totalloss)  subjectLoss,
                 round(scaleFactor * exposedrp * totalrp)  subjectRP,
@@ -40,7 +41,7 @@ BEGIN
                 inner join economic_model_staging.retroconfiguration rcf on t.retroconfigurationid = rcf.retroconfigurationid
                 inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
                 inner join economic_model_staging.yelpt y on per.yeltperiodid = y.yeltperiodid
-                inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
+                inner join economic_model_computed.portlayer_scenario pl on per.portlayerid = pl.portlayerid and rb.scenarioid = pl.scenarioid
                 inner join economic_model_computed.retrocontract_scenario rcs on rcf.retrocontractid = rcs.retrocontractid and rcs.scenarioid = rb.scenarioid
             where
                 // The reason for this is that SubjectYLT is per-retro, so there are many millions of rows. To reduce the amount of data sent to powerbi, we skip

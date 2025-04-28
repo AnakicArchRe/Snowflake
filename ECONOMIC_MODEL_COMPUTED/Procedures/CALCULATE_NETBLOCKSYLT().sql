@@ -25,15 +25,14 @@ BEGIN
     // 2. generate YLT for the net diff blocks
     truncate economic_model_computed.netblockylt;
         
-    insert into economic_model_computed.netblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, periodstart, periodend, loss, rp, rb)
+    insert into economic_model_computed.netblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, lockedFxRate, loss, rp, rb)
         select 
             b.scenarioid,
             y.lossviewgroup,
             y.year,
             y.peril,
             pl.portlayerid,
-            per.periodstart,
-            per.periodend,
+            lockedFxRate,
             round(sum(exposedlimit * totalloss * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor)))  loss,
             round(sum(exposedrp * totalrp * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor)))  RP,
             round(sum(exposedrp * totalrb * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor)))  RB
@@ -42,7 +41,7 @@ BEGIN
             inner join economic_model_staging.retrotag t on b.blockid = t.retroblockid
             inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
             inner join economic_model_staging.yelpt y on per.yeltperiodid = y.yeltperiodid
-            inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
+            inner join economic_model_computed.portlayer_scenario pl on per.portlayerid = pl.portlayerid and pl.scenarioid = b.scenarioid
             inner join economic_model_staging.retroconfiguration rcf on t.retroconfigurationid = rcf.retroconfigurationid
             inner join economic_model_computed.retrocontract_scenario rcs on rcf.retrocontractid = rcs.retrocontractid and rcs.scenarioid = b.scenarioid
         // Note: commented out because we calculate net ylt for all scenarios, only the subjectylt calculation depends on the includeinanalysis flag.
@@ -52,7 +51,7 @@ BEGIN
         -- where
         --     rcs.includeinanalysis = true and
         group by
-            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, per.periodstart, per.periodend
+            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, pl.lockedFxRate
     ;
 
     -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.

@@ -19,10 +19,12 @@ begin
             inner join economic_model_scenario.scenario sc on sc.scenarioid = b.scenarioid
             // get to the submission table so we can find the fxdate in case it's needed (not specified by the scenario)
             inner join economic_model_staging.portlayerperiod per on b.periodid = per.periodid
-            inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
+            inner join economic_model_computed.portlayer_scenario pl on per.portlayerid = pl.portlayerid and sc.scenarioid = pl.scenarioid
             inner join economic_model_staging.submission s on pl.submissionid = s.submissionid
-            -- todo: check if this is what PC meant with bound fx rate
-            inner join economic_model_raw.fxrate fx on s.currency = fx.currency and fx.basecurrency = 'USD' and fx.fxdate = coalesce(:fxdate, sc.fxdate, s.fxdate)
+            -- note: if the scenario has boundFxLockIn flag set, inforce portlayers will have lockedFxDate and it should ne used.
+            -- Otherwise, try the following option respectively: argument passed in (do we need this?), scenario-defined fxdate, submission-defined fxdate (same as lockedFxDate but used for projections)
+            -- Lastly, we use to_number with a string in order to force an exception in case no fxdate is found
+            inner join economic_model_raw.fxrate fx on s.currency = fx.currency and fx.basecurrency = 'USD' and fx.fxdate = coalesce(lockedFxDate, :fxdate, sc.fxdate, s.fxdate, to_date('No fx date was found for portlayer ' || pl.portlayerid ))
             -- we need this so we can get the attachment and exposureperiod
             inner join economic_model_computed.calculationcontract c on b.scenarioid = c.scenarioid and b.calculationcontractid = c.calculationcontractid
         where
@@ -147,8 +149,7 @@ begin
                     economic_model_computed.yltByContract b
                     inner join economic_model_computed.calculationcontract c on b.calculationcontractid = c.calculationcontractid and b.scenarioid = c.scenarioid            
                 group by 
-                    b.scenarioid,
-                    lossviewgroup,
+                    b.scenarioid,                   lossviewgroup,
                     year,
                     b.calculationcontractid,
                     c.commissiononnetpremium,

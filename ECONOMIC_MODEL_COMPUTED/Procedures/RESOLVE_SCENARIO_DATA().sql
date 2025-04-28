@@ -112,23 +112,36 @@ begin
                     else coalesce(last_value(coalesce(pl_o.premiumfactor, tz_u_o.premiumfactor)) ignore nulls over (partition by sp.scenarioid, pl.portlayerid order by depth asc), pl.premiumfactor) 
                 end premiumfactor,
                 pl.sharefactor as shareFactor_original,
-                pl.premiumfactor as premiumFactor_original
+                pl.premiumfactor as premiumFactor_original,
+                -- add lockedFxDate for infoce portlayers in scenarios that lock the boundfxdate
+                case when (sc.boundfxlockin and pl.layerview = 'INFORCE') then s.fxdate else null end as lockedFxDate,
+                s.currency
             from
                 economic_model_staging.portlayer pl
+                inner join economic_model_staging.submission s on pl.submissionid = s.submissionid
                 cross join economic_model_scenario.scenario_parts sp
+                inner join economic_model_scenario.scenario sc on sp.partid = sc.scenarioid
                 -- limit to portfolios included in scenario (todo: parts and main scenario should have the same list of portfolios)
                 inner join economic_model_computed.portfolio_scenario pf on pl.portfolioid = pf.portfolioid and pf.scenarioid = sp.scenarioid
                 left outer join economic_model_scenario.portlayer_override pl_o on sp.partid = pl_o.scenarioid and pl.portlayerid = pl_o.portlayerid
                 left outer join economic_model_scenario.topupzone_override_unpivoted tz_u_o on sp.partid = tz_u_o.scenarioid and pl.topupzoneid = tz_u_o.topupzoneid and tz_u_o.productgroup = pl.productgroup
         )
+        , withLockedFxRate as (
+            select 
+                pl.*,
+                iff(lockedFxDate is null or fx.rate is not null, fx.rate, to_number('Can''t resolve FX date for portlayer ' || pl.portlayerid)) as lockedFxRate
+            from 
+                withResolvedAndOriginalValues pl
+                left join economic_model_staging.fxrate fx on fx.basecurrency = 'USD' and fx.currency = pl.currency and pl.lockedFxDate = fx.fxdate
+        )
         select 
-            * exclude (shareFactor_original, premiumFactor_original),
+            * exclude (shareFactor_original, premiumFactor_original, currency),
             economic_model_computed.concat_non_null(
                 economic_model_computed.compare_and_note(sharefactor, sharefactor_original, 'ShareFactor'),
                 economic_model_computed.compare_and_note(premiumfactor, premiumfactor_original, 'Premiumactor')
             ) AS notes
         from 
-            withResolvedAndOriginalValues
+            withLockedFxRate
         ;
 
     -- filter out retros that don't impact a scenario (don't interact with portfolios it contains)
