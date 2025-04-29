@@ -591,7 +591,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_YELPT()",
-    "ObjectDDLHash": "567cfb0ea65628c30e77036763da0f1dd8e4aa6d6c816c6550659ccd2ad81ae2"
+    "ObjectDDLHash": "7b83ef31e15628038df562a4b61a662ffba95f6a4f8cab1243f4435125bc80f6"
   },
   {
     "ObjectType": "TABLE",

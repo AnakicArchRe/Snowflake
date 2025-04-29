@@ -89,12 +89,12 @@ BEGIN
             select distinct lossviewgroup from economic_model_staging.yelptdata
         )
         , allLayerPeriods as (
-            select distinct yeltperiodid, layerid, shareoflayerduration 
+            -- note: grouping because we might have different share durations for the same layerid due to leap years (e.g. inforce non-leap, projection leap year),
+            -- using min_by to force non-leap years where ambiguous.
+            select yeltperiodid, layerid, min_by(shareoflayerduration, datediff(days, inception, expiration)) shareoflayerduration
             from economic_model_staging.portlayerperiod per
             inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
-            -- note: only use inforce layers to avoid duplicating rows due to shareoflayerduration 
-            -- being different on leap years (e.g. inforce non-leap, projectio leap year)
-            where layerview = 'INFORCE'
+            group by yeltperiodid, layerid
         )
         , withExtraCols as (
             select distinct
