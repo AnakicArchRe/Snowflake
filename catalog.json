@@ -51,7 +51,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_SUBJECTBLOCKSYLT()",
-    "ObjectDDLHash": "dc3da3a8f96e509b86429304af3c7809061f68fc32a62bb9759d45147ab69627"
+    "ObjectDDLHash": "cfa20de421f337e11048ab619b8cb1a6473e1606ea959197e4dec9e602dec836"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -591,7 +591,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_YELPT()",
-    "ObjectDDLHash": "9e22569c37e4634a8314936ce16f25ba6a19a7dbf50f1241cf10fd4b70117560"
+    "ObjectDDLHash": "567cfb0ea65628c30e77036763da0f1dd8e4aa6d6c816c6550659ccd2ad81ae2"
   },
   {
     "ObjectType": "TABLE",

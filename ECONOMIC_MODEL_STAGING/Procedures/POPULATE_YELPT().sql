@@ -81,20 +81,40 @@ BEGIN
 
     create or replace table ECONOMIC_MODEL_STAGING.Seasonality as
         with layerTotalLosses as(
-            -- note: we must know the total loss of a layer using the yelt. We can't rely on the previous yelpt table, because we might have overlapping periods for the same layerid, because 
-            -- we might have overlapping yelt periods for the same layer because the layer can have inforce and projections, and they will be sliced into stable blocks at different days of the year.
+            -- note: we must know the total loss of a layer using the yelt. We can't rely on the previous yelpt table, because we might have overlapping periods for the same layerid, 
+            -- because the layer can have inforce and projection portlayers which can be sliced into stable blocks at different days of the year.
             select layerid, lossviewgroup, sum(losspct) layerLossAllYears from economic_model_staging.yelt group by layerid, lossviewgroup
         )
+        , allLossViews as (
+            select distinct lossviewgroup from economic_model_staging.yelptdata
+        )
+        , allLayerPeriods as (
+            select distinct yeltperiodid, layerid, shareoflayerduration 
+            from economic_model_staging.portlayerperiod per
+            inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
+            -- note: only use inforce layers to avoid duplicating rows due to shareoflayerduration 
+            -- being different on leap years (e.g. inforce non-leap, projectio leap year)
+            where layerview = 'INFORCE'
+        )
+        , withExtraCols as (
+            select distinct
+                lp.YeltPeriodId,
+                lv.LOSSVIEWGROUP,
+                // periodlossallyears / layerlossallyears
+                layerLossAllYears,
+                sum(TotalLoss) over (partition by yd.lossViewGroup, yd.yeltperiodid) as periodLossAllYears,
+                case when layerLossAllYears is null then shareoflayerduration else zeroifnull(periodLossAllYears) / layerLossAllYears end as ShareOfYearlyLayerLosses
+            from 
+                -- ensure we have data for all lossviewgroups and all periods, even if there were no losses in a period/lossviewgroup
+                allLossViews lv
+                cross join allLayerPeriods lp
+                left join layerTotalLosses ltl on lp.layerid = ltl.layerid and lv.lossviewgroup = ltl.lossviewgroup
+                left join economic_model_staging.yelptdata yd on lv.lossviewgroup = yd.lossviewgroup and lp.yeltperiodid = yd.yeltperiodid
+        )
         select
-            distinct
-            yd.YeltPeriodId,
-            yd.LOSSVIEWGROUP,
-            // periodlossallyears / layerlossallyears
-            sum(TotalLoss) over (partition by yd.lossViewGroup, yd.yeltperiodid) / layerLossAllYears as ShareOfYearlyLayerLosses
-        from 
-            economic_model_staging.yelptdata yd
-            inner join layerTotalLosses ltl on yd.layerid = ltl.layerid and yd.lossviewgroup = ltl.lossviewgroup
-        ;
+            * exclude (layerLossAllYears, periodLossAllYears)
+        from
+            withExtraCols;
 
 end
 ;

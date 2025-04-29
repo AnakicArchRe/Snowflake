@@ -68,10 +68,13 @@ BEGIN
         from 
             cte
         ;
-    
+
     create or replace table economic_model_computed.subjectblock_seasonal_premium as
         select 
-            t.retroblockid, rb.scenarioid, se.lossviewgroup, rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
+            t.retroblockid, 
+            rb.scenarioid, se.lossviewgroup, 
+            rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, 
+            rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
         from
             economic_model_computed.blockoperations_out rb
             inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
