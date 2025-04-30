@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATECONTRACTMETRICS(FXDATE DATE)
+CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATECONTRACTMETRICS()
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
@@ -21,10 +21,14 @@ begin
             inner join economic_model_staging.portlayerperiod per on b.periodid = per.periodid
             inner join economic_model_computed.portlayer_scenario pl on per.portlayerid = pl.portlayerid and sc.scenarioid = pl.scenarioid
             inner join economic_model_staging.submission s on pl.submissionid = s.submissionid
-            -- note: if the scenario has boundFxLockIn flag set, inforce portlayers will have lockedFxDate and it should ne used.
-            -- Otherwise, try the following option respectively: argument passed in (do we need this?), scenario-defined fxdate, submission-defined fxdate (same as lockedFxDate but used for projections)
-            -- Lastly, we use to_number with a string in order to force an exception in case no fxdate is found
-            inner join economic_model_raw.fxrate fx on s.currency = fx.currency and fx.basecurrency = 'USD' and fx.fxdate = coalesce(lockedFxDate, :fxdate, sc.fxdate, s.fxdate, to_date('No fx date was found for portlayer ' || pl.portlayerid ))
+            inner join economic_model_raw.fxrate fx on 
+                s.currency = fx.currency 
+                and fx.basecurrency = 'USD' 
+                and fx.fxdate = 
+                    -- note #1: if the scenario has boundFxLockIn flag set, inforce portlayers will have boundFxDate and it should be used. All other cases use scenario.fxdate.
+                    -- note #2: we use to_date with a string in order to force an exception in case no fxdate is found
+                    -- todo: shoud we use portlayer.inception as a last option and just use the latest value we have? (probably better to force using scenario.fxdate, I think)
+                    coalesce(iff(sc.boundFxLockIn, pl.boundFxDate, null), sc.fxdate, to_date('No fx date was found for portlayer ' || pl.portlayerid || ' and scenario ' || sc.scenarioid ))
             -- we need this so we can get the attachment and exposureperiod
             inner join economic_model_computed.calculationcontract c on b.scenarioid = c.scenarioid and b.calculationcontractid = c.calculationcontractid
         where

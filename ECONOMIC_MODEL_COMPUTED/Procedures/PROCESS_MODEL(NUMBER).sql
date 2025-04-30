@@ -322,7 +322,7 @@ begin
         select scenarioid, retrocontractid, periodid, proRataPremium, proRataPremiumExpenses, exposedPremium, exposedLimit 
         from economic_model_computed.subjectblockinfo;
 
-        call economic_model_computed.calculatecontractmetrics(null);
+        call economic_model_computed.calculatecontractmetrics();
         
         // todo: review and update the metrics we expose here. we need to keep this table synced with the calculationcontractmetrics table, as far as included columns go
         insert into economic_model_computed.contractresult(
@@ -532,7 +532,7 @@ begin
     inner join economic_model_staging.retrotag t on t.retroblockid = b.retroblockid
     inner join economic_model_computed.ScenarioFiltered sf on sf.scenarioid = b.scenarioid;
 
-    call economic_model_computed.calculatecontractmetrics(null);
+    call economic_model_computed.calculatecontractmetrics();
     
     // todo: review and update the metrics we expose here. we need to keep this table synced with the calculationcontractmetrics table, as far as included columns go
     insert into economic_model_computed.investorresult(
