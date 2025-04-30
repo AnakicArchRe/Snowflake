@@ -75,7 +75,7 @@ BEGIN
                 coalesce(productgroup, 'UNKNOWN') as ProductGroup,
                 s.fxdate,
                 s.currency,
-                economic_model_management.verify_not_null(fx.rate, 'FX date for layer ' || concat(l.Source_db, '_', l.LayerId)) as fxrate,
+                cast(economic_model_management.verify_not_null(fx.rate, 'FX date for layer ' || concat(l.Source_db, '_', l.LayerId)) as number(18,10)) as fxrate,
                 EL
             from 
                 economic_model_raw.layer l
