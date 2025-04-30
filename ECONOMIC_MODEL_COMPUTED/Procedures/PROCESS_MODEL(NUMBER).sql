@@ -91,7 +91,7 @@ begin
             pls.sharefactor,
             b.placement,
             pls.premiumfactor,
-            pls.lockedfxrate,
+            pls.boundFxRate,
             per.shareoflayerduration,
             pls.expenses,
             s.sidesign,
@@ -248,7 +248,7 @@ begin
                     b.expenses,
                     b.reinstcount,
                     b.sidesign,
-                    b.lockedfxrate,
+                    b.boundFxRate,
 
                     coalesce(la.available, 1) as availableAtLevel,
                     
@@ -284,7 +284,7 @@ begin
 
         // todo: expand subjectblock with columns for all factors we used (for auditing results)
         insert into economic_model_computed.subjectblock(
-            scenarioid, retroblockid, exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount, lockedfxrate,
+            scenarioid, retroblockid, exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount, boundFxRate,
             diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign,
             diag_notes)
             select 
@@ -296,7 +296,7 @@ begin
                 proratapremium,
                 proratapremiumexpenses,
                 reinstcount,
-                lockedfxrate,
+                boundFxRate,
 
                 limit100pct,
                 premium100pct,
@@ -412,7 +412,7 @@ begin
             -- note: we save cessiongross for diagnostic purposes but also for calculating how much is available in the next leve. 
             -- Since I'm also using it for available I didn't add the diag_ prefix this is an internal detail so I'm on the fence about it.
             cessiongross, 
-            exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount, lockedFxRate,
+            exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount, boundFxRate,
             diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, 
             diag_sidesign, 
             notes)
@@ -428,7 +428,7 @@ begin
                 b.nonplaced_proratapremium * cessiongross as premiumprorata,
                 b.nonplaced_proratapremiumexpenses * cessiongross as expensesprorata,
                 b.reinstcount,
-                b.lockedFxRate,
+                b.boundFxRate,
 
                 limit100pct,
                 premium100pct,

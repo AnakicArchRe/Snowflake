@@ -32,7 +32,7 @@ BEGIN
 
     truncate economic_model_computed.grossblockylt;
 
-    insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, lockedFxRate, loss, rp, rb)
+    insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, boundFxRate, loss, rp, rb)
         select 
             b.scenarioid,
             y.lossviewgroup,
@@ -40,7 +40,7 @@ BEGIN
             y.peril,
             pl.portlayerid,
             
-            lockedFxRate,
+            boundFxRate,
 
             round(sum(exposedlimit * totalloss)) Loss,
             round(sum(exposedrp * totalrp)) RP,
@@ -51,7 +51,7 @@ BEGIN
             inner join economic_model_staging.portlayerperiod per on pl.portlayerid = per.portlayerid
             inner join economic_model_staging.yelpt y on per.yeltperiodid = y.yeltperiodid
         group by
-            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, lockedfxrate
+            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, boundFxRate
     ;
 
     -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.

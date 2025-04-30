@@ -25,14 +25,14 @@ BEGIN
     // 2. generate YLT for the net diff blocks
     truncate economic_model_computed.netblockylt;
         
-    insert into economic_model_computed.netblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, lockedFxRate, loss, rp, rb)
+    insert into economic_model_computed.netblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, boundFxRate, loss, rp, rb)
         select 
             b.scenarioid,
             y.lossviewgroup,
             y.year,
             y.peril,
             pl.portlayerid,
-            lockedFxRate,
+            boundFxRate,
             round(sum(exposedlimit * totalloss * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor))) loss,
             round(sum(exposedrp * totalrp * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor))) RP,
             round(sum(exposedrp * totalrb * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor))) RB
@@ -51,7 +51,7 @@ BEGIN
         -- where
         --     rcs.includeinanalysis = true and
         group by
-            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, pl.lockedFxRate
+            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, pl.boundFxRate
     ;
 
     -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.

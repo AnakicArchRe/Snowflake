@@ -20,7 +20,7 @@ BEGIN
 
     truncate economic_model_computed.subjectblockylt;
     
-    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, lockedfxrate, subjectLoss, subjectRP, subjectRB, maxlossscalefactor)
+    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, boundFxRate, subjectLoss, subjectRP, subjectRB, maxlossscalefactor)
         with cte as (
             select
                 y.year,
@@ -29,7 +29,7 @@ BEGIN
                 pl.portlayerid, 
                 rcf.retrocontractid, 
                 rb.scenarioid,
-                pl.lockedfxrate,
+                pl.boundFxRate,
                 coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor) as scaleFactor,
                 round(sum(scaleFactor * exposedlimit * totalloss))  subjectLoss,
                 round(sum(scaleFactor * exposedrp * totalrp)) subjectRP,
@@ -58,7 +58,7 @@ BEGIN
                 pl.portlayerid, 
                 rcf.retrocontractid, 
                 rb.scenarioid,
-                pl.lockedfxrate,
+                pl.boundFxRate,
                 y.maxlossscalefactor, 
                 rcs.nonmodeledload,
                 rcs.climateload
