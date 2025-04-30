@@ -4,6 +4,8 @@ LANGUAGE SQL
 AS
 BEGIN
 
+    call economic_model_staging.populate_fx();
+    
     call economic_model_staging.populate_Submissions();
 
     call economic_model_staging.populate_Programs();
@@ -18,7 +20,6 @@ BEGIN
 
     call economic_model_staging.populate_RetroContracts();
 
-    call economic_model_staging.populate_fx();
     
     // todo: we're using reference portfolios to determine which portlayer cedes to which
     // retroprogram. We should use the new http endpoint for that instead, and get rid of

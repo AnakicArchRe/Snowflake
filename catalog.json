@@ -99,7 +99,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RESOLVE_SCENARIO_DATA()",
-    "ObjectDDLHash": "31143be054ac33c296a30d602893cd6959442ff3ca337c2f6d8fd6629d999478"
+    "ObjectDDLHash": "68a9fb0fe14317d8f461cfdeb1c9b05dbc4090f0887cee18085582e251efb32d"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -195,7 +195,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PORTLAYER_SCENARIO",
-    "ObjectDDLHash": "ec01208161234bbcf9c0730d8b0ec19b6ab46dce8e8639415bc55f989d376962"
+    "ObjectDDLHash": "2032f5dfec404a66b710fc919d548a09a3fc19254b3e421ed204978efaef4218"
   },
   {
     "ObjectType": "TABLE",
@@ -238,6 +238,12 @@
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "YELTRANK",
     "ObjectDDLHash": "a60d01ab715c708073bbd2f7d30ad6614a27941cd386a1bbb8c5e71d800787fd"
+  },
+  {
+    "ObjectType": "FUNCTION",
+    "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
+    "ObjectName": "VERIFY_NOT_NULL(VAL VARIANT, ERROR_MESSAGE VARCHAR)",
+    "ObjectDDLHash": "1d0b32d2081b6a858b0b7b281125d542a3026b52ba5124c02adda247f2f4e949"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -537,7 +543,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_PORTLAYERS()",
-    "ObjectDDLHash": "73eb52c53c7fd260dee1019159e182308415cbd3d2d2881dbaa39cd990314346"
+    "ObjectDDLHash": "4480aa78d0c19488f02fe5a272a041e6b02f7754d4baee49d6a7af7c9da18331"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -579,7 +585,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_STAGING_DATA()",
-    "ObjectDDLHash": "f231f3caec498a58b1ab9fdacbbe65f32512d724386cf66513ed3147445de46d"
+    "ObjectDDLHash": "2a3152824d4167574627711376270491ce4edab9eeb1bc51d98cb37ff254d759"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -609,7 +615,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "PORTLAYER",
-    "ObjectDDLHash": "20c50cdcde464fe0bdc2404a443ff88fc615d199ba386b5cf109302893bae70b"
+    "ObjectDDLHash": "54cc42be56df807e724a97925ab18dfef62fafd10acfb17dd6da427f585187c7"
   },
   {
     "ObjectType": "TABLE",

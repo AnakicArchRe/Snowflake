@@ -113,25 +113,13 @@ begin
                 end premiumfactor,
                 pl.sharefactor as shareFactor_original,
                 pl.premiumfactor as premiumFactor_original,
-                -- add boundFxDate for inforce portlayers in scenarios that lock the boundfxdate
-                case when pl.layerview = 'INFORCE' then s.fxdate else null end as boundFxDate,
-                s.currency
             from
                 economic_model_staging.portlayer pl
-                inner join economic_model_staging.submission s on pl.submissionid = s.submissionid
                 cross join economic_model_scenario.scenario_parts sp
                 -- limit to portfolios included in scenario (todo: parts and main scenario should have the same list of portfolios)
                 inner join economic_model_computed.portfolio_scenario pf on pl.portfolioid = pf.portfolioid and pf.scenarioid = sp.scenarioid
                 left outer join economic_model_scenario.portlayer_override pl_o on sp.partid = pl_o.scenarioid and pl.portlayerid = pl_o.portlayerid
                 left outer join economic_model_scenario.topupzone_override_unpivoted tz_u_o on sp.partid = tz_u_o.scenarioid and pl.topupzoneid = tz_u_o.topupzoneid and tz_u_o.productgroup = pl.productgroup
-        )
-        , withBoundFxRate as (
-            select 
-                pl.*,
-                iff(boundFxDate is null or fx.rate is not null, fx.rate, to_number('Can''t resolve FX date for portlayer ' || pl.portlayerid)) as boundFxRate
-            from 
-                withResolvedAndOriginalValues pl
-                left join economic_model_staging.fxrate fx on fx.basecurrency = 'USD' and fx.currency = pl.currency and pl.boundFxDate = fx.fxdate
         )
         select 
             * exclude (shareFactor_original, premiumFactor_original, currency),
@@ -140,7 +128,7 @@ begin
                 economic_model_computed.compare_and_note(premiumfactor, premiumfactor_original, 'Premiumactor')
             ) AS notes
         from 
-            withBoundFxRate
+            withResolvedAndOriginalValues
         ;
 
     -- filter out retros that don't impact a scenario (don't interact with portfolios it contains)
@@ -212,8 +200,7 @@ begin
             witOrigAndResolvedValues
         ;
 
-
-
+        
     -- retroconfiguration
     create or replace table economic_model_computed.retroconfiguration_scenario as
         select distinct

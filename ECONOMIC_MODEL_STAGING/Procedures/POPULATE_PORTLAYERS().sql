@@ -73,11 +73,16 @@ BEGIN
                     else l.premium / l.placement 
                 end as Premium100Pct,
                 coalesce(productgroup, 'UNKNOWN') as ProductGroup,
+                s.fxdate,
+                s.currency,
+                economic_model_management.verify_not_null(fx.rate, 'FX date for layer ' || concat(l.Source_db, '_', l.LayerId)) as fxrate,
                 EL
             from 
                 economic_model_raw.layer l
                 inner join economic_model_raw.submission s on l.submissionid = s.submissionid and l.source_db = s.source_db
                 inner join productgroup pg on l.layerid = pg.layerid AND L.SOURCE_DB = PG.SOURCE_DB
+                -- must use to_date to strip time as some old entries have time in there
+                left join economic_model_staging.fxrate fx on fx.basecurrency = 'USD' and fx.currency = s.currency and fx.fxdate = TO_DATE(s.fxdate)
             where 
                 l.isactive = 1 and l.isdeleted = 0 
                 and s.isactive = 1 and s.isdeleted = 0
@@ -120,7 +125,7 @@ BEGIN
                     WHEN (P.PORTFOLIOTYPE  = 3 AND YEAR(l.expiration) = YEAR(P.ASOFDATE)) THEN 'PROJECTION2'
                     ELSE 'NOTINCLUDED'
                 END as LayerView,
-                Share, ShareAdjusted, Share2Adjusted, pl.Premium, PremiumAdjusted, Premium2Adjusted
+                Share, ShareAdjusted, Share2Adjusted, pl.Premium, PremiumAdjusted, Premium2Adjusted,
             from 
                 economic_model_raw.portlayer pl
                 inner join economic_model_raw.layer l on pl.layerid = l.layerid and l.isdeleted = 0 and l.isactive = 1 and l.source_db = pl.source_db
@@ -134,6 +139,9 @@ BEGIN
             pld.PortfolioId, 
             l.LayerId,
             LayerView,
+            case when pld.layerview = 'INFORCE' then fxdate else null end as boundFxDate,
+            case when pld.layerview = 'INFORCE' then fxrate else null end as boundFxRate,
+            currency,
             pld.inception, 
             pld.expiration,
             l.inception as OriginalLayerInception,
@@ -168,11 +176,12 @@ BEGIN
             l.risklimit,
             l.occlimit,
             l.placement,
-            l.premium,
+            l.premium
         from 
             portlayerdata pld
             inner join layer l on pld.layerid = l.layerid
         where 
-            LayerView <> 'NOTINCLUDED';
+            LayerView <> 'NOTINCLUDED'
+    ;
 End
 ;
