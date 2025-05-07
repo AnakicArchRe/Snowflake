@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_GROSSBLOCKSYLT()
+CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_GROSSBLOCKSYLT(scenarioId int)
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
@@ -26,12 +26,13 @@ BEGIN
         from 
             economic_model_computed.grossblock b
             // filter for active scenarios
-            inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1;
+            inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1
+        where
+            :scenarioid is null or b.scenarioid = :scenarioid;
 
     call economic_model_computed.blockoperations_reducetodiff();
 
-    truncate economic_model_computed.grossblockylt;
-
+    call economic_model_computed.clearscenariodatafromtable('grossblockylt', :scenarioId);
     insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, loss, rp, rb)
         select 
             b.scenarioid,
@@ -52,8 +53,9 @@ BEGIN
             year, peril, lossviewgroup, b.scenarioid, pl.portlayerid
     ;
 
+    call economic_model_computed.clearscenariodatafromtable('grossblock_seasonal_premium', :scenarioId);
     -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.
-    create or replace table economic_model_computed.grossblock_seasonal_premium as
+    insert into economic_model_computed.grossblock_seasonal_premium (retroblockid, scenarioid, lossviewgroup, premiumseasonal, expensesseasonal)
         select 
             t.retroblockid, 
             rb.scenarioid, 

@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_SUBJECTBLOCKSYLT()
+CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_SUBJECTBLOCKSYLT(scenarioId int)
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
@@ -14,13 +14,16 @@ BEGIN
         from 
             economic_model_computed.subjectblock b
             // filter for active scenarios
-            inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1;
+            inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1
+        where 
+            :scenarioid is null or b.scenarioid = :scenarioid;
 
     call economic_model_computed.blockoperations_reducetodiff();
 
-    truncate economic_model_computed.subjectblockylt;
+
+    call economic_model_computed.clearscenariodatafromtable('subjectblockylt', :scenarioId);
     
-    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, subjectLoss, subjectRP, subjectRB, maxlossscalefactor)
+    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, subjectLoss, subjectRP, subjectRB)
         with cte as (
             select
                 y.year,
@@ -33,7 +36,9 @@ BEGIN
                 round(sum(scaleFactor * exposedlimit * totalloss))  subjectLoss,
                 round(sum(scaleFactor * exposedrp * totalrp)) subjectRP,
                 round(sum(scaleFactor * exposedrp * totalrb)) subjectRB,
-                y.maxlossscalefactor / scalefactor as maxlossscalefactor
+                -- no longer using dynamic climateload in PowerBI, so no need for this piece of information
+                -- note: as a reminder, it indicates how much a layer's losses can grow before hitting the cap (limit)
+                -- y.maxlossscalefactor / scalefactor as maxlossscalefactor
             from 
                 economic_model_computed.blockoperations_out rb
                 inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
@@ -67,7 +72,8 @@ BEGIN
             cte
         ;
 
-    create or replace table economic_model_computed.subjectblock_seasonal_premium as
+    call economic_model_computed.clearscenariodatafromtable('subjectblock_seasonal_premium', :scenarioId);
+    insert into economic_model_computed.subjectblock_seasonal_premium(retroblockid, scenarioid, lossviewgroup, premiumSeasonal, expensesSeasonal)
         select 
             t.retroblockid, 
             rb.scenarioid, se.lossviewgroup, 
@@ -81,5 +87,4 @@ BEGIN
             inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid
     ;
 
-end
-;
+end;

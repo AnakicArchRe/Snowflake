@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_NETBLOCKSYLT()
+CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.CALCULATE_NETBLOCKSYLT(scenarioId int)
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
@@ -18,13 +18,13 @@ BEGIN
             inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1
         where 
             retrocontractinvestorid = 'NET_POSITION_INVESTOR'
+            and (:scenarioid is null or b.scenarioid = :scenarioid);
     ;
 
     call economic_model_computed.blockoperations_reducetodiff();
 
     // 2. generate YLT for the net diff blocks
-    truncate economic_model_computed.netblockylt;
-        
+    call economic_model_computed.clearscenariodatafromtable('netblockylt', :scenarioId);
     insert into economic_model_computed.netblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, loss, rp, rb)
         select 
             b.scenarioid,
@@ -54,7 +54,8 @@ BEGIN
     ;
 
     -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.
-    create or replace table economic_model_computed.netblock_seasonal_premium as
+    call economic_model_computed.clearscenariodatafromtable('netblock_seasonal_premium', :scenarioId);
+    insert into economic_model_computed.netblock_seasonal_premium (retroblockid, scenarioid, lossviewgroup, premiumSeasonal, expensesSeasonal)
         select 
             t.retroblockid, 
             rb.scenarioid, 
