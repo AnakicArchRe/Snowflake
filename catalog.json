@@ -38,20 +38,20 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CALCULATE_GROSSBLOCKSYLT()",
-    "ObjectDDLHash": "52b24312d4aca5fb26a60b964edaaae16b53c68ec7ce6744f4fd8700d1f7637c"
+    "ObjectName": "CALCULATE_GROSSBLOCKSYLT(NUMBER)",
+    "ObjectDDLHash": "167844780fdcf6a8dbfb172b3085f581c9825d84a820218097d0f2fcc047d72d"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CALCULATE_NETBLOCKSYLT()",
-    "ObjectDDLHash": "1a040b3f27bd0c6a0b0cd6422e8d0aeba0f0d75aacd9b73977906c1583d50669"
+    "ObjectName": "CALCULATE_NETBLOCKSYLT(NUMBER)",
+    "ObjectDDLHash": "7d949a14cc12f874d07b88cf9fb538fe7e6c6bfad643fff0497b2847bd9ed54d"
   },
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "CALCULATE_SUBJECTBLOCKSYLT()",
-    "ObjectDDLHash": "797ce333217bafac5cf7521c9d7575e06900977950983abd11c2a875445de75a"
+    "ObjectName": "CALCULATE_SUBJECTBLOCKSYLT(NUMBER)",
+    "ObjectDDLHash": "cf2bb0dd4458681de121d85f10ffe462aa4eed51cb3d6872846768045efbc9ca"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -80,8 +80,8 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "PREPAREPOWERBIDATA()",
-    "ObjectDDLHash": "2f9422cbcde79648b389f41e7f57366e5b06764b86376f403dc4fd997c92f447"
+    "ObjectName": "PREPAREPOWERBIDATA(NUMBER)",
+    "ObjectDDLHash": "c47841614a0246eb771f8067fbae64393210f527332b3188331a5aa4c4d77ee0"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -147,49 +147,49 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CEDEDBLOCK",
-    "ObjectDDLHash": "2a3d8ae061c19631e39530fd7571d910f99e56eecc2beab7914cb6f19684f5ab"
+    "ObjectDDLHash": "544160113e9650073db0b91e35a9ae6afc77dd224019970a51e65df0f4fa372c"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CONTRACTRESULT",
-    "ObjectDDLHash": "1fcb212f3ef1496e72bd3592b599c36dde5bea296ffa34e1e9e0c37a3889e6af"
+    "ObjectDDLHash": "53413ee896383e9ddac50298c2005d4bfc2cffe26100cebba516c540f537ba65"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "GROSSBLOCK",
-    "ObjectDDLHash": "9e61235c16e70e88843d4b59412ce74bf34badc7e7939d6e02fd0daa2aba39b3"
+    "ObjectDDLHash": "1079bc5d4d17325349f7ba5f4dc614f2869e5cecb1b1c97993a9891bf24825e1"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "GROSSBLOCK_SEASONAL_PREMIUM",
-    "ObjectDDLHash": "ae706496624a7a08d8778cd10f03620d2cc958f4f5a3af10488db77b77b0f918"
+    "ObjectDDLHash": "e06eef445555145ca5f183db7101d090aeb3d5066e110cf733d9cf3133d920d2"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "GROSSBLOCKYLT",
-    "ObjectDDLHash": "eb6e811048b40590ea5ce694412bac15cc4432d7cf27652668ae694e06829946"
+    "ObjectDDLHash": "7fa7f4d2030a568ec9fccef09049916e3b1fbfee361821cf94eb9752df9ffbe5"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "INVESTORRESULT",
-    "ObjectDDLHash": "1d9ffefb1fc5fdf703e17a7a362c33cebd0c72590f9be53ce13e1197839f9ae3"
+    "ObjectDDLHash": "f69a5041aeda173aaf2921cdcbf84a855095f7fd47cd62f318cd6830b61115c8"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "NETBLOCK_SEASONAL_PREMIUM",
-    "ObjectDDLHash": "f93b1898a7f87d2ce3b7c5a9cb8ddc34f7d11f1f54067e3fd1d8ee352ab0dc2a"
+    "ObjectDDLHash": "4f80c4f71a2cbf1979bb5755eb339ef167cb477fdc6a91edce539cd3a848d0ab"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "NETBLOCKYLT",
-    "ObjectDDLHash": "591cb7d9fcbff96e371a646cacee8f11eedf513a3aa69c95725b06d5eb7e3ae0"
+    "ObjectDDLHash": "8533453b0ebfbb251097b547b4dd49de1dad02ef855881eddc4bc850f5e15f8d"
   },
   {
     "ObjectType": "TABLE",
@@ -219,19 +219,19 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "SUBJECTBLOCK",
-    "ObjectDDLHash": "a7c83ca6499d9ba20b326b61c108bd49b8cc2d48034be0b3c75b2e651f2c7262"
+    "ObjectDDLHash": "05caedc02e5d379cf233ef592d6d2a2daad0c9f10f72261d6d7f0437dc8d1358"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "SUBJECTBLOCK_SEASONAL_PREMIUM",
-    "ObjectDDLHash": "4454d050994725c5338d7065ab2b884ef02e15613bf5c3f52839e38375130188"
+    "ObjectDDLHash": "8c54cdb9556dea047d41a7b57f671483af172e7a89788f63fa45e462ca0155f4"
   },
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "SUBJECTBLOCKYLT",
-    "ObjectDDLHash": "13afcc6f718118d071d69dd4586ce6cd5722ec0540d32c7fed8f6bc7ac61ba0d"
+    "ObjectDDLHash": "27710ecc9e239729b108dd4acfc4e5a0ba80b166d72f98b4cf34fdf3683b4767"
   },
   {
     "ObjectType": "VIEW",
