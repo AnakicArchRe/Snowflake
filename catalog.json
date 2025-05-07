@@ -99,7 +99,31 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RESOLVE_SCENARIO_DATA()",
-    "ObjectDDLHash": "bbc7ab865852c60690c57dbba389df2a5cf3e7752679798c3810290341d08781"
+    "ObjectDDLHash": "eea89e32197bbc33d3134f1cb98490b203ef357383e9d637a8cd243794f2718f"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "RESOLVE_SCENARIO_PORTLAYERS()",
+    "ObjectDDLHash": "27c67b66f41380176eace80be08974f76bc3eaa75fd5fa54dd8d5e61886f3073"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "RESOLVE_SCENARIO_RETROCONFIGURATIONS()",
+    "ObjectDDLHash": "d4568396c458972f0b041b086d537cb1f71fff647031727092c23e9033ee25a7"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "RESOLVE_SCENARIO_RETROCONTRACTS()",
+    "ObjectDDLHash": "cd57d6d5bfd2b124531c563f800986b9c5cc5c814f9b96d4989d95ff30ee3e44"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "RESOLVE_SCENARIO_RETROINVESTMENTLEGS()",
+    "ObjectDDLHash": "83ba7331f38420703dbf415053cd54419ec1d715cbb616cdd7ed7858992e9d63"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -232,6 +256,24 @@
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "SUBJECTBLOCKYLT",
     "ObjectDDLHash": "27710ecc9e239729b108dd4acfc4e5a0ba80b166d72f98b4cf34fdf3683b4767"
+  },
+  {
+    "ObjectType": "VIEW",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "CESSIONFLAG",
+    "ObjectDDLHash": "b9ea11247f0f4279a2fe487588090606f21531e2b6fd8369a330f35e815e0348"
+  },
+  {
+    "ObjectType": "VIEW",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "PORTFOLIO_SCENARIO",
+    "ObjectDDLHash": "74b3ec4b3863b69febbed5e0a1b654b9630d70705761319f9793c6a9ed4e96b3"
+  },
+  {
+    "ObjectType": "VIEW",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "TOPUPZONE_OVERRIDE_UNPIVOTED",
+    "ObjectDDLHash": "21dbea67854c832352f34acc10311e11f4314a72e69b63f09a1476169a2c03aa"
   },
   {
     "ObjectType": "VIEW",
@@ -494,20 +536,14 @@
   {
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "SCENARIO_PARTS",
-    "ObjectDDLHash": "0a11d148d9f934d3b2791cec225b8008f62a2f2158242e5b3fedd51b0b7572c5"
-  },
-  {
-    "ObjectType": "TABLE",
-    "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "TOPUPZONE_OVERRIDE",
     "ObjectDDLHash": "61dd131345cfc6eb4a534097a638d11abe48584ee4f5c52a6590b414e32e9219"
   },
   {
-    "ObjectType": "TABLE",
+    "ObjectType": "VIEW",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
-    "ObjectName": "TOPUPZONE_OVERRIDE_UNPIVOTED",
-    "ObjectDDLHash": "3e59fbb4a38faaa6b1f8f012052c4191166d9e8524d4a89d50c83df9e2a54702"
+    "ObjectName": "SCENARIO_PARTS",
+    "ObjectDDLHash": "7eda22d2a70c05fd58681aa45f683124d4affc868253be22cdd33572a1594ed5"
   },
   {
     "ObjectType": "PROCEDURE",
