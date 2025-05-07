@@ -9,7 +9,7 @@ begin
             -- generate dates
             dates as (
                 select dateadd(day, seq4(), (select min (fxdate) from revo_bermuda.dbo.fxrate)) date from table (generator(rowcount => (select 10e3)))
-                where date < (select max(fxdate) from economic_model_raw.submission)
+                where date <= (select max(fxdate) from economic_model_raw.submission)
             )
             -- get fx records
             , fxRows as (

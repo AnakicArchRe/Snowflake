@@ -73,16 +73,13 @@ BEGIN
                     else l.premium / l.placement 
                 end as Premium100Pct,
                 coalesce(productgroup, 'UNKNOWN') as ProductGroup,
-                s.fxdate,
-                s.currency,
-                cast(economic_model_management.verify_not_null(fx.rate, 'FX date for layer ' || concat(l.Source_db, '_', l.LayerId)) as number(18,10)) as fxrate,
+                -- must use to_date to strip time as some old entries have time in there
+                TO_DATE(s.fxdate) fxdate,
                 EL
             from 
                 economic_model_raw.layer l
                 inner join economic_model_raw.submission s on l.submissionid = s.submissionid and l.source_db = s.source_db
                 inner join productgroup pg on l.layerid = pg.layerid AND L.SOURCE_DB = PG.SOURCE_DB
-                -- must use to_date to strip time as some old entries have time in there
-                left join economic_model_staging.fxrate fx on fx.basecurrency = 'USD' and fx.currency = s.currency and fx.fxdate = TO_DATE(s.fxdate)
             where 
                 l.isactive = 1 and l.isdeleted = 0 
                 and s.isactive = 1 and s.isdeleted = 0
@@ -140,8 +137,6 @@ BEGIN
             l.LayerId,
             LayerView,
             case when pld.layerview = 'INFORCE' then fxdate else null end as boundFxDate,
-            case when pld.layerview = 'INFORCE' then fxrate else null end as boundFxRate,
-            currency,
             pld.inception, 
             pld.expiration,
             l.inception as OriginalLayerInception,

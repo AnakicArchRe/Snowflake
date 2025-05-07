@@ -91,7 +91,6 @@ begin
             pls.sharefactor,
             b.placement,
             pls.premiumfactor,
-            pls.boundFxRate,
             per.shareoflayerduration,
             pls.expenses,
             s.sidesign,
@@ -248,7 +247,6 @@ begin
                     b.expenses,
                     b.reinstcount,
                     b.sidesign,
-                    b.boundFxRate,
 
                     coalesce(la.available, 1) as availableAtLevel,
                     
@@ -284,7 +282,7 @@ begin
 
         // todo: expand subjectblock with columns for all factors we used (for auditing results)
         insert into economic_model_computed.subjectblock(
-            scenarioid, retroblockid, exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount, boundFxRate,
+            scenarioid, retroblockid, exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
             diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, diag_sidesign,
             diag_notes)
             select 
@@ -296,7 +294,6 @@ begin
                 proratapremium,
                 proratapremiumexpenses,
                 reinstcount,
-                boundFxRate,
 
                 limit100pct,
                 premium100pct,
@@ -412,7 +409,7 @@ begin
             -- note: we save cessiongross for diagnostic purposes but also for calculating how much is available in the next leve. 
             -- Since I'm also using it for available I didn't add the diag_ prefix this is an internal detail so I'm on the fence about it.
             cessiongross, 
-            exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount, boundFxRate,
+            exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
             diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, 
             diag_sidesign, 
             notes)
@@ -428,7 +425,6 @@ begin
                 b.nonplaced_proratapremium * cessiongross as premiumprorata,
                 b.nonplaced_proratapremiumexpenses * cessiongross as expensesprorata,
                 b.reinstcount,
-                b.boundFxRate,
 
                 limit100pct,
                 premium100pct,
@@ -562,11 +558,12 @@ begin
             economic_model_computed.calculationcontractmetrics m
             left join investedAmountByRetroContract ri on ri.scenarioid = m.scenarioid and ri.retrocontractid = m.calculationcontractid;
 
+
     // 5. generate gross blocks
     -- todo: add diag info
     insert into economic_model_computed.grossblock (scenarioid, portlayerid, exposedlimit, exposedrp, premium, expenses, exposedExpenses, reinstcount)
         select 
-            pl.scenarioid, 
+            pl.scenarioid,
             pl.portlayerid,
             // note: round all currency amounts to integer to save space in both snowflake and in PowerBI
             // I think this should be safe as the errors it introduce will tend to even out on aggregate and on aggregate we're interested in millions, not dollars.

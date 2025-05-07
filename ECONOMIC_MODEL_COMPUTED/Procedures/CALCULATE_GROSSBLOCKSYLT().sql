@@ -32,15 +32,13 @@ BEGIN
 
     truncate economic_model_computed.grossblockylt;
 
-    insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, boundFxRate, loss, rp, rb)
+    insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, loss, rp, rb)
         select 
             b.scenarioid,
             y.lossviewgroup,
             y.year,
             y.peril,
             pl.portlayerid,
-            
-            boundFxRate,
 
             round(sum(exposedlimit * totalloss)) Loss,
             round(sum(exposedrp * totalrp)) RP,
@@ -51,17 +49,22 @@ BEGIN
             inner join economic_model_staging.portlayerperiod per on pl.portlayerid = per.portlayerid
             inner join economic_model_staging.yelpt y on per.yeltperiodid = y.yeltperiodid
         group by
-            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, boundFxRate
+            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid
     ;
 
     -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.
     create or replace table economic_model_computed.grossblock_seasonal_premium as
         select 
-            t.retroblockid, rb.scenarioid, se.lossviewgroup, rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
+            t.retroblockid, 
+            rb.scenarioid, 
+            se.lossviewgroup, 
+            rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, 
+            rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
         from
             economic_model_computed.blockoperations_out rb
             inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
             inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
+            inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
             inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid
     ;
        

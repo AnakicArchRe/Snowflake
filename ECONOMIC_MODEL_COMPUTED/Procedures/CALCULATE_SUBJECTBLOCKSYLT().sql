@@ -20,7 +20,7 @@ BEGIN
 
     truncate economic_model_computed.subjectblockylt;
     
-    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, boundFxRate, subjectLoss, subjectRP, subjectRB, maxlossscalefactor)
+    insert into economic_model_computed.subjectblockylt (year, peril, lossviewgroup, portlayerid, retrocontractid, scenarioid, subjectLoss, subjectRP, subjectRB, maxlossscalefactor)
         with cte as (
             select
                 y.year,
@@ -29,7 +29,6 @@ BEGIN
                 pl.portlayerid, 
                 rcf.retrocontractid, 
                 rb.scenarioid,
-                pl.boundFxRate,
                 coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor) as scaleFactor,
                 round(sum(scaleFactor * exposedlimit * totalloss))  subjectLoss,
                 round(sum(scaleFactor * exposedrp * totalrp)) subjectRP,
@@ -58,7 +57,6 @@ BEGIN
                 pl.portlayerid, 
                 rcf.retrocontractid, 
                 rb.scenarioid,
-                pl.boundFxRate,
                 y.maxlossscalefactor, 
                 rcs.nonmodeledload,
                 rcs.climateload
@@ -74,11 +72,12 @@ BEGIN
             t.retroblockid, 
             rb.scenarioid, se.lossviewgroup, 
             rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, 
-            rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
+            rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal,
         from
             economic_model_computed.blockoperations_out rb
             inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
             inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
+            inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
             inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid
     ;
 

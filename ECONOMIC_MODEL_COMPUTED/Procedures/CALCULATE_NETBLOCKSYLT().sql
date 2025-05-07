@@ -25,14 +25,13 @@ BEGIN
     // 2. generate YLT for the net diff blocks
     truncate economic_model_computed.netblockylt;
         
-    insert into economic_model_computed.netblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, boundFxRate, loss, rp, rb)
+    insert into economic_model_computed.netblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, loss, rp, rb)
         select 
             b.scenarioid,
             y.lossviewgroup,
             y.year,
             y.peril,
             pl.portlayerid,
-            boundFxRate,
             round(sum(exposedlimit * totalloss * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor))) loss,
             round(sum(exposedrp * totalrp * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor))) RP,
             round(sum(exposedrp * totalrb * coalesce(rcs.nonmodeledload, 1) * least(coalesce(rcs.climateload, 1), y.maxlossscalefactor))) RB
@@ -51,17 +50,22 @@ BEGIN
         -- where
         --     rcs.includeinanalysis = true and
         group by
-            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid, pl.boundFxRate
+            year, peril, lossviewgroup, b.scenarioid, pl.portlayerid
     ;
 
     -- this is currently simple, but if, for some reason it gets more involved, consider extracting this into separate procedure, as all three _ylt procs have this.
     create or replace table economic_model_computed.netblock_seasonal_premium as
         select 
-            t.retroblockid, rb.scenarioid, se.lossviewgroup, rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal
+            t.retroblockid, 
+            rb.scenarioid, 
+            se.lossviewgroup, 
+            rb.exposedpremium * se.shareofyearlylayerlosses premiumSeasonal, 
+            rb.exposedexpenses * se.shareofyearlylayerlosses expensesSeasonal,
         from
             economic_model_computed.blockoperations_out rb
             inner join economic_model_staging.retrotag t on rb.blockid = t.retroblockid
             inner join economic_model_staging.portlayerperiod per on t.periodid = per.periodid
+            inner join economic_model_staging.portlayer pl on per.portlayerid = pl.portlayerid
             inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid
     ;
 
