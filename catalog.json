@@ -74,6 +74,12 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "EXPORT_BY_SCENARIO_PARTITIONS(VARCHAR, NUMBER)",
+    "ObjectDDLHash": "978dcb2721c21176f820f5b3556c476345b09b8cc9431d00dc80fee09268d9c5"
+  },
+  {
+    "ObjectType": "PROCEDURE",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "LOADALL()",
     "ObjectDDLHash": "77272c45ba210cd3766b8e725b23ce4dbaa4cb04e71a60610bd3a93bf2832117"
   },
