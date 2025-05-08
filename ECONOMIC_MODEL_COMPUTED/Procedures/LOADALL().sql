@@ -11,7 +11,7 @@ begin
     call economic_model_computed.process_model(null);
 
     -- precalculate ylt for blocks, for better powerbi performance
-    call economic_model_computed.PreparePowerBIData();
+    call economic_model_computed.PreparePowerBIData(null);
 
 end
 ;

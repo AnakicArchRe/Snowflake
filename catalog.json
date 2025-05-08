@@ -75,7 +75,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "LOADALL()",
-    "ObjectDDLHash": "519daf59b3860c1367605a37c0422f720a20137b6e09118b3177356cd3f79792"
+    "ObjectDDLHash": "77272c45ba210cd3766b8e725b23ce4dbaa4cb04e71a60610bd3a93bf2832117"
   },
   {
     "ObjectType": "PROCEDURE",
