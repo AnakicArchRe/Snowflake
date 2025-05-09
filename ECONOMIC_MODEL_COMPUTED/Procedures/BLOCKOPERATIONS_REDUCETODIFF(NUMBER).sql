@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.BLOCKOPERATIONS_REDUCETODIFF()
+CREATE OR REPLACE PROCEDURE ECONOMIC_MODEL_COMPUTED.BLOCKOPERATIONS_REDUCETODIFF(SCENARIOID NUMBER)
 RETURNS NUMBER(38,0)
 LANGUAGE SQL
 AS
@@ -11,6 +11,7 @@ begin
             select distinct blockid, b.scenarioid, parentscenarioid
             from economic_model_computed.blockoperations_in b
             inner join economic_model_scenario.scenario sc on sc.scenarioid = b.scenarioid
+            where :scenarioid is null or b.scenarioid = :scenarioid
         ), res as (
         select 
             sb.scenarioid,

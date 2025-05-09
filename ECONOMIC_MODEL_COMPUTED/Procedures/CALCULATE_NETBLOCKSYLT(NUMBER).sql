@@ -17,11 +17,10 @@ BEGIN
             // filter for active scenarios
             inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1
         where 
-            retrocontractinvestorid = 'NET_POSITION_INVESTOR'
-            and (:scenarioid is null or b.scenarioid = :scenarioid);
+            retrocontractinvestorid = 'NET_POSITION_INVESTOR';
     ;
 
-    call economic_model_computed.blockoperations_reducetodiff();
+    call economic_model_computed.blockoperations_reducetodiff(:scenarioid);
 
     // 2. generate YLT for the net diff blocks
     call economic_model_computed.clearscenariodatafromtable('netblockylt', :scenarioId);

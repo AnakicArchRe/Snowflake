@@ -27,10 +27,9 @@ BEGIN
             economic_model_computed.grossblock b
             // filter for active scenarios
             inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid and s.isactive = 1
-        where
-            :scenarioid is null or b.scenarioid = :scenarioid;
+        ;
 
-    call economic_model_computed.blockoperations_reducetodiff();
+    call economic_model_computed.blockoperations_reducetodiff(:scenarioid);
 
     call economic_model_computed.clearscenariodatafromtable('grossblockylt', :scenarioId);
     insert into economic_model_computed.grossblockylt(scenarioid, lossviewgroup, year, peril, portlayerid, loss, rp, rb)
