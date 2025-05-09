@@ -7,10 +7,13 @@ begin
     -- load scenario-independent data
     call economic_model_computed.stagemodel();
 
-    -- resolve scenario data, calculate blocks and contract/investor results
+    -- resolve scenario data
+    call economic_model_computed.resolve_scenario_data();
+
+    -- calculate blocks and contract/investor results
     call economic_model_computed.process_model(null);
 
-    -- precalculate ylt for blocks, for better powerbi performance
+    -- precalculate ylt for blocks (for better powerbi performance)
     call economic_model_computed.PreparePowerBIData(null);
 
 end

@@ -81,7 +81,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "LOADALL()",
-    "ObjectDDLHash": "77272c45ba210cd3766b8e725b23ce4dbaa4cb04e71a60610bd3a93bf2832117"
+    "ObjectDDLHash": "ab7a2957ad2a51bb4c88ddfdc0ca2075a0b079f6ed0b03fb9831cc6937df18d9"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -93,7 +93,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(NUMBER)",
-    "ObjectDDLHash": "c0844eb73a8fb17ed610ad57e593eef7df3903f512c0520df8c584f63bfb832d"
+    "ObjectDDLHash": "34b90edffe377d39f8e3d9736d9aaf841b1d40b725e9a1f7faff4d4da0210c74"
   },
   {
     "ObjectType": "PROCEDURE",
