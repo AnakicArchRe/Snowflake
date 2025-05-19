@@ -465,7 +465,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_RAW",
     "ObjectName": "SUBMISSION",
-    "ObjectDDLHash": "d43b157b9547fa2966f644ae6841f43c184d095156a612afabca4ba306522d09"
+    "ObjectDDLHash": "bd7af5e74aef9fb30c03fbf4ecf573b63dfdd6b1ddecd1565d1c7c683722d1da"
   },
   {
     "ObjectType": "TABLE",
