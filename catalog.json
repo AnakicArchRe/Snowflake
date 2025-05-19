@@ -51,7 +51,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATE_SUBJECTBLOCKSYLT(NUMBER)",
-    "ObjectDDLHash": "5df03fe653a437150fe071d86144f4521c7ab4de89215ce856f1693183bce938"
+    "ObjectDDLHash": "d03e8fe8ea337c831a11b04a40d85e3f3a6528b8baf75bb012340c76c12ad46c"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -261,7 +261,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "SUBJECTBLOCKYLT",
-    "ObjectDDLHash": "27710ecc9e239729b108dd4acfc4e5a0ba80b166d72f98b4cf34fdf3683b4767"
+    "ObjectDDLHash": "9ac50528a3388749b82adabf8f59582c1c432c58a6c708fdd6c80bc5305511d8"
   },
   {
     "ObjectType": "VIEW",

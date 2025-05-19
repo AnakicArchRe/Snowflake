@@ -55,6 +55,7 @@ BEGIN
             pl.portfolioid, 
             pl.topupzoneid,
             pl.facility,
+            month(pl.inception),
             rcf.retrocontractid, 
             rb.scenarioid
         ;
@@ -74,4 +75,5 @@ BEGIN
             inner join economic_model_staging.seasonality se on se.yeltperiodid = per.yeltperiodid
     ;
 
-end;
+end
+;
