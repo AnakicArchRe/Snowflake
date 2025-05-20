@@ -98,12 +98,6 @@
   {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
-    "ObjectName": "RESOLVE_SCENARIO_DATA_2()",
-    "ObjectDDLHash": "dd5b60f7e6f6c72b9da1e965e5f44a9918541cf68dbcf5f04a85bbd22db5d601"
-  },
-  {
-    "ObjectType": "PROCEDURE",
-    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RESOLVE_SCENARIO_DATA()",
     "ObjectDDLHash": "eea89e32197bbc33d3134f1cb98490b203ef357383e9d637a8cd243794f2718f"
   },
