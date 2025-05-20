@@ -11,7 +11,7 @@ begin
             from 
                 economic_model_scenario.scenario s
                 cross join table(split_to_table(coalesce(s.analysis_retrocontractids, ''), ',')) t
-                inner join economic_model_revoext.retrocontract r on trim(t.value) = r.retrocontractid
+                inner join economic_model_revoext.retrocontract r on trim(t.value) = r.retrocontractid or s.analysis_retrocontractids = '*' 
             where 
                 s.isactive = 1
         )
