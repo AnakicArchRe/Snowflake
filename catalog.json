@@ -57,7 +57,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "CALCULATECONTRACTMETRICS()",
-    "ObjectDDLHash": "f3e5463193fd197ef4196044029e73feac596430738bd3e9d86b7f7d1e36c560"
+    "ObjectDDLHash": "135f66ef2ec2af0445983825a480d9cd6cddca5ced71cea776290874a9de4c76"
   },
   {
     "ObjectType": "PROCEDURE",

@@ -145,7 +145,8 @@ begin
                     economic_model_computed.yltByContract b
                     inner join economic_model_computed.calculationcontract c on b.calculationcontractid = c.calculationcontractid and b.scenarioid = c.scenarioid            
                 group by 
-                    b.scenarioid,                   lossviewgroup,
+                    b.scenarioid,
+                    lossviewgroup,
                     year,
                     b.calculationcontractid,
                     c.commissiononnetpremium,
@@ -222,7 +223,7 @@ begin
                 case when chosenCapitalForMetrics > 0 then avgresult / chosenCapitalForMetrics else null end as avgResultPct,
                 case when chosenCapitalForMetrics > 0 then bestresult / chosenCapitalForMetrics else null end as bestResultPct,
                 case when chosenCapitalForMetrics > 0 then medianResult / chosenCapitalForMetrics else null end as medianResultPct,
-                avgResult / STDDEV_POP(y.investorresult) as sharpeRatio,
+                case when STDDEV_POP(y.investorresult) = 0 then null else avgResult / STDDEV_POP(y.investorresult) end as sharpeRatio,
                 // bep = break even point
                 -- min_by(yeltrank, abs(y.investorresult)) / 10e3 as bep1,
                 1 - count_if(y.investorresult < 0) / 10e3 as chanceOfPositiveResult,
