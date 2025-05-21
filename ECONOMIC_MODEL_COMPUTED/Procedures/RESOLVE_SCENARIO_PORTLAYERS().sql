@@ -28,7 +28,7 @@ begin
                 -- limit to portfolios included in scenario
                 inner join economic_model_computed.portfolio_scenario pf on pl.portfolioid = pf.portfolioid and pf.scenarioid = sp.partid
                 left outer join economic_model_scenario.portlayer_override pl_o on sp.partid = pl_o.scenarioid and pl.portlayerid = pl_o.portlayerid
-                left outer join economic_model_computed.topupzone_override_unpivoted tz_u_o on sp.partid = tz_u_o.scenarioid and pl.topupzoneid = tz_u_o.topupzoneid and tz_u_o.productgroup = pl.productgroup
+                left outer join economic_model_computed.topupzone_override_unpivoted tz_u_o on sp.partid = tz_u_o.scenarioid and pl.topupzoneid = tz_u_o.topupzoneid and upper(tz_u_o.productgroup) = upper(pl.productgroup)
         )
         select 
             x.* exclude (shareFactor_original, premiumFactor_original, limit100pct, premium100pct, boundfxdate),
