@@ -60,8 +60,9 @@ begin
             r.scenarioid is not null
          ;
 
-    -- Prepare base blocks. These do not include cessiogross % nor available % (not scenario and level dependent). 
-    -- They are used to base subsequent calculations on. (available for subject, available + cessiongross broken down by investor for ceded)
+    -- Prepare base blocks. These do not include cessiogross % nor available % since we don't know these values yet. 
+    -- These blocks are not scenario-idenependet: they do use the netcessionlockin flag as well as filter portlayers visible in each scenario.
+    -- These blocks are used to base subsequent calculations on. ("available" for subject, "available" * "cessiongross" by investor for ceded)
     -- We've already done the filtering and pulled in the relevant factors (except the ones we don't yet know)
     create or replace temporary table economic_model_computed.baseblockinfo as 
         select
@@ -144,6 +145,8 @@ begin
             
     -- 2. let's start generating blocks
 
+    -- todo: Can there be projected portlayers ceding to specific retros (projections are not in the retroallocations table)? Check with PC.
+
     -- 2.1. Retros with isspecific flag don't interact with other retros, so we can calculate their ceded blocks right away.
     -- the cessiongross comes from the retroallocation table, and avilable is always 1 (todo: confirm with PC). 
     -- Todo: It looks like some retros with IsSpecific=1 have multiple investors for a given layer. Is this expected? Investigate.
@@ -194,7 +197,7 @@ begin
                         sbi.scenarioid, 
                         sbi.periodid,
                         sbi.retrocontractid,
-                        1 - sum(cessiongross * diag_available) as available,
+                        1 - sum(cb.cessiongross * diag_available) as available,
                         case when sbi.netCessionDefinitionPeriod <> sbi.periodid then '{Definition period: ' || sbi.netCessionDefinitionPeriod || '}\n' else '' end ||
                             listagg(
                                 concat(
@@ -231,6 +234,7 @@ begin
                     b.retroblockid,
                     b.retrocontractid,
                     b.retroconfigurationid,
+                    b.layerid,
 
                     // diag factors
                     b.limit100pct,
@@ -402,20 +406,47 @@ begin
         -- Now that we've updated the investmentcalculatedpct of each investor (in case the retro wasn't using REVO/Override collateral), we can finally calculate and insert ceded blocks for this level
         -- We're going to use the ceded blocks for calculating the "available" factor in the next level
         insert into economic_model_computed.cededblock(
-            scenarioid, retroblockid, retrocontractinvestorid, 
+            scenarioid, 
+            retroblockid, 
+            retrocontractinvestorid, 
             -- note: we save cessiongross for diagnostic purposes but also for calculating how much is available in the next leve. 
-            -- Since I'm also using it for available I didn't add the diag_ prefix this is an internal detail so I'm on the fence about it.
+            -- Since I'm also using it for "available" I didn't add the diag_ prefix but this is an internal detail so I'm on the fence about it.
             cessiongross, 
-            exposedlimit, exposedrp, exposedExpenses, premiumprorata, expensesprorata, reinstcount,
-            diag_limit100pct, diag_premium100pct, diag_share, diag_sharefactor, diag_placement, diag_premiumfactor, diag_shareoflayerduration, diag_expenses, diag_available, diag_available_explanation, 
+            exposedlimit, 
+            exposedrp, 
+            exposedExpenses, 
+            premiumprorata, 
+            expensesprorata, 
+            reinstcount,
+            diag_limit100pct, 
+            diag_premium100pct, 
+            diag_share, 
+            diag_sharefactor, 
+            diag_placement, 
+            diag_premiumfactor, 
+            diag_shareoflayerduration, 
+            diag_expenses, 
+            diag_available, 
+            diag_available_explanation, 
             diag_sidesign, 
             notes)
-             select
+            select
                 b.scenarioid, 
                 retroblockid,
                 rci.retrocontractinvestorid,
-                -- note: we use the investmentsigned specified by overide/revo, or the calculated one if override/revo is not found
-                b.placement * coalesce(rci.investmentsigned, rci.investmentcalculatedpct) as CessionGross,
+
+                -- todo: ensure this is correct (check with PC). I don't really understand the reasoning while writing this, so best to check with him.
+                b.placement * 
+                case 
+                    -- If both retro and Layer started before cutoff date (only for inforce layer), use Cession % from retroallocation
+                    when (pl.inception <= s.inforceenddate and r.inception <= s.inforceenddate and upper(pl.layerview) = 'INFORCE') then ra.cessiongross
+                    -- if the layer started after the cutoff date, but the retro started on or before it, use the cession % from REVO
+                    when (r.inception <= s.inforceenddate) then rci.investmentsigned
+                    -- if both the layer and the retro stated after the cutoff date, use the calculated cession % (based on required capital)
+                    -- but fallback to REVO if not calculated
+                    else coalesce(rci.investmentcalculatedpct, rci.investmentsigned)
+                end as CessionGross, 
+
                 b.nonplaced_exposedlimit * cessiongross as exposedlimit,
                 b.nonplaced_exposedpremium * cessiongross as exposedpremium,
                 b.nonplaced_exposedexpenses * cessiongross as exposedExpenses,
@@ -423,17 +454,17 @@ begin
                 b.nonplaced_proratapremiumexpenses * cessiongross as expensesprorata,
                 b.reinstcount,
 
-                limit100pct,
-                premium100pct,
-                share,
-                sharefactor,
-                placement,
-                premiumfactor,
-                shareoflayerduration,
-                expenses,
-                availableatlevel,
-                availableExplanation,
-                sidesign,
+                b.limit100pct,
+                b.premium100pct,
+                b.share,
+                b.sharefactor,
+                b.placement,
+                b.premiumfactor,
+                b.shareoflayerduration,
+                b.expenses,
+                b.availableatlevel,
+                b.availableExplanation,
+                b.sidesign,
                 economic_model_computed.concat_non_null(
                     rci.notes,
                     case when rci.investmentsigned is null then 'Using calculated investment %' else null end,
@@ -442,9 +473,12 @@ begin
             from 
                 economic_model_computed.subjectBlockInfo b
                 inner join economic_model_computed.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
+                left join economic_model_staging.retroallocation ra on ra.layerid = b.layerid and ra.retrocontractinvestorid = rci.retrocontractinvestorid
+                inner join economic_model_staging.portlayer pl on b.portlayerid = pl.portlayerid
+                inner join economic_model_revoext.retrocontract r on b.retrocontractid = r.retrocontractid
+                inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid
             where
-                CessionGross > 0
-        ;
+                CessionGross > 0;
 
     END FOR;
 
