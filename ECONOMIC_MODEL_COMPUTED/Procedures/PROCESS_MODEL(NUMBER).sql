@@ -589,7 +589,6 @@ begin
             economic_model_computed.calculationcontractmetrics m
             left join investedAmountByRetroContract ri on ri.scenarioid = m.scenarioid and ri.retrocontractid = m.calculationcontractid;
 
-
     // 5. generate gross blocks
     -- todo: add diag info
     insert into economic_model_computed.grossblock (scenarioid, portlayerid, exposedlimit, exposedrp, premium, expenses, exposedExpenses, reinstcount)
