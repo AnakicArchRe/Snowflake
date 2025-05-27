@@ -74,7 +74,8 @@ BEGIN
                 end as Premium100Pct,
                 coalesce(productgroup, 'UNKNOWN') as ProductGroup,
                 -- must use to_date to strip time as some old entries have time in there
-                TO_DATE(s.fxdate) fxdate,
+                to_date(l.boundfxdate) as boundfxdate,
+                to_date(s.fxdate) as submission_fxdate,
                 EL
             from 
                 economic_model_raw.layer l
@@ -130,13 +131,14 @@ BEGIN
             where 
                 pl.isactive = 1 and pl.isdeleted = 0
         )
-        select 
+        select
             pld.Source,
             PortLayerId,
             pld.PortfolioId, 
             l.LayerId,
             LayerView,
-            case when pld.layerview = 'INFORCE' then fxdate else null end as boundFxDate,
+            case when pld.layerview = 'INFORCE' then coalesce(boundfxdate, submission_fxdate) else null end as boundFxDate,
+            iff(boundfxdate is not null, 'Layer', 'Submission') as boundFxDate_source,
             pld.inception, 
             pld.expiration,
             l.inception as OriginalLayerInception,
@@ -154,6 +156,7 @@ BEGIN
             l.premium100pct,
             l.productgroup,
             l.el,
+            l.status,
     		case 
                 when pld.Share is null or pld.Share = 0 then 1
                 when LayerView = 'INFORCE' then 1
@@ -176,7 +179,7 @@ BEGIN
             portlayerdata pld
             inner join layer l on pld.layerid = l.layerid
         where 
-            LayerView <> 'NOTINCLUDED'
+            LayerView <> 'NOTINCLUDED' 
     ;
 End
 ;
