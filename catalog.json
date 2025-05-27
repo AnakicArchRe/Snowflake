@@ -633,7 +633,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_YELPT()",
-    "ObjectDDLHash": "c1b393ebbbc1c78055e520b23546ff2229f8873240d00e2c5483cb12a4e6f539"
+    "ObjectDDLHash": "7d7d14384521c9660f87bfdfb4d9bc8b8098354a2deb985c4219ed12752fabd6"
   },
   {
     "ObjectType": "TABLE",
@@ -724,5 +724,11 @@
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "YELPT",
     "ObjectDDLHash": "8319547decf26392ddb497564e31bbcefe34b1180f103e9fff56b5c02628168f"
+  },
+  {
+    "ObjectType": "VIEW",
+    "SchemaName": "ECONOMIC_MODEL_STAGING",
+    "ObjectName": "V_YELT",
+    "ObjectDDLHash": "e28c08b983ca8129c77761b0324f44bac97deb76ff3cb7ac5b9b9c873bc0b307"
   }
 ]

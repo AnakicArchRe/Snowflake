@@ -6,9 +6,7 @@ BEGIN
 
     create or replace temporary table economic_model_staging.yelt as 
         select 
-            concat(source_db, '_', LossAnalysisId) as LossAnalysisId,
-            concat(source_db, '_', layerid) as layerid,
-            * exclude (lossanalysisid, layerid)
+            *
         from 
             economic_model_raw.v_Yelt;
 
