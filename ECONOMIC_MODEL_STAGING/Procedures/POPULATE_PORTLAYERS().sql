@@ -94,39 +94,40 @@ BEGIN
                 concat(pl.source_db, '_', pl.PortLayerId) as PortLayerId, 
                 concat(pl.source_db, '_', pl.LayerId) as LayerId, 
                 concat(pl.source_db, '_', pl.PortfolioId) as PortfolioId, 
+                CAST(DATE_FROM_PARTS(p.UWYEAR,1,1) AS TIMESTAMP_NTZ(7)) AS PORTFOLIOSTART,
+                CAST(DATE_FROM_PARTS(p.UWYEAR,12,31) AS TIMESTAMP_NTZ(7)) AS PORTFOLIOEND,
                 pl.source_db as Source,
                 CASE
-                    WHEN  P.PORTFOLIOTYPE = 0 THEN l.inception
-                    WHEN  P.PORTFOLIOTYPE = 1 THEN DATEADD(YEAR, 1, l.INCEPTION)
-                    WHEN (P.PORTFOLIOTYPE = 2 AND YEAR(l.inception) = YEAR(P.ASOFDATE)) THEN l.inception
-                    WHEN (P.PORTFOLIOTYPE = 2 AND YEAR(l.inception) = YEAR(P.ASOFDATE) - 1) THEN DATEADD(YEAR, 1, l.inception)
-                    WHEN (P.PORTFOLIOTYPE = 2 AND YEAR(l.expiration) = YEAR(P.ASOFDATE)) THEN DATEADD(DAY, 1, DATEADD(YEAR, 0, l.expiration))
-                    WHEN (P.PORTFOLIOTYPE = 3 AND YEAR(l.inception) = YEAR(P.ASOFDATE)) THEN DATEADD(YEAR, 1, l.inception)
-                    WHEN (P.PORTFOLIOTYPE = 3 AND YEAR(l.inception) = YEAR(P.ASOFDATE) - 1) THEN DATEADD(YEAR, 2, l.inception)
-                    WHEN (P.PORTFOLIOTYPE = 3 AND YEAR(l.expiration) = YEAR(P.ASOFDATE)) THEN DATEADD(DAY, 1, DATEADD(YEAR, 0, l.expiration))
-                END AS Inception
-                , CASE
-                    WHEN  P.PORTFOLIOTYPE = 0 THEN DATEADD(DAY, -1, DATEADD(YEAR, 1, l.inception))
-                    WHEN  P.PORTFOLIOTYPE = 1 THEN DATEADD(DAY, -1, DATEADD(YEAR, 2, l.inception))
-                    WHEN (P.PORTFOLIOTYPE = 2 AND YEAR(l.inception) = YEAR(P.ASOFDATE)) THEN DATEADD(DAY, -1, DATEADD(YEAR, 1, l.inception))
-                    WHEN (P.PORTFOLIOTYPE = 2 AND YEAR(l.inception) = YEAR(P.ASOFDATE) - 1) THEN DATEADD(DAY, -1, DATEADD(YEAR, 2, l.inception))
-                    WHEN (P.PORTFOLIOTYPE = 2 AND YEAR(l.expiration) = YEAR(P.ASOFDATE) ) THEN DATEADD(DAY, 0, DATEADD(YEAR, 1, l.expiration))
-                    WHEN (P.PORTFOLIOTYPE = 3 AND YEAR(l.inception) = YEAR(P.ASOFDATE)) THEN DATEADD(DAY, -1, DATEADD(YEAR, 2, l.inception))
-                    WHEN (P.PORTFOLIOTYPE = 3 AND YEAR(l.inception) = YEAR(P.ASOFDATE) - 1) THEN DATEADD(DAY, -1, DATEADD(YEAR, 3, l.inception))
-                    WHEN (P.PORTFOLIOTYPE = 3 AND YEAR(l.expiration) = YEAR(P.ASOFDATE)) THEN DATEADD(DAY, 0, DATEADD(YEAR, 1, l.expiration))
-                    --ELSE 'NOTINCLUDED'
-                END AS Expiration,
-                CASE
+                    WHEN l.EXPIRATION >= PORTFOLIOEND THEN 'INFORCE' /* IF A LAYER EXPIRES AFTER THEN END OF PORTFOLIO, THEN THE LAYER WILL NOT BE RENEWED IN THIS PORTFOLIO E.G. PORTFOLIO 1037, LAYERID 139559, PORTLAYERID 869408 */
+                    WHEN (l.EXPIRATION < P.ASOFDATE AND l.INCEPTION < PORTFOLIOSTART ) THEN 'IGNORE' /* SUCH LAYER WOULD BE A MISTAKE FROM THE PORTFOLIO MODULE E.G. PORTFOLIO 1037, LAYERID 129272, PORTLAYERID 868905 */
+                    WHEN (l.EXPIRATION < P.ASOFDATE ) THEN 'INFORCE' /* SUCH LAYER WOULD BE A SHORT TERM LAYER THAT IS NO LONGER INFORCE BUT INCLUDED IN THE PORTFOLIO TO HAVE A COMPLETE VIEW OF THE UNDERWRITING YEAR E.G. PORTFOLIO 1037, LAYERID 146942, PORTLAYERID 869835 */
                     WHEN  P.PORTFOLIOTYPE  = 0 THEN 'INFORCE'
                     WHEN  P.PORTFOLIOTYPE  = 1 THEN 'PROJECTION1'
-                    WHEN (P.PORTFOLIOTYPE  = 2 AND YEAR(l.inception) = YEAR(P.ASOFDATE)) THEN 'INFORCE'
-                    WHEN (P.PORTFOLIOTYPE  = 2 AND YEAR(l.inception) = YEAR(P.ASOFDATE) - 1) THEN 'PROJECTION1'
-                    WHEN (P.PORTFOLIOTYPE  = 2 AND YEAR(l.expiration) = YEAR(P.ASOFDATE)) THEN 'PROJECTION1'
-                    WHEN (P.PORTFOLIOTYPE  = 3 AND YEAR(l.inception) = YEAR(P.ASOFDATE)) THEN 'PROJECTION1'
-                    WHEN (P.PORTFOLIOTYPE  = 3 AND YEAR(l.inception) = YEAR(P.ASOFDATE) - 1) THEN 'PROJECTION2'
-                    WHEN (P.PORTFOLIOTYPE  = 3 AND YEAR(l.expiration) = YEAR(P.ASOFDATE)) THEN 'PROJECTION2'
+                    WHEN (P.PORTFOLIOTYPE  = 2 AND YEAR(l.INCEPTION) = YEAR(P.ASOFDATE)) THEN 'INFORCE'
+                    WHEN (P.PORTFOLIOTYPE  = 2 AND YEAR(l.INCEPTION) = YEAR(P.ASOFDATE)) THEN 'INFORCE'
+                    WHEN (P.PORTFOLIOTYPE  = 2 AND YEAR(l.INCEPTION) = YEAR(P.ASOFDATE) - 1) THEN 'PROJECTION1'
+                    WHEN (P.PORTFOLIOTYPE  = 2 AND YEAR(l.EXPIRATION) = YEAR(P.ASOFDATE)) THEN 'PROJECTION1'
+                    WHEN (P.PORTFOLIOTYPE  = 3 AND YEAR(l.INCEPTION) = YEAR(P.ASOFDATE)) THEN 'PROJECTION1'
+                    WHEN (P.PORTFOLIOTYPE  = 3 AND YEAR(l.INCEPTION) = YEAR(P.ASOFDATE) - 1) THEN 'PROJECTION2'
+                    WHEN (P.PORTFOLIOTYPE  = 3 AND YEAR(l.EXPIRATION) = YEAR(P.ASOFDATE)) THEN 'PROJECTION2'
                     ELSE 'NOTINCLUDED'
-                END as LayerView,
+                END AS LAYERVIEW,
+                CASE
+                    WHEN LAYERVIEW = 'INFORCE' THEN L.INCEPTION
+                    WHEN l.EXPIRATION < p.ASOFDATE THEN L.INCEPTION /* THESE LAYERS SHOULD CODED AS INFORCE AND THUS HANDLED BY FIRST WHEN STATEMENT */
+                    WHEN l.EXPIRATION >= PORTFOLIOEND THEN L.INCEPTION /* LAYERS THAT WILL EXPIRE AFTER THE PORTFOLIO WILL NOT BE RENEWED AS PART OF THIS PORTFOLIO3 CHECK THAT THIER STATUS IS INFORCE */
+                    WHEN LAYERVIEW = 'PROJECTION1' THEN DATEADD(DAY, 1, L.EXPIRATION)
+                    WHEN LAYERVIEW = 'PROJECTION2' THEN DATEADD(YEAR,1,DATEADD(DAY, 1, L.EXPIRATION))
+                    ELSE '1900-01-01'        
+                END AS Inception, 
+                CASE
+                    WHEN LAYERVIEW = 'INFORCE' THEN L.EXPIRATION  
+                    WHEN L.EXPIRATION < p.ASOFDATE THEN L.EXPIRATION   /* THESE LAYERS SHOULD CODED AS INFORCE AND THUS HANDLED BY FIRST WHEN STATEMENT */
+                    WHEN L.EXPIRATION >= PORTFOLIOEND THEN L.EXPIRATION   /* LAYERS THAT WILL EXPIRE AFTER THE PORTFOLIO WILL NOT BE RENEWED AS PART OF THIS PORTFOLIO3 CHECK THAT THIER STATUS IS INFORCE */
+                    WHEN LAYERVIEW = 'PROJECTION1' THEN DATEADD(YEAR, 1, L.EXPIRATION)
+                    WHEN LAYERVIEW = 'PROJECTION2' THEN DATEADD(YEAR, 2, L.EXPIRATION)
+                    ELSE '1900-01-01'    
+                END AS Expiration,
                 Share, ShareAdjusted, Share2Adjusted, pl.Premium, PremiumAdjusted, Premium2Adjusted,
             from 
                 economic_model_raw.portlayer pl
