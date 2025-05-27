@@ -183,7 +183,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "GROSSBLOCK",
-    "ObjectDDLHash": "1079bc5d4d17325349f7ba5f4dc614f2869e5cecb1b1c97993a9891bf24825e1"
+    "ObjectDDLHash": "e4ec9b6387ee03e53252a4d17ed600836b2b6b5d68a943c0790e3b3d29dfb741"
   },
   {
     "ObjectType": "TABLE",
