@@ -579,7 +579,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_PORTLAYERS()",
-    "ObjectDDLHash": "f22b56e2393e827dcd5f0d2ff0f94aeab433eee775bb222165c799762f9254de"
+    "ObjectDDLHash": "cb5966b3e6f5742df1d46a618da4bd434555a83a79dc5b7c535c48b36fb8bd7f"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -651,7 +651,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "PORTLAYER",
-    "ObjectDDLHash": "77f023568156e0ebf5c60cf7bc423792fc0c9883044f0597b7214667977df21f"
+    "ObjectDDLHash": "2339167aa344d5fe60ee0cc0e1f35e5c4133ec32bd7450e73d7e8ace6310d94e"
   },
   {
     "ObjectType": "TABLE",

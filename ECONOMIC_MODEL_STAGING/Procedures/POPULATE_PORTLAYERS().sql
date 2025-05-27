@@ -50,6 +50,10 @@ BEGIN
                 agglimit,
                 occlimit,
                 risklimit,
+                signedshare as diag_signedshare, 
+                estimatedshare as diag_estimatedshare, 
+                authshare as diag_authshare, 
+                quotedcorreshare as diag_quotedcorreshare,
                 case 
                     when signedshare > 0 then signedshare
                     when estimatedshare > 0 then estimatedshare
@@ -149,6 +153,10 @@ BEGIN
             l.segment,
             l.lob,
             l.share,
+            l.diag_signedshare, 
+            l.diag_estimatedshare, 
+            l.diag_authshare, 
+            l.diag_quotedcorreshare,
             l.layerdesc,
             l.expenses,
             l.topupzoneid,
