@@ -8,12 +8,19 @@ BEGIN
     create or replace table ECONOMIC_MODEL_STAGING.PortLayer as
         WITH ELINPUT AS (
             SELECT
-                Source_db,
-                LAYERID,
-                RANK() OVER ( PARTITION BY source_db, LAYERID ORDER BY LAYERID, R.LOSSVIEW DESC) AS RANKVIEW,
-                R.EL
+                r.Source_db,
+                r.LAYERID,
+                RANK() OVER ( PARTITION BY r.source_db, r.LAYERID ORDER BY r.LAYERID, R.LOSSVIEW DESC) AS RANKVIEW,
+                R.EL,
+                R.LR,
+                CASE 
+                    WHEN (R.CR > 0 AND R.LR > 0) THEN (R.CR - R.LR) 
+                    WHEN L.PRICINGSOURCE = 2 THEN R.TOTALEXP 
+                    ELSE ( R.TOTALEXP + (R.RB / ( 1+R.RP)) ) 
+                END AS ER
             FROM
                 economic_model_raw.lossviewresult R
+                inner join economic_model_raw.layer L on r.layerid = l.layerid and r.source_db = l.source_db
             WHERE
                 R.LOSSVIEW IN (1, 10) 
                 AND R.ISACTIVE = 1
@@ -23,11 +30,14 @@ BEGIN
                 e.source_db,
                 l.LAYERID, 
                 EL,
+                LR,
+                ER,
                 CASE 
                     WHEN (COALESCE(e.EL,0) >= 0.2 AND L.FACILITY IN ('9PC', '5PC') AND cp.LEGALENTCODE IN ('ARL', 'ARE')) THEN 'Linteau' 
                     WHEN COALESCE(e.EL,0) <= 0.05 THEN 'TopUp' 
                     ELSE 'Middle' 
-                END AS PRODUCTGROUP
+                END AS PRODUCTGROUP,
+                LEGALENTCODE
             FROM 
                 ELINPUT e
                 inner join economic_model_raw.layer l on e.layerid = l.layerid and e.source_db = l.source_db
@@ -50,10 +60,11 @@ BEGIN
                 agglimit,
                 occlimit,
                 risklimit,
-                signedshare as diag_signedshare, 
-                estimatedshare as diag_estimatedshare, 
-                authshare as diag_authshare, 
-                quotedcorreshare as diag_quotedcorreshare,
+                regismkey,
+                signedshare, 
+                estimatedshare, 
+                authshare, 
+                quotedcorreshare,
                 case 
                     when signedshare > 0 then signedshare
                     when estimatedshare > 0 then estimatedshare
@@ -80,7 +91,11 @@ BEGIN
                 -- must use to_date to strip time as some old entries have time in there
                 to_date(l.boundfxdate) as boundfxdate,
                 to_date(s.fxdate) as submission_fxdate,
-                EL
+                EL,
+                ER, 
+                LR,
+                LEGALENTCODE,
+                L.ERC,
             from 
                 economic_model_raw.layer l
                 inner join economic_model_raw.submission s on l.submissionid = s.submissionid and l.source_db = s.source_db
@@ -143,29 +158,31 @@ BEGIN
             l.LayerId,
             LayerView,
             case when pld.layerview = 'INFORCE' then coalesce(boundfxdate, submission_fxdate) else null end as boundFxDate,
-            iff(boundfxdate is not null, 'Layer', 'Submission') as boundFxDate_source,
+            iff(boundfxdate is not null, 'Layer', 'Submission') as diag_boundFxDate_source,
             pld.inception, 
             pld.expiration,
-            l.inception as OriginalLayerInception,
-            l.expiration as OriginalLayerExpiration,
+            l.inception as diag_originalLayerInception,
+            l.expiration as diag_originalLayerExpiration,
             l.submissionid,
             l.reinstcount,
             l.facility,
             l.segment,
             l.lob,
             l.share,
-            l.diag_signedshare, 
-            l.diag_estimatedshare, 
-            l.diag_authshare, 
-            l.diag_quotedcorreshare,
+            l.signedshare as diag_signedshare, 
+            l.estimatedshare as diag_estimatedshare, 
+            l.authshare as diag_authshare, 
+            l.quotedcorreshare as diag_quotedcorreshare,
+            l.regismkey as diag_regismkey,
+            l.LEGALENTCODE as diag_legalentcode,
             l.layerdesc,
             l.expenses,
             l.topupzoneid,
             l.limit100pct,
             l.premium100pct,
             l.productgroup,
-            l.el,
-            l.status,
+            l.el as diag_el,
+            l.status as diag_status,
     		case 
                 when pld.Share is null or pld.Share = 0 then 1
                 when LayerView = 'INFORCE' then 1
@@ -178,12 +195,15 @@ BEGIN
                 when LayerView = 'PROJECTION1' then PremiumAdjusted / pld.Premium
                 when LayerView = 'PROJECTION2' then Premium2Adjusted / pld.Premium
             end as PremiumFactor,
-            l.limitbasis,
-            l.agglimit,
-            l.risklimit,
-            l.occlimit,
-            l.placement,
-            l.premium
+            l.limitbasis as diag_limitbasis,
+            l.agglimit as diag_agglimit,
+            l.risklimit as diag_risklimit,
+            l.occlimit as diag_occlimit,
+            l.placement as diag_placement,
+            l.premium as diag_premium,
+            l.ERC as diag_ERC,
+            l.ER as diag_ER,
+            l.LR as diag_LR
         from 
             portlayerdata pld
             inner join layer l on pld.layerid = l.layerid

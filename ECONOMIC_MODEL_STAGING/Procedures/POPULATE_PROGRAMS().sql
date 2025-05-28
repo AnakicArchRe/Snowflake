@@ -11,7 +11,8 @@ begin
             concat(p.source_db, '_',p.CedentId) as CedentId, 
             c.Name as CedentName,
             cg.Name as CedentGroup,
-            cp.LEGALENTCODE as Company
+            cp.LEGALENTCODE as Company,
+            ExtName
         from 
             economic_model_raw.program p
             inner join economic_model_raw.cedent c on p.cedentid = c.cedentid and c.source_db = p.source_db
