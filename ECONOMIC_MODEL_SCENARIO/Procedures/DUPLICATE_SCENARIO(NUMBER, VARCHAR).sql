@@ -7,9 +7,9 @@ begin
     
     let uuidstr := (SELECT UUID_STRING());
 
-    INSERT INTO economic_model_scenario.scenario(name,description, isactive, sortorder, parentscenarioid, analysis_portfolioids, analysis_retrocontractids, fxdate, netcessionslockin)
+    INSERT INTO economic_model_scenario.scenario(name,description, isactive, sortorder, parentscenarioid, analysis_portfolioids, analysis_retrocontractids, fxdate, boundfxlockin, inforceenddate)
     select 
-        :uuidstr || coalesce(:new_scenario_name, name || '-duplicate') as name, description, isactive, sortorder, parentscenarioid, analysis_portfolioids, analysis_retrocontractids, fxdate, netcessionslockin
+        :uuidstr || coalesce(:new_scenario_name, name || '-duplicate') as name, description, isactive, sortorder, parentscenarioid, analysis_portfolioids, analysis_retrocontractids, fxdate, boundfxlockin, inforceenddate
     from 
         economic_model_scenario.scenario where scenarioid = :original_scenario_id;
     
@@ -29,8 +29,8 @@ begin
     from economic_model_scenario.retroconfiguration_override
     where scenarioid = :original_scenario_id;
 
-    insert into economic_model_scenario.RETROCONTRACT_OVERRIDE(scenarioid, RETROCONTRACTID, LEVEL, ISACTIVE, commission, profitcommission, reinsurancebrokerageonnetpremium, reinsuranceexpensesoncededcapital, reinsuranceexpensesoncededpremium, targetcollateralcalculated)
-    select :new_scenario_id, RETROCONTRACTID, LEVEL, ISACTIVE, commission, profitcommission, reinsurancebrokerageonnetpremium, reinsuranceexpensesoncededcapital, reinsuranceexpensesoncededpremium, targetcollateralcalculated 
+    insert into economic_model_scenario.RETROCONTRACT_OVERRIDE(scenarioid, RETROCONTRACTID, LEVEL, ISACTIVE, commission, profitcommission, reinsurancebrokerageonnetpremium, reinsuranceexpensesoncededcapital, reinsuranceexpensesoncededpremium, targetcollateralcalculated, netcessionlockin)
+    select :new_scenario_id, RETROCONTRACTID, LEVEL, ISACTIVE, commission, profitcommission, reinsurancebrokerageonnetpremium, reinsuranceexpensesoncededcapital, reinsuranceexpensesoncededpremium, targetcollateralcalculated, netcessionlockin
     from economic_model_scenario.RETROCONTRACT_OVERRIDE
     where scenarioid = :original_scenario_id;
 

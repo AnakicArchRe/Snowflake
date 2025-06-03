@@ -495,7 +495,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_SCENARIO",
     "ObjectName": "DUPLICATE_SCENARIO(NUMBER, VARCHAR)",
-    "ObjectDDLHash": "718ebc0b2d52ee6ab5c80ae103d44fe44cd95e2b1854e6a7218804cec74f770c"
+    "ObjectDDLHash": "58ca1b53d96fdabb577a363692a538ef73fd742afd0205e28d2952ed842933c0"
   },
   {
     "ObjectType": "PROCEDURE",
