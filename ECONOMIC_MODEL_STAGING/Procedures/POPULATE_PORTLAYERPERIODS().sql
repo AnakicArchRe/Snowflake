@@ -110,9 +110,7 @@ BEGIN
         )
         select 
             pl.portlayerid,
-            -- todo: shouldn't this include year? Probably makes no difference because next year's day-range won't overlap
-            -- with this year's day-range since layers are 12months long max (todo: check if this is true and if not, include both years in PeriodId).
-            concat(pl.PortLayerid, ':', dayofyear(PeriodStart), '-', dayofyear(PeriodEnd)) as PeriodId,
+            concat(pl.PortLayerid, ': ', year(PeriodStart), '.', dayofyear(PeriodStart), '-', year(PeriodEnd), '.', dayofyear(PeriodEnd)) as PeriodId,
             -- note: yelt references layers, not portlayers, so using layerid here.
             concat(pl.LayerId, ':', PeriodStartDayOfYear_NonLeap, '-', PeriodEndDayOfYeay_NonLeap) as YeltPeriodId,
                 
