@@ -22,7 +22,7 @@ BEGIN
                 economic_model_raw.lossviewresult R
                 inner join economic_model_raw.layer L on r.layerid = l.layerid and r.source_db = l.source_db
             WHERE
-                R.LOSSVIEW IN (1, 10) 
+                R.LOSSVIEW IN (1, 10, 11) 
                 AND R.ISACTIVE = 1
         )
         , PRODUCTGROUP AS (
