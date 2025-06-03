@@ -219,7 +219,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PORTLAYER_SCENARIO",
-    "ObjectDDLHash": "c065f58956c06e04596d50d28887ba907d18b45c768f065a7a8fac8d1bf546fc"
+    "ObjectDDLHash": "040e992e43bf6a26df68666449ac0ca92b21ae68ccd3638717d888bd679892e7"
   },
   {
     "ObjectType": "TABLE",
