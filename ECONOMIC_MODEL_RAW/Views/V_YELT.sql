@@ -140,4 +140,5 @@ create or replace view ACTUARIAL_ILS_POC.ECONOMIC_MODEL_RAW.V_YELT(
     select
         m.*
     from 
-        merged m;
+        merged m
+    where year <= 10000;

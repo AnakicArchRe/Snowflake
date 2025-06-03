@@ -471,7 +471,7 @@
     "ObjectType": "VIEW",
     "SchemaName": "ECONOMIC_MODEL_RAW",
     "ObjectName": "V_YELT",
-    "ObjectDDLHash": "3e3a5942b155cedfa9530bdd0edc97c6a7a5ca9db420d1608c6d2739ce41fe98"
+    "ObjectDDLHash": "20e24cae9d77abfc7196ad44fa1115e65e25bb00395c7d86b55c6e47ea527e10"
   },
   {
     "ObjectType": "TABLE",
