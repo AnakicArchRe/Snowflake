@@ -439,19 +439,20 @@ begin
                 b.placement * 
                 case 
                     -- If both retro and Layer started before cutoff date (only for inforce layer), use Cession % from retroallocation
-                    when (pl.inception <= s.inforceenddate and r.inception <= s.inforceenddate and upper(pl.layerview) = 'INFORCE') then ra.cessiongross
+                    -- Do not read inv % from REVO in case of NET placeholder retro
+                    when r.level <> 10 and (pl.inception <= s.inforceenddate and r.inception <= s.inforceenddate and upper(pl.layerview) = 'INFORCE') then ra.cessiongross
                     -- if the layer started after the cutoff date, but the retro started on or before it, use the cession % from REVO
                     when (r.inception <= s.inforceenddate) then rci.investmentsigned
                     -- if both the layer and the retro stated after the cutoff date, use the calculated cession % (based on required capital)
                     -- but fallback to REVO if not calculated
                     else coalesce(rci.investmentcalculatedpct, rci.investmentsigned)
-                end as CessionGross, 
+                end as CessionGross_Final, 
 
-                b.nonplaced_exposedlimit * cessiongross as exposedlimit,
-                b.nonplaced_exposedpremium * cessiongross as exposedpremium,
-                b.nonplaced_exposedexpenses * cessiongross as exposedExpenses,
-                b.nonplaced_proratapremium * cessiongross as premiumprorata,
-                b.nonplaced_proratapremiumexpenses * cessiongross as expensesprorata,
+                b.nonplaced_exposedlimit * CessionGross_Final as exposedlimit,
+                b.nonplaced_exposedpremium * CessionGross_Final as exposedpremium,
+                b.nonplaced_exposedexpenses * CessionGross_Final as exposedExpenses,
+                b.nonplaced_proratapremium * CessionGross_Final as premiumprorata,
+                b.nonplaced_proratapremiumexpenses * CessionGross_Final as expensesprorata,
                 b.reinstcount,
 
                 b.limit100pct,
@@ -478,7 +479,7 @@ begin
                 inner join economic_model_revoext.retrocontract r on b.retrocontractid = r.retrocontractid
                 inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid
             where
-                CessionGross > 0;
+                CessionGross_Final > 0;
 
     END FOR;
 
