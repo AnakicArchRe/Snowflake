@@ -20,6 +20,7 @@ begin
             CASE WHEN RHOE  > 0 THEN 0 ELSE HURDLERATE END AS ReinsuranceExpensesOnCededCapital,
             RHOE AS ReinsuranceExpensesOnCededPremium,
             case when (cedeselectiontype = 1 and retroleveltype = 0) then 1 else 0 end as IsSpecific,
+            status,
             case when status in (22,10) then true else false end as IsActive
         from 
             economic_model_raw.retroprogram

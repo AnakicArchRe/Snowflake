@@ -4,17 +4,23 @@ LANGUAGE SQL
 AS
 begin
 
+    begin transaction;
+
     -- 1. housekeeping (clean up old/orphaned entries) - delete contracts with no retroprograms (except catchall placeholder contracts i.e. net position)
-    delete 
+    delete
         from economic_model_revoext.retrocontract r
     where 
+        -- if there's no active retroprogram for the contract, it means that the contract is not used by any active retroprogram
         not exists (
-            select * from economic_model_revoext.retroprogramcontractmapping m where m.retrocontractid = r.retrocontractid
-        ) 
-        and level < 10;
-
-    
-    begin transaction;
+            select 
+                * 
+            from
+                economic_model_revoext.retroprogramcontractmapping m
+                inner join economic_model_staging.retroprogram rp on m.retroprogramid = rp.retroprogramid
+            where 
+                m.retrocontractid = r.retrocontractid
+        )
+        and zeroifnull(level) < 10;
 
     -- Add missing mappings and contracts
     -- 2.a. When a new retroprogram arrives from REVO, add a mapping for it
@@ -33,6 +39,8 @@ begin
             distinct retrocontractid, 1, 1, 'ARCH', 4
         from
             economic_model_revoext.retroprogramcontractmapping m
+            -- a mapping must refer to a retroprogram that exists in the staging table (can have disabled status, but must have isactive = 1 and isdeleted = 0 to be activateable via scenarios)
+            inner join economic_model_staging.retroprogram r on m.retroprogramid = r.retroprogramid
             where not exists (select * from economic_model_revoext.retrocontract r where m.retrocontractid = r.retrocontractid);
     
     -- 3. update retrocontract information based on member retroprograms
@@ -88,7 +96,8 @@ begin
         r.reinsuranceexpensesoncededpremium = s.reinsuranceexpensesoncededpremium,
         r.reinsurancebrokerageonnetpremium = s.reinsurancebrokerageonnetpremium,
         r.isactive = s.isactive,
-        r.isspecific = s.isspecific    
+        r.isspecific = s.isspecific,
+        r.status = s.status
     from 
         economic_model_staging.retrocontractsettings s
     where 

@@ -24,6 +24,12 @@
     "ObjectDDLHash": "07f4acd483a9b380219059791a02acbccbe7b3c864cbe78b61572bb5748cef2e"
   },
   {
+    "ObjectType": "FUNCTION",
+    "SchemaName": "ECONOMIC_MODEL_COMPUTED",
+    "ObjectName": "TEMP_HACK_ADJUST_GROSSCESSION(IS_LAYER_XOL BOOLEAN, RETROSTATUS NUMBER, RETROVEL NUMBER, GROUPNAME VARCHAR, RETROCONTRACTID VARCHAR, LAYERID VARCHAR)",
+    "ObjectDDLHash": "10b98e000cb74f0379eb0f6d443bbd70e9e7e7e91ff6e65542403a6a505141da"
+  },
+  {
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "BLOCKOPERATIONS_EXPANDFROMDIFF()",
@@ -93,7 +99,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(NUMBER)",
-    "ObjectDDLHash": "b1cd8de0ce19d263ebfe0d83f714b992a807fe7260d72ef7ef2388516424ffe5"
+    "ObjectDDLHash": "8399fc38a5db4c5ab6c34d0d165e578a189a436647be6f0082777188429e19e7"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -231,7 +237,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RETROCONTRACT_SCENARIO",
-    "ObjectDDLHash": "539095df25dc20638ac8130c452a44a40099b176cc37e643c322d8c36d5aa59f"
+    "ObjectDDLHash": "04da84e36c9883da6dbcf59282fdc2229058b2c9cfda132343675930ac5769b1"
   },
   {
     "ObjectType": "TABLE",
@@ -483,7 +489,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_REVOEXT",
     "ObjectName": "RETROCONTRACT",
-    "ObjectDDLHash": "f30cb2b64ccc7196a9e01df24a2eae283f1129780ca3dac9565b5584dc4fef01"
+    "ObjectDDLHash": "24b309b0becb7518da8fd387b94a68817c0752eff660e97991ef065a85ce1b64"
   },
   {
     "ObjectType": "TABLE",
@@ -597,7 +603,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_RETROCONTRACTS()",
-    "ObjectDDLHash": "2707c73199c1ec1aa0ab330cff0830a9915f3e5b441477ddc3703efbc1386eef"
+    "ObjectDDLHash": "31119be9d749c4dc60fd885f81254b52e5d3068e43819b602293a0ec53db10dd"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -609,7 +615,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_RETROPROGRAMS()",
-    "ObjectDDLHash": "7949d3f7ccd5e325a88d9183a0d7e3b6887464cc6106ad02777dc0dafc2e86c9"
+    "ObjectDDLHash": "cc0c3589e293822ac517f2b9c60713e9517f82aed8e7f798143acba5915508af"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -699,7 +705,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "RETROPROGRAM",
-    "ObjectDDLHash": "02aaeb3d1fdb575ac6eaaa80cd5626e95a8a61dda857d4e06d6051593bb58ef0"
+    "ObjectDDLHash": "40420c888688f541723d48857232f531bccd614dbd5ceb63a9f57ccce98f8dbb"
   },
   {
     "ObjectType": "TABLE",

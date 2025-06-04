@@ -435,18 +435,32 @@ begin
                 retroblockid,
                 rci.retrocontractinvestorid,
 
-                -- todo: ensure this is correct (check with PC). I don't really understand the reasoning while writing this, so best to check with him.
-                b.placement * 
-                case 
-                    -- If both retro and Layer started before cutoff date (only for inforce layer), use Cession % from retroallocation
-                    -- Do not read inv % from REVO in case of NET placeholder retro
-                    when r.level <> 10 and (pl.inception <= s.inforceenddate and r.inception <= s.inforceenddate and upper(pl.layerview) = 'INFORCE') then ra.cessiongross
-                    -- if the layer started after the cutoff date, but the retro started on or before it, use the cession % from REVO
-                    when (r.inception <= s.inforceenddate) then rci.investmentsigned
-                    -- if both the layer and the retro stated after the cutoff date, use the calculated cession % (based on required capital)
-                    -- but fallback to REVO if not calculated
-                    else coalesce(rci.investmentcalculatedpct, rci.investmentsigned)
-                end as CessionGross_Final, 
+                coalesce(
+                    -- note: REVO returns the wrong gross cession for XOL layers so we
+                    -- compensate using this temporary function. Once REVO is fixed,
+                    -- we can remove this function and the coalesce around it (and leave
+                    -- just the second branch of the coalesce).
+                    economic_model_computed.temp_hack_adjust_grosscession(
+                        b.sidesign = -1,                        
+                        r.status,
+                        r.level,
+                        r.groupname,
+                        r.retrocontractid,
+                        pl.layerid
+                    ),
+                    b.placement * 
+                        -- todo: ensure this is correct (check with PC). I don't really understand the reasoning while writing this, so best to check with him.
+                        case 
+                            -- If both retro and Layer started before cutoff date (only for inforce layer), use Cession % from retroallocation
+                            -- Do not read inv % from REVO in case of NET placeholder retro
+                            when r.level <> 10 and (pl.inception <= s.inforceenddate and r.inception <= s.inforceenddate and upper(pl.layerview) = 'INFORCE') then ra.cessiongross
+                            -- if the layer started after the cutoff date, but the retro started on or before it, use the cession % from REVO
+                            when (r.inception <= s.inforceenddate) then rci.investmentsigned
+                            -- if both the layer and the retro stated after the cutoff date, use the calculated cession % (based on required capital)
+                            -- but fallback to REVO if not calculated
+                            else coalesce(rci.investmentcalculatedpct, rci.investmentsigned)
+                        end
+                ) as CessionGross_Final, 
 
                 b.nonplaced_exposedlimit * CessionGross_Final as exposedlimit,
                 b.nonplaced_exposedpremium * CessionGross_Final as exposedpremium,
@@ -482,7 +496,6 @@ begin
                 CessionGross_Final > 0;
 
     END FOR;
-
 
     // now we finish up by doing things 3, 4, and 5
    
