@@ -11,7 +11,7 @@ begin
                 select 
                     -- for each layer, we find the latest portfolio that has this layer and trust its cessions
                     -- note: must use p.sourceportfolioid (int) for ranking because p.portfolioId is a string and when comparing strings "999">"1000".
-                    l.source_db, l.topupzoneid, pl.portlayerid, l.layerid, rank() over (partition by l.layerid order by p.portfolioid desc) rank
+                    l.source_db, l.topupzoneid, pl.portlayerid, l.layerid, rank() over (partition by l.source_db, l.layerid order by p.portfolioid desc) rank
                 from 
                     economic_model_raw.layer l
                     inner join economic_model_raw.portlayer pl on l.layerid = pl.layerid and pl.source_db = l.source_db
