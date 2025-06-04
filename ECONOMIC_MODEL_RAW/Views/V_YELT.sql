@@ -141,4 +141,5 @@ create or replace view ACTUARIAL_ILS_POC.ECONOMIC_MODEL_RAW.V_YELT(
         m.*
     from 
         merged m
-    where year <= 10000;
+    where
+        peril <> 'TR';
