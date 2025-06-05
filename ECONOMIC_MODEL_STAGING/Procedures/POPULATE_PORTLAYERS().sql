@@ -79,6 +79,7 @@ BEGIN
                     else budgetpremium
                 end as Premium,
                 TopUpZoneId,
+                CASE WHEN l.rol <> 0 THEN l.rol WHEN l.quoterol <> 0 THEN l.quoterol ELSE COALESCE(l.budgetrol,0) END AS rol,
                 case 
                     when l.limitbasis = 1 then l.agglimit
                     when l.limitbasis in (4,7) then l.risklimit
@@ -177,6 +178,7 @@ BEGIN
             l.quotedcorreshare as diag_quotedcorreshare,
             l.regismkey as diag_regismkey,
             l.LEGALENTCODE as diag_legalentcode,
+            l.ROL as diag_rol,
             l.layerdesc,
             l.expenses,
             l.topupzoneid,
