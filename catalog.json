@@ -99,7 +99,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "PROCESS_MODEL(NUMBER)",
-    "ObjectDDLHash": "8399fc38a5db4c5ab6c34d0d165e578a189a436647be6f0082777188429e19e7"
+    "ObjectDDLHash": "657d4fe29a9ebc1e4aaa1c5b1575badf0af5b50d3e6dac165b2c79b0937c8f75"
   },
   {
     "ObjectType": "PROCEDURE",

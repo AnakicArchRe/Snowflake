@@ -31,7 +31,8 @@ begin
     truncate economic_model_computed.calculationcontract;
     insert into economic_model_computed.calculationcontract
         with targetCollateralUsed as (
-            select retrocontractid, scenarioid, coalesce(max_by(targetcollateraloverride, startdate), max_by(targetcollateralrevo, startdate)) collateral from economic_model_computed.retroconfiguration_scenario rc 
+            select retrocontractid, scenarioid, coalesce(max_by(targetcollateraloverride, startdate), max_by(targetcollateralrevo, startdate)) collateral 
+            from economic_model_computed.retroconfiguration_scenario rc 
             group by retrocontractid, scenarioid
         )
         select 
@@ -94,19 +95,19 @@ begin
             s.sidesign,
             pls.reinstcount,
 
-            // calculated values
-            s.sidesign * pls.limit100pct * pls.share * pls.sharefactor * b.placement as exposedLimit,
-            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement as exposedPremium,
-            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement as exposedExpenses,
-            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement * per.shareoflayerduration as proRataPremium,
-            s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * b.placement * per.shareoflayerduration * pls.expenses as proRataPremiumExpenses,
-
             // we'll need non placed blocks for calculating cession (cession gross % includes placement)
             s.sidesign * pls.limit100pct * pls.share * pls.sharefactor as nonplaced_exposedLimit,
             s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor as nonplaced_exposedPremium,
             s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor as nonplaced_exposedExpenses,
             s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * per.shareoflayerduration as nonplaced_proRataPremium,
             s.sidesign * pls.premium100pct * pls.share * pls.sharefactor * pls.premiumfactor * per.shareoflayerduration * pls.expenses as nonplaced_proRataPremiumExpenses,
+
+            // calculated values
+            nonplaced_exposedLimit * b.placement as exposedLimit,
+            nonplaced_exposedPremium * b.placement as exposedPremium,
+            nonplaced_exposedExpenses * b.placement as exposedExpenses,
+            nonplaced_proRataPremium * b.placement as proRataPremium,
+            nonplaced_proRataPremiumExpenses * b.placement as proRataPremiumExpenses,
 
             economic_model_computed.concat_non_null(pls.notes, rps.notes) AS notes
             // calculation (might need 4 more columns here: premium+expenses/placed+nonplaced for seasonal calc)
@@ -159,12 +160,12 @@ begin
             b.retroblockid,
             rci.retrocontractinvestorid,
             -- todo: It looks like some retros with IsSpecific=1 have multiple investors for a given layer. Is this expected? Investigate.
-            b.placement * ra.cessiongross as CessionGross,
-            b.nonplaced_exposedlimit * cessiongross as exposedlimit,
-            b.nonplaced_exposedpremium * cessiongross as exposedpremium,
-            b.nonplaced_exposedexpenses * cessiongross as exposedexpenses,
-            b.nonplaced_proratapremium * cessiongross as premiumprorata,
-            b.nonplaced_proratapremiumexpenses * cessiongross as expensesprorata,
+            ra.cessiongross as CessionGross,
+            b.nonplaced_exposedlimit * ra.cessiongross as exposedlimit,
+            b.nonplaced_exposedpremium * ra.cessiongross as exposedpremium,
+            b.nonplaced_exposedexpenses * ra.cessiongross as exposedexpenses,
+            b.nonplaced_proratapremium * ra.cessiongross as premiumprorata,
+            b.nonplaced_proratapremiumexpenses * ra.cessiongross as expensesprorata,
             reinstcount,
             limit100pct, premium100pct, share, sharefactor, placement, premiumfactor, shareoflayerduration, expenses, 1, 'Specific retros always have Available = 1',
             b.sidesign,
@@ -448,18 +449,17 @@ begin
                         r.retrocontractid,
                         pl.layerid
                     ),
-                    b.placement * 
-                        -- todo: ensure this is correct (check with PC). I don't really understand the reasoning while writing this, so best to check with him.
-                        case 
-                            -- If both retro and Layer started before cutoff date (only for inforce layer), use Cession % from retroallocation
-                            -- Do not read inv % from REVO in case of NET placeholder retro
-                            when r.level <> 10 and (pl.inception <= s.inforceenddate and r.inception <= s.inforceenddate and upper(pl.layerview) = 'INFORCE') then ra.cessiongross
-                            -- if the layer started after the cutoff date, but the retro started on or before it, use the cession % from REVO
-                            when (r.inception <= s.inforceenddate) then rci.investmentsigned
-                            -- if both the layer and the retro stated after the cutoff date, use the calculated cession % (based on required capital)
-                            -- but fallback to REVO if not calculated
-                            else coalesce(rci.investmentcalculatedpct, rci.investmentsigned)
-                        end
+                    -- todo: ensure this is correct (check with PC). I don't really understand the reasoning while writing this, so best to check with him.
+                    case 
+                        -- If both retro and Layer started before cutoff date (only for inforce layer), use Cession % from retroallocation
+                        -- Do not read inv % from REVO in case of NET placeholder retro
+                        when r.level <> 10 and (pl.inception <= s.inforceenddate and r.inception <= s.inforceenddate and upper(pl.layerview) = 'INFORCE') then ra.cessiongross
+                        -- if the layer started after the cutoff date, but the retro started on or before it, use the cession % from REVO
+                        when (r.inception <= s.inforceenddate) then b.placement * rci.investmentsigned
+                        -- if both the layer and the retro stated after the cutoff date, use the calculated cession % (based on required capital)
+                        -- but fallback to REVO if not calculated
+                        else coalesce(rci.investmentcalculatedpct, b.placement * rci.investmentsigned)
+                    end
                 ) as CessionGross_Final, 
 
                 b.nonplaced_exposedlimit * CessionGross_Final as exposedlimit,
