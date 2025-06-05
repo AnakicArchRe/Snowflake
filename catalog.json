@@ -561,7 +561,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_FX()",
-    "ObjectDDLHash": "1bde4fbd623ae548625ab86a2775c46b56a365298e2f04799dcd1421042469ce"
+    "ObjectDDLHash": "e3feb39f04bbef3599ce1b52759a5927ec931539d07c3f2054f470f7d27ff11a"
   },
   {
     "ObjectType": "PROCEDURE",
