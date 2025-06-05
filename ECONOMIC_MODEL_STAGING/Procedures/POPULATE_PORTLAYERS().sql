@@ -65,11 +65,12 @@ BEGIN
                 estimatedshare, 
                 authshare, 
                 quotedcorreshare,
-                case 
-                    when signedshare > 0 then signedshare
-                    when estimatedshare > 0 then estimatedshare
-                    else budgetshare
-                end as Share,
+                CASE
+                    WHEN l.status IN (12, 20, 21, 30, 1, 24, 0) THEN 0 /* making sure that cancelled, decline, NTU, not in scope, pending, withdrawn and layers without status are not included in premium and limit calculations */
+                    WHEN l.signedshare > 0 THEN l.signedshare 
+                    WHEN l.estimatedshare > 0 THEN l.estimatedshare
+                    ELSE COALESCE(l.budgetshare, 0)
+                END AS share,
                 l.Status, 
                 LayerDesc, 
                 Commission + CommOverride + Brokerage + Tax AS EXPENSES, 
@@ -83,10 +84,11 @@ BEGIN
                     when l.limitbasis in (4,7) then l.risklimit
                     else l.occlimit
                 end as limit100Pct,
-                case 
-                    when l.placement = 0 then 0 
-                    else l.premium / l.placement 
-                end as Premium100Pct,
+                CASE 
+                    WHEN l.premium = 0 THEN (CASE WHEN l.rol <> 0 THEN l.rol WHEN l.quoterol <> 0 THEN l.quoterol ELSE COALESCE(l.budgetrol,0) END) * limit100pct
+                    WHEN l.placement = 0 THEN 0 
+                    ELSE l.premium / l.placement 
+                END AS premium100pct,
                 coalesce(productgroup, 'UNKNOWN') as ProductGroup,
                 -- must use to_date to strip time as some old entries have time in there
                 to_date(l.boundfxdate) as boundfxdate,
