@@ -555,7 +555,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "INSERT_NETPOSITION_CATCHALL()",
-    "ObjectDDLHash": "d544ecf83484b6e852a7d13099811140ef1705c5541d4f4f83710304c0eacffd"
+    "ObjectDDLHash": "618a4f3b90ab07eab8ddcccd63d708ad7264f49063a639c89a90d66ad2c07d84"
   },
   {
     "ObjectType": "PROCEDURE",
