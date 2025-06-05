@@ -490,7 +490,7 @@ begin
                 inner join economic_model_computed.retroinvestmentleg_scenario rci on rci.retroconfigurationid = b.retroconfigurationid and rci.scenarioid = b.scenarioid
                 left join economic_model_staging.retroallocation ra on ra.layerid = b.layerid and ra.retrocontractinvestorid = rci.retrocontractinvestorid
                 inner join economic_model_staging.portlayer pl on b.portlayerid = pl.portlayerid
-                inner join economic_model_revoext.retrocontract r on b.retrocontractid = r.retrocontractid
+                inner join economic_model_computed.retrocontract_scenario r on b.retrocontractid = r.retrocontractid and b.scenarioid = r.scenarioid
                 inner join economic_model_scenario.scenario s on b.scenarioid = s.scenarioid
             where
                 CessionGross_Final > 0;
