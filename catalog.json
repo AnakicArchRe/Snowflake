@@ -123,7 +123,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RESOLVE_SCENARIO_RETROCONTRACTS()",
-    "ObjectDDLHash": "bec5f5b6f3b837b94bc9334804ec4b41fa08fc20d7e09e3b8caf6cb03c6dccf4"
+    "ObjectDDLHash": "a4b355e9835551288183733011f80d02e654bd92237af08c95ece42113cddb41"
   },
   {
     "ObjectType": "PROCEDURE",
