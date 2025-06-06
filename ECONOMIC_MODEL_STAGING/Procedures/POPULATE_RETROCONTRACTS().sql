@@ -55,9 +55,9 @@ begin
         ), groupedAndRanked as (
             select 
                 m.retrocontractid,
-                -- first member inception (used to determine exposureStart, but only as a cap)
+                -- first member's inception (used to determine exposureStart, but only as a cap)
                 min(inception) over (partition by m.retrocontractid) minInception,
-                -- exposureend is last memer's expiration
+                -- exposureend is last member's expiration
                 max(expiration) over (partition by m.retrocontractid) as maxExpiration,
                 -- exposure start is -1year+1day relative to maxExpiration, capped by MinInception
                 greatest(dateadd(day, 1, dateadd(year, -1, maxExpiration)), minInception) as exposureStart,

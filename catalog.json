@@ -237,7 +237,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RETROCONTRACT_SCENARIO",
-    "ObjectDDLHash": "04da84e36c9883da6dbcf59282fdc2229058b2c9cfda132343675930ac5769b1"
+    "ObjectDDLHash": "e3701e060cf59f7e952797fedd8160c908736b95c2846149ae926a1e7be9122e"
   },
   {
     "ObjectType": "TABLE",
@@ -489,7 +489,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_REVOEXT",
     "ObjectName": "RETROCONTRACT",
-    "ObjectDDLHash": "24b309b0becb7518da8fd387b94a68817c0752eff660e97991ef065a85ce1b64"
+    "ObjectDDLHash": "26c83a07f7670e252cb5b7fe480c6b40e6d55cf69babf8e0f2fff742da762a5c"
   },
   {
     "ObjectType": "TABLE",
@@ -603,7 +603,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_STAGING",
     "ObjectName": "POPULATE_RETROCONTRACTS()",
-    "ObjectDDLHash": "31119be9d749c4dc60fd885f81254b52e5d3068e43819b602293a0ec53db10dd"
+    "ObjectDDLHash": "f5d57f8af23de2bb288a62ae582808c2f2f298053243571161b85aad173993c2"
   },
   {
     "ObjectType": "PROCEDURE",
