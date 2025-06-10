@@ -64,6 +64,7 @@ BEGIN
                 signedshare, 
                 estimatedshare, 
                 authshare, 
+                budgetshare,
                 quotedcorreshare,
                 CASE
                     WHEN l.status IN (12, 20, 21, 30, 1, 24, 0) THEN 0 /* making sure that cancelled, decline, NTU, not in scope, pending, withdrawn and layers without status are not included in premium and limit calculations */
@@ -174,6 +175,7 @@ BEGIN
             l.share,
             l.signedshare as diag_signedshare, 
             l.estimatedshare as diag_estimatedshare, 
+            l.budgetshare as diag_budgetshare,
             l.authshare as diag_authshare, 
             l.quotedcorreshare as diag_quotedcorreshare,
             l.regismkey as diag_regismkey,
