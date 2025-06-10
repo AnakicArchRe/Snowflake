@@ -77,6 +77,8 @@ begin
             rps.level,
             rps.inception,
             rps.isspecific,
+            rps.groupname,
+            rps.status,
 
             -- if netcessionlockin is set, all blocks of a portlayer that cede to a retro look at the the first period 
             -- where the cession started to find how much was available after lower levels retros are done. If it is not set,
@@ -236,7 +238,6 @@ begin
                     b.retrocontractid,
                     b.retroconfigurationid,
                     b.layerid,
-
                     // diag factors
                     b.limit100pct,
                     b.premium100pct,
@@ -261,7 +262,6 @@ begin
                     availableAtLevel * exposedExpenses as exposedExpenses,
                     availableAtLevel * proRataPremium as proRataPremium,
                     availableAtLevel * proRataPremiumExpenses as proRataPremiumExpenses,
-
                     // we need non placed blocks for calculating cession (cession gross % includes placement)
                     availableAtLevel * nonplaced_exposedLimit as nonplaced_exposedLimit,
                     availableAtLevel * nonplaced_exposedPremium as nonplaced_exposedPremium,
@@ -275,6 +275,16 @@ begin
                     cross join currentLevel
                 where 
                     b.isspecific = 0 and b.level = currLevel
+                    // Note: This was done in a hurry. I think it's best to do any corrections on the raw data as a separate stored procedure.
+                    // Both the temp_hack_adjust_grosscession function and this filter clause are meant to correct for erroneous data coming from REVO.
+                    // As such, they should be done in _raw schema, and the rest of the model should not be aware of them.
+                    // Todo: move this to the economic_model_raw schema.
+                    and
+                    not
+                    (
+                        (b.sidesign = -1 AND b.status NOT IN (10,22) AND b.level <= 3) 
+                        or (b.sidesign = -1 AND b.status NOT IN (10,22) AND b.level = 4 AND b.groupname = 'LEVEL4 - UNCOLLATERALIZED' AND b.retrocontractid NOT IN ('ARL_226', 'ARL_331'))
+                    )
                     ;
 
 
@@ -460,7 +470,7 @@ begin
                         -- but fallback to REVO if not calculated
                         else coalesce(rci.investmentcalculatedpct, b.placement * rci.investmentsigned)
                     end
-                ) as CessionGross_Final, 
+                ) as CessionGross_Final,
 
                 b.nonplaced_exposedlimit * CessionGross_Final as exposedlimit,
                 b.nonplaced_exposedpremium * CessionGross_Final as exposedpremium,
