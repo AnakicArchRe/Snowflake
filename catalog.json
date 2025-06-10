@@ -237,7 +237,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_COMPUTED",
     "ObjectName": "RETROCONTRACT_SCENARIO",
-    "ObjectDDLHash": "e3701e060cf59f7e952797fedd8160c908736b95c2846149ae926a1e7be9122e"
+    "ObjectDDLHash": "e6b9df016111ef508314f4bade4d31be6c660f7e3115be7aa28d317a41dce312"
   },
   {
     "ObjectType": "TABLE",
@@ -489,7 +489,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_REVOEXT",
     "ObjectName": "RETROCONTRACT",
-    "ObjectDDLHash": "26c83a07f7670e252cb5b7fe480c6b40e6d55cf69babf8e0f2fff742da762a5c"
+    "ObjectDDLHash": "7ede8449a505cf912afcb22c1f65beb525594d160ace52c29809a030d614acf4"
   },
   {
     "ObjectType": "TABLE",
