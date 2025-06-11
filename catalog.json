@@ -297,7 +297,7 @@
     "ObjectType": "PROCEDURE",
     "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
     "ObjectName": "CREATESNAPSHOT(VARCHAR, VARCHAR, VARCHAR, BOOLEAN)",
-    "ObjectDDLHash": "ac7eb4b63785a467dafe716f0cecc6c5fd0f2908f45ffc99a2d72c97abdfcf63"
+    "ObjectDDLHash": "ec4cf884c3a9e5195b5c97930abb3dd024a050b462bd0a8c1fa6d75e183aa796"
   },
   {
     "ObjectType": "PROCEDURE",
@@ -315,7 +315,7 @@
     "ObjectType": "TABLE",
     "SchemaName": "ECONOMIC_MODEL_MANAGEMENT",
     "ObjectName": "SNAPSHOTINFO",
-    "ObjectDDLHash": "7ba2d9f0f4be451b281ed11a8d54570d40f3b931139ac8beefe7784f5e277ba1"
+    "ObjectDDLHash": "9436f9aee21c1d3e8fdb7a0b46487c9584f0faf0dbaa3a4147282cae93ca87fc"
   },
   {
     "ObjectType": "TABLE",
